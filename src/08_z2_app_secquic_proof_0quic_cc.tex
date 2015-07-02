@@ -1,0 +1,128 @@
+\begin{proof}
+ The proof proceeds in a sequence of games. \vspace{10pt}\\
+ \textbf{Game 0.} This game equals the \textit{channel confidetility} security experiment.
+ \begin{equation}
+  \Adv_0 = \Adv^{\rsaccecc}_{P}(A)
+ \end{equation}%
+%
+%
+ \textbf{Game 1.} The challenger in this game proceeds as before, however it aborts and chooses $b^{\prime}$ uniformly random, if there exists any oracle that breaks server authentication. Thus we have
+ \begin{equation}
+  |\Adv_1 - \Adv_0| = \Adv^{\rsaccesa}_{P}(A).
+ \end{equation}%
+ Note that if there exists the oracle which breaks \textit{server authentication}, the adversary easily breaks \textit{channel confidentiality}. If the target oracle breaks \textit{server authentication}, the adversary or unrelated oracle (i.e. it is not intended partner of the oracle) can establish the session with the oracle. The adversary can issue $\Reveal$-query to unrelated oracle which is out of the restriction of \textit{channel confidentiality}. Then the adversary can know the session key of the target oracle.
+\vspace{10pt}\\%
+%
+%
+ \textbf{Game 2.} The challenger in this game proceeds as before, however in addition guesses indices $(p^{\ast}, i^{\ast}, \ell^{\ast}) \xleftarrow{\$} [n_s + n_c] \times [n_o] \times [n_{\ell}]$. It aborts and chooses $b^{\prime}$ at random, if the attacker issues a $\Encrypt$-query with $(p,i,\ell) \neq (p^{\ast}, i^{\ast}, \ell^{\ast})$. With probability $1/((n_s+n_c)n_o n_{\ell})$ we have $(p,i,\ell) = (p^{\ast}, i^{\ast}, \ell^{\ast})$, and thus
+ \begin{equation}
+  \Adv_1 = (n_s + n_c) n_o n_{\ell}\Adv_2.
+ \end{equation}%
+ Note that in Game 2 we know that $\mathcal{A}$ will issue a $\Encrypt$-query to oracle $\pOracleAstRes$. Note also that $\pOracleAstRes$ has a unique partner due to Game 1. In the sequel we denote with $\qOracleAstRes$ the unique oracle such that $\pOracleAstRes$ has a matching conversation to $\qOracleAstRes$, and say that $\qOracleAstRes$ is the intended partner of $\pOracleAstRes$.
+\vspace{10pt}\\%
+%
+%
+ \textbf{Game 3.} Let $T_{\pindexzero} = g^u$ denote the Diffie-Hellman share chosen by $\pOracleAstFull$, let $T_{\qindexzero} = g^v$ denote the share chosen by its partner $\qOracleAstFull$, and let $k_{\pindexzero}$ is the key computed by $\pOracleAstFull$. Thus, both oracles compute the premaster secret as $pms = g^{uv}$.
+
+ The challenger in this game proceeds as before, however replaces the premaster secret $pms^{\prime}$ or $pms$ of $\pOracleAstFull$ and $\qOracleAstFull$ with a random group element $\widetilde{pms^{\prime}} = g^w$, $w \xleftarrow{\$} \Zset_p$. Note that both $g^u$ and $g^v$ are chosen by oracles $\pOracleAstFull$ and $\qOracleAstFull$, respectively, as otherwise $\pOracleAstFull$ would not have a matching conversation to $\qOracleAstFull$ and the game would be aborted.
+
+ Suppose that there exists an algorithm $\mathcal{A}$ distinguishes Game 3 from Game 2. Then we can construct an algorithm $\mathcal{B}$ solving the DDH problem as follows. $\mathcal{B}$ receives as input $(g,g^u,g^v,g^w)$. The challenger defines $T_{\pindexzero} := g^u$ and $T_{\qindexzero} := g^v$, and the premaster secret of $\pOracleAstFull$ and $\qOracleAstFull$ equal to $pms^{\prime} := g^w$. Note that $\mathcal{B}$ can simulate all messages exchanged between $\pOracleAstFull$ and $\qOracleAstFull$ properly. Since all other oracles are not modified, $\mathcal{B}$ can simulate these oracles properly as well.
+
+ If $w=uv$, then the view of $\mathcal{A}$ when interacting with $\mathcal{B}$ is identical to Game 2, while if $w \xleftarrow{\$}\Zset_p$ then it is identical to Game 3. Thus, the DDH assumption implies that
+ \begin{equation}
+  |\Adv_{3 + 3\ell} - \Adv_{2 + 3\ell}| \leq \epsilon_{\ddh}
+ \end{equation}%
+%
+%
+ \textbf{Game 4 + $3\ell$.} We repeat the game until randomizing the session between $\pOracleAstEll$ and $\qOracleAstEll$. Initially $\ell = 0$. The reason of repeating is that the adversary always return correct $b^{\prime}$ if the adversary can obtain $T_s^{\ast}$ of $\pOracleAstResMinusOne$ or $\qOracleAstResMinusOne$. We need to prevent the adversary obtaining all $T_s^{\ast}$ in $\ell < \ell^{\ast}$.
+
+ In Game 4 + 3$\ell$ we make use of the fact that the premaster secret $\widetilde{pms^{\prime}}$ of $\pOracleAstEll$ and $\qOracleAstEll$ is chosen uniformly random. We thus replace the value $ms^{\prime} = \PRF(\widetilde{pms^{\prime}}, \NONC)$ with a random value $\widetilde{ms^{\prime}}$.
+
+ Distinguish Game 4 + 3$\ell$ from Game 3 + 3$\ell$ implies an algorithm breaking the security of the pseudo random function $\PRF$, thus
+ \begin{equation}
+  |\Adv_{4 + 3\ell} - \Adv_{3 + 3\ell}| \leq \epsilon_{\prf}
+ \end{equation}%
+%
+%
+ \textbf{Game 5 + $3\ell$.} In this game we replace the function $\PRF(\widetilde{ms^{\prime}}, \cdot)$ used by $\pOracleAstEll$ and $\qOracleAstEll$ with a random function $F_{\widetilde{ms^{\prime}}}$. Of course the same random function is used for both oracles $\pOracleAstEll$ and $\qOracleAstEll$. Distinguishing Game 5 from Game 4 again implies an algorithm breaking the security of the pseudo random function $\PRF$.
+ \begin{equation}
+  |\Adv_{5 + 3\ell} - \Adv_{4 + 3\ell}| \leq \epsilon_{\prf}
+ \end{equation}%
+
+ Note that the adversary cannot obtain the Diffie-Hellman value $T_s^{\ast}$ because the adversary obtain nothing from the transcription due to randomization of the session key $k$. These changes prevent trivially attack. If the adversary obtain the Diffie-Hellman value $T_s^{\ast}$, the adversary can hijack the session following way: the adversary generate $T_c^{\prime}$, $\NONC^{\prime}$ by himself and send these value with $\SCID$. The server cannot reject this query made by the adversary because there are no authentication mechanism. The adversary can share the secret key with the server and always return correct $b^{\prime}$.
+ After this game, we add $\ell = \ell + 1$. If $\ell \leq \ell^{\ast}$ we repeat the game.
+\vspace{10pt}\\%
+%
+%
+ \textbf{Game 6 + $3\ell$.} Now we use that the key $k_{\pindexell}$ and $k_{\qindexell}$ in the stateful symmetric encryption scheme uniformly at random and independent of all QUIC handshake messages. In this we replace the value $T_s^{\ast}$ with random value $\widetilde{T_s^{\ast}}$.
+
+ Suppose that there exists an algorithm $\mathcal{A}$ distinguishes Game 6 + 3 $\ell$ from Game 5 + 3 $\ell$. Then we can construct an algorithm $\mathcal{B}$ breaking $\sLHAE$ secure. By assumption, the simulator $\mathcal{B}$ is given access to an encryption oracle $\Encrypt$ and a decryption oracle $\Decrypt$.
+
+ Since by assumption any attacker has advantage at most $\epsilon_{\sLHAE}$ in breaking the $\sLHAE$ security of the symmetric encryption scheme, we have
+ \begin{equation}
+  |\Adv_{6 + 3\ell} - \Adv_{5 + 3\ell}| \leq \epsilon_{\sLHAE}.
+ \end{equation}%
+
+ Note that the premaster secret shared by the next oracle $\pOracleAstEllPlusOne$ and $\qOracleAstEllPlusOne$ will be also random value because $\widetilde{T_s^{\ast}}$ is random value.
+ After this game, we add $\ell = \ell + 1$. If $\ell \leq \ell^{\ast}$ we repeat the game.
+\vspace{10pt}\\%
+%
+%
+ For next step, there are two cases. The first case is that the adversary issue $\Encrypt$-query $\pOracleAstRes$ or $\qOracleAstRes$ whose state $\Lambda = \preaccept$. The second case is that the adversary issue $\Encrypt$-query $\pOracleAstRes$ or $\qOracleAstRes$ whose state $\Lambda = \accept$.
+
+ We define the first case as Game$_{a}$ and the second case as Game$_{b}$
+%
+%
+ \textbf{Game$_a$ 7 + 3$\ell^{\ast}$.} Now we use that the key $k_{\pindexell}$ and $k_{\qindexell}$ which is independent of all QUIC handshake messages.
+
+ In this game we construct a simulator $\mathcal{B}$ that uses a RSACCE attacker $\mathcal{A}$ to break the security of the underlying $\sLHAE$ secure symmetric encryption scheme. By assumption, the simulator $\mathcal{B}$ is given access to an encryption oracle $\Encrypt$ and a decryption oracle $\Decrypt$. $\mathcal{B}$ embeds that $\sLHAE$ experiment by simply forwarding all $\Encrypt(\pOracleAstRes,\cdot)$ queries to $\Encrypt$, and all $\Decrypt(\qOracleAstRes,\cdot)$ queries to $\Decrypt$. Otherwise it proceeds as the challenger in Game 6.
+
+ Observe that the values generated in this game are exactly distributed as in the previous game. We thus have
+ \begin{equation}
+  \Adv_{7 + 3\ell^{\ast}} = \Adv_{6 + 3\ell^{\ast}}
+ \end{equation}%
+ If $\mathcal{A}$ outputs a quad $\pindexout$, then $\mathcal{B}$ forwards $b^{\prime}$ to the $\sLHAE$ challenger. Otherwise it outputs a random bit. Since the simulator essentially relays all messages it is easy to see that an attacker $\mathcal{A}$ having advantage $\epsilon^{\prime}$ yields an attacker $\mathcal{B}$ against the $\sLHAE$ security of the encryption scheme with success probability at least $1/2 + \epsilon^{\prime}$.
+
+ Since by assumption any attacker has advantage at most $\epsilon_{\sLHAE}$ in breaking the $\sLHAE$ security of the symmetric encryption scheme and there are two case that $\Lambda \in \{\preaccept, \accept\}$, we have
+ \begin{equation}
+  \Adv_{7 + 3\ell^{\ast}} \leq \frac{1}{2} + 2\epsilon_{\sLHAE}.
+ \end{equation}%
+%
+%
+ \textbf{Game$_b$ 7 + 3$\ell^{\ast}$.} The challenger in this game proceeds as before, however replaces the premaster secret $pms^{\ast}$ of $\pOracleAstRes$ and $\qOracleAstRes$ with a random group element $\widetilde{pms^{\ast}} = g^w$, $w \xleftarrow{\$} \Zset_p$. Note that both $g^u$ and $g^v$ are chosen by oracles $\pOracleAstRes$ and $\qOracleAstRes$, respectively, as otherwise $\pOracleAstRes$ would not have a matching conversation to $\qOracleAstRes$ and the game would be aborted.
+
+ Distinguish Game$_b$ 7 + 3$\ell^{\ast}$ from Game 6 + $\ell^{\ast}$ implies an algorithm breaking the security of the decisional Diffie-Hellman problem, thus
+ \begin{equation}
+  |\Adv_{7 + \ell^{\ast}} - \Adv_{6 + \ell^{\ast}}| \leq \epsilon_{\ddh}
+ \end{equation}%
+%
+%
+ \textbf{Game$_b$ 8 + 3$\ell^{\ast}$.} In this game we make use of the fact that the premaster secret $\widetilde{pms^{\ast}}$ of $\pOracleAstRes$ and $\qOracleAstRes$ is chosen uniformly random. We thus replace the value $ms^{\ast} = \PRF(\widetilde{pms^{\ast}}, \NONC)$ with a random value $\widetilde{ms^{\ast}}$.
+
+ Distinguish Game$_b$ 8 + 3$\ell^{\ast}$ from Game$_b$ 7 + $\ell^{\ast}$ implies an algorithm breaking the security of the pseudo random function $\PRF$, thus
+ \begin{equation}
+  |\Adv_{8 + 3\ell^{\ast}} - \Adv_{7 + 3\ell^{\ast}}| \leq \epsilon_{\prf}
+ \end{equation}%
+%
+%
+ \textbf{Game$_b$ 9 + 3$\ell^{\ast}$} In this game we replace the all function $\PRF(\widetilde{ms^{\ast}}, \cdot)$ used by $\pOracleAstRes$ and $\qOracleAstRes$ with a random function $F_{\widetilde{ms^{\ast}}}$. Of course the same random function is used for both oracles $\pOracleAstRes$ and $\qOracleAstRes$. Distinguishing Game$_b$ 9 + 3$\ell^{\ast}$ from Game$_b$ 8 + 3$\ell^{\ast}$ again implies an algorithm breaking the security of the pseudo random function $\PRF$.
+ \begin{equation}
+  |\Adv_{9 + 3\ell^{\ast}} - \Adv_{8 + 3\ell^{\ast}}| \leq \epsilon_{\prf}
+ \end{equation}%
+%
+%
+ \textbf{Game$_b$ 10 + 3$\ell^{\ast}$.} Now we use that the key $k_{\pindexell}$ and $k_{\qindexell}$ which is independent of all QUIC handshake messages.
+
+ In this game we construct a simulator $\mathcal{B}$ that uses a RSACCE attacker $\mathcal{A}$ to break the security of the underlying $\sLHAE$ secure symmetric encryption scheme. By assumption, the simulator $\mathcal{B}$ is given access to an encryption oracle $\Encrypt$ and a decryption oracle $\Decrypt$. $\mathcal{B}$ embeds that $\sLHAE$ experiment by simply forwarding all $\Encrypt(\pOracleAstRes,\cdot)$ queries to $\Encrypt$, and all $\Decrypt(\qOracleAstRes,\cdot)$ queries to $\Decrypt$. Otherwise it proceeds as the challenger in Game 6.
+
+ Observe that the values generated in this game are exactly distributed as in the previous game. We thus have
+ \begin{equation}
+  \Adv_{10 + 3\ell^{\ast}} = \Adv_{9 + 3\ell^{\ast}}
+ \end{equation}%
+ If $\mathcal{A}$ outputs a quad $\pindexout$, then $\mathcal{B}$ forwards $b^{\prime}$ to the $\sLHAE$ challenger. Otherwise it outputs a random bit. Since the simulator essentially relays all messages it is easy to see that an attacker $\mathcal{A}$ having advantage $\epsilon^{\prime}$ yields an attacker $\mathcal{B}$ against the $\sLHAE$ security of the encryption scheme with success probability at least $1/2 + \epsilon^{\prime}$.
+
+ Since by assumption any attacker has advantage at most $\epsilon_{\sLHAE}$ in breaking the $\sLHAE$ security of the symmetric encryption scheme and there are two case that $\Lambda \in \{\preaccept, \accept\}$, we have
+ \begin{equation}
+  \Adv_{10 + 3\ell^{\ast}} \leq \frac{1}{2} + 2\epsilon_{\sLHAE}.
+ \end{equation}%
+\end{proof}

@@ -1,0 +1,13 @@
+%=====================================================
+\section{Conclusion} \label{sec:conclusion}
+%=====================================================
+
+We propose a new security model, \textit{Resumable} SACCE (RSACCE) security and strong RSACCE.
+This model consider forward secrecy among all independent sessions.
+For resumption to be effective, we compromise but still require
+some level of forward secrecy among related resumption sessions.
+The original QUIC meets RSACCE security, however it does not meet strong RSACCE security.
+Because the adversary can spoof the query in resumption and the server accepts this query.
+QUIC has an optional mechanism, called client encrypted tag-value (CETV), which is disabled in the default setting.
+If it is enabled, QUIC with CETV satisfies strong RSACCE.
+Finally, we presented a more efficient protocol than QUIC, which satisfies strong RSACCE security.

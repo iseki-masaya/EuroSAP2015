@@ -1,0 +1,16 @@
+\begin{abstract}
+We study the security of Quick UDP Internet Connections (QUIC for short) --
+an experimental transport layer network protocol recently developed by Google
+-- and show some security concern,
+when abbreviated handshakes, aka ``resumptions", are established.
+To explain our concern, we propose a new security model,
+extending server-only authenticated and channel confidentiality establishment (SACCE),
+so that authentication and channel confidentiality can be evaluated
+including abbreviated handshake (resumption) sessions.
+We then show that QUIC meets the weaker version of our security notion,
+but not the stronger one.
+On one hand, QUIC with an optional client encrypted tag value (CETV) mechanism,
+satisfies the stronger one.
+We finally present a more efficient protocol with the spirit of QUIC,
+because QUIC with CETV increases communication and computational costs.
+\end{abstract}

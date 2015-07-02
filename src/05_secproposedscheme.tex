@@ -1,0 +1,23 @@
+%=====================================================
+\section{Our proposed scheme} \label{sec:quic_tls}
+%=====================================================
+
+As mentioned in Sec.~\ref{sec:quic_cetv}, many steps in CETV is useless to elevate the security of QUIC from RSACCE to strong RSACCE. These steps can be replaced with message authentication code keeping the security.
+The abstract model of our proposed scheme is in Fig.~\ref{fig:quic_detail}.
+% In contrast to original QUIC, the client send Diffie-Hellman public value in first query and cached $rms$ which is derived from master secret in this protocol.
+
+\begin{theorem} \label{theorem:quic_tls}
+ Let $\mu$ be the output length of $\PRF$, let $\lambda$ be the length of $\SCID$, let $\nclient$ be the number of clients, let $\nserver$ be the number of servers, let $\noracle$ be the number of oracles of each parties, and let $n_{\ell}$ be the maximum number of resumptions. Assume that the $\PRF$ is $(t, \epsilon_{\prf})$-pseudo-random function family, the signature shceme $\SIG$ is $(t, \epsilon_{\sig})$-secure against existentially unforgeable under adaptive chosen-message attacks, the DDH problem on $G$ is $(t, \epsilon_{\ddh})$-hard, the PRF-ODH problem on $\PRF$ is $(t, \epsilon_{\prfodh})$-hard, the hash function family $\mathcal{H}$ is $(t,\epsilon_{H})$-collision-resistant (CR), the stateful symmetric encryption scheme $\SE$ is $(t, \epsilon_{\sLHAE})$-secure.
+ Then for all PPT adversaries, our proposed scheme is \textbf{strong} RSACCE secure.
+\end{theorem}
+
+Our proposed scheme can prevent the five attacks in~\cite{LJBN15:QUIC}.
+
+\begin{itemize}
+ \item{Server Config Replay Attack}
+  In this attack, the adversary collect
+ \item{Source-Address Token Replay Attack}
+ \item{Connection ID Manipulation Attack}
+ \item{Source-Address Token Manipulation Attack}
+ \item{Crypto Stream Offset Attack}
+\end{itemize}

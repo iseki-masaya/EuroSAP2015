@@ -1,0 +1,176 @@
+\begin{figure*}[!htp]
+\begin{center}
+
+Fullhandshake between a client and a server \vspace{10pt}\\
+
+\fbox{
+\begin{minipage}[t]{0.35\textwidth}
+\begin{tabular}[t]{l}
+ $\quad Client$ \\
+ $$ \\
+ $1.\ \ \peer = S, \text{$S$ is determined from $cert_s$}$ \\
+ $2.\ \ pk_s = \getPK(cert_s)$ \\
+ $3.\ \ \text{If } \SIG.\Vfy(pk_s, \sigma_s, T_s \| \SCID) = \perp$ \\
+ $4.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+ $5.\ \ t_c \xleftarrow{\$} \mathbb{Z}_q$ \\
+ $6.\ \ T_c=g^{t_c}$ \\
+ $7.\ \ pms = T_s^{t_c}$ \\
+ $8.\ \ \NONC \leftarrow \$$ \\
+ $9.\ \ ms = \PRF(pms, \NONC)$ \\
+ $10.\  trans = T_s \| T_c \| \SCID \| \NONC$ \\
+ $11.\  k=\PRF(ms, trans)$ \\
+ $12.\  \Lambda=\preaccept$ \\
+ $13.\  (pk_c,sk_c) = \SIG.\Gen(1^{\spar})$ \\
+ $14.\  \sigma_c = \SIG.\Sign(sk_c, trans)$ \\
+ $15.\  c_c = \SE.\Enc(k, len, H, pk_c \| \sigma_c, st_e)$ \\
+ $16.\  m_2 = (T_c, \SCID, \NONC, c_c)$ \\
+ $$\\
+ $1.\ \ \text{If } \SE.\Dec(k,c_s,H,st_d) = \perp$ \\
+ $2.\ \ \quad \Lambda=\text{'reject' and abort}$ \\
+ $3.\ \ T_s^{\ast} = \SE.\Dec(k,c_s,H,st_d)$ \\
+ $4.\ \ pms^{\ast} = T_s^{\ast t_c}$ \\
+ $5.\ \ ms^{\ast} = \PRF(pms^{\ast}, \NONC)$ \\
+ $6.\ \ trans^{\ast} = T_s^{\ast} \| T_c \| \SCID \| \NONC$ \\
+ $7.\ \ k=\PRF(ms^{\ast}, trans^{\ast})$ \\
+ $8.\ \ \Lambda=\accept$ \\
+ $9.\ \ \theta \leftarrow (T_s^{\ast}, \SCID, pk_c, sk_c)$ \\
+\end{tabular}
+\end{minipage}%
+}
+\begin{minipage}[t]{0.13\textwidth}
+\begin{tabular}[t]{l}
+ $\xrightarrow{\text{inchoateCHLO}}$\\
+ $$\\
+ $$\\
+ $$\\
+ $\xleftarrow{\hspace{9pt}\text{REJ}(m_1)\hspace{9pt}}$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $\xrightarrow{\hspace{5pt}\text{CHLO}(m_2)\hspace{5pt}}$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $\xleftarrow{\hspace{5pt}\text{SHLO}(m_3)\hspace{5pt}}$\\
+\end{tabular}
+\end{minipage}%
+\fbox{
+\begin{minipage}[t]{0.35\textwidth}
+\begin{tabular}[t]{l}
+ $\quad Server$ \\
+ $1.\ \ \SCID \leftarrow \{0,1\}^{\lambda} $ \\
+ $2.\ \ t_s \xleftarrow{\$} \mathbb{Z}_q$ \\
+ $3.\ \ T_s = g^{t_s}$ \\
+ $4.\ \ \sigma_s = \SIG.\Sign(sk_s,T_s \| \SCID)$ \\
+ $5.\ \ m_1 = (T_s,\sigma_s,\SCID,cert_s)$ \\
+ $$\\ \vspace{6pt}
+ $$\\
+ $1.\ \ \peer = \SCID$ \\
+ $2.\ \ pms=T_c^{t_s}$ \\
+ $3.\ \ ms=\PRF(pms, \NONC)$ \\
+ $4.\ \ trans = T_s \| T_c \| \SCID \| \NONC$ \\
+ $5.\ \ k=\PRF(ms, trans)$ \\
+ $6.\ \ \Lambda=\preaccept$ \\
+ $7.\ \ (pk_c, \sigma_c) = \SE.\Dec(k,c_c,H,st_d)$ \\
+ $8.\ \ \text{If } \SIG.\Vfy(pk_c, \sigma_c, trans) = \perp$ \\
+ $9.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+ $10.\  t_s^{\ast} \xleftarrow{\$} \mathbb{Z}_q $ \\
+ $11.\  T_s^{\ast} = g^{t_s^{\ast}} $ \\
+ $12.\  c_s = \SE.\Enc(k, len, H, T_s^{\ast}, st_e)$ \\
+ $13.\  m_3 = (c_s)$ \\
+ $14.\  pms^{\ast} = T_c^{t_s^{\ast}}$ \\
+ $15.\  ms^{\ast} = \PRF(pms^{\ast}, \NONC)$ \\
+ $16.\  trans^{\ast} = T_s^{\ast} \| T_c \| \SCID \| \NONC$ \\
+ $17.\  k=\PRF(ms^{\ast}, trans^{\ast})$ \\
+ $18.\  \Lambda=\accept$ \\
+ $19.\  \theta(\SCID) \leftarrow (T_s^{\ast}, t_s^{\ast})$ \\
+\end{tabular}
+\end{minipage}%
+} \vspace{10pt}
+
+Resumption between a client and a server \vspace{10pt}\\
+
+\fbox{
+\begin{minipage}[t]{0.35\textwidth}
+\begin{tabular}[t]{l}
+ $1.\ \ (T_s^{\ast}, \SCID, pk_c, sk_c) \leftarrow \theta$ \\
+ $2.\ \ t_c^{\prime} \xleftarrow{\$} \mathbb{Z}_q$ \\
+ $3.\ \ T_c^{\prime}=g^{t_c^{\prime}}$ \\
+ $4.\ \ pms^{\prime} = T_s^{\ast t_c^{\prime}}$ \\
+ $5.\ \ \NONC^{\prime} \leftarrow \$$ \\
+ $6.\ \ ms^{\prime} = \PRF(pms^{\prime}, \NONC^{\prime})$ \\
+ $7.\ \ trans^{\prime} = T_s^{\ast} \| T_c^{\prime} \| \SCID \| \NONC^{\prime}$ \\
+ $8.\ \ k=\PRF(ms^{\prime}, trans^{\prime})$ \\
+ $9.\ \ \Lambda=\preaccept$ \\
+ $10.\  \sigma_c^{\prime} = \SIG.\Sign(sk_c, trans^{\prime})$ \\
+ $11.\  c_c = \SE.\Enc(k, len, H, pk_c \| \sigma_c^{\prime}, st_e)$ \\
+ $12.\  m_1^{\prime} = (T_c^{\prime},\SCID,\NONC^{\prime},c_c)$ \\
+ $$\\
+ $1.\ \ \text{If } \SE.\Dec(k,c_s,H,st_d) = \perp$ \\
+ $2.\ \ \quad \Lambda=\text{'reject' and abort}$ \\
+ $3.\ \ T_s^{\ast} = \SE.\Dec(k,c_s,H,st_d)$ \\
+ $4.\ \ pms^{\ast} = T_s^{\ast t_c^{\prime}}$ \\
+ $5.\ \ ms^{\ast} = \PRF(pms^{\ast}, \NONC^{\prime})$ \\
+ $6.\ \ trans^{\ast} = T_s^{\ast} \| T_c^{\prime} \| \SCID \| \NONC^{\prime}$ \\
+ $7.\ \ k=\PRF(ms^{\ast}, trans^{\ast})$ \\
+ $8.\ \ \Lambda=\accept$ \\
+ $9.\ \ \theta \leftarrow (T_s^{\ast}, \SCID, pk_c, sk_c)$ \\
+\end{tabular}
+\end{minipage}%
+}
+\begin{minipage}[t]{0.13\textwidth}
+\begin{tabular}[t]{l}
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $\xrightarrow{\hspace{5pt}\text{CHLO}(m_1^{\prime})\hspace{5pt}}$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $$\\
+ $\xleftarrow{\hspace{5pt}\text{SHLO}(m_2^{\prime})\hspace{5pt}}$\\
+\end{tabular}
+\end{minipage}%
+\fbox{
+\begin{minipage}[t]{0.35\textwidth}
+\begin{tabular}[t]{l}
+ $$\vspace{4pt}\\
+ $$\\
+ $1.\ \ (T_s^{\ast}, t_s^{\ast}) \leftarrow \theta(\SCID)$ \\
+ $2.\ \ pms^{\prime}=T_c^{\prime t_s^{\ast}}$ \\
+ $3.\ \ ms^{\prime}=\PRF(pms^{\prime}, \NONC^{\prime})$ \\
+ $4.\ \ trans^{\prime}= T_s^{\ast} \| T_c^{\prime} \| \SCID \| \NONC^{\prime}$ \\
+ $5.\ \ k=\PRF(ms^{\prime}, trans^{\prime})$ \\
+ $6.\  \Lambda=\preaccept$ \\
+ $7.\ \ (pk_c, \sigma_c^{\prime}) = \SE.\Dec(k,c_c,H,st_d)$ \\
+ $8.\ \ \text{If } \SIG.\Vfy(pk_c, \sigma_c^{\prime}, trans^{\prime}) = \perp$ \\
+ $9.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+ $10.\  t_s^{\ast} \xleftarrow{\$} \mathbb{Z}_q $ \\
+ $11.\  T_s^{\ast} = g^{t_s^{\ast}} $ \\
+ $12.\  c_s = \SE.\Enc(k, len, H, T_s^{\ast}, st_e)$ \\
+ $13.\  m_2^{\prime} = (c_s)$ \\
+ $14.\  pms^{\ast} = T_c^{\prime t_s^{\ast}}$ \\
+ $15.\  ms^{\ast} = \PRF(pms^{\ast}, \NONC^{\prime})$ \\
+ $16.\  trans^{\ast} = T_s^{\ast} \| T_c^{\prime} \| \SCID \| \NONC^{\prime}$ \\
+ $17.\  k=\PRF(ms^{\ast}, trans^{\ast})$ \\
+ $18.\  \Lambda=\accept$ \\
+ $19.\  \theta(\SCID) \leftarrow (T_s^{\ast}, t_s^{\ast})$ \\
+ $$\\
+\end{tabular}
+\end{minipage}
+}
+
+\caption{Abstract model of the QUIC handshake protocol with CETV}\label{fig:quic_cetv}
+\end{center}
+\end{figure*}

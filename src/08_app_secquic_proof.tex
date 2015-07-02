@@ -1,0 +1,99 @@
+%=====================================================
+\section{Proof of QUIC} \label{app:secquic}
+%=====================================================
+
+In this section, we show the proof of Theorem~\ref{theorem:quic}, Theorem~\ref{theorem:quic_cetv} and Theorem~\ref{theorem:quic_tls}.
+
+%--------------------------------------------------------
+\subsection{Security of QUIC} \label{app:quic}
+%--------------------------------------------------------
+
+We prove Theorem~\ref{theorem:quic} by proving two lemmas.
+
+\begin{lemma} \label{lemma:quic_rsacce-sa}
+ $\Adv^{\rsaccesa}_{P}(A)$ is at most
+ \begin{equation}
+  \Adv^{\rsaccesa}_{P}(A) \leq \frac{n_s}{2^{\lambda}} + n_c(m_s \epsilon_{\sig} + n_s(\epsilon_{\prfodh} + \epsilon_{\prf} + \epsilon_{\sLHAE}))
+ \end{equation}
+\end{lemma}
+%
+\input{08_z1_app_secquic_proof_0quic_sa}
+
+\begin{lemma} \label{lemma:quic_rsacce-cc}
+ $\Adv^{\rsaccecc}_{P}(A)$ is at most
+ \begin{equation}
+  \Adv^{\rsaccecc}_{P}(A) \leq \Adv^{\rsaccesa}_{P}(A) + n_sn_c\ell(\epsilon_{\ddh} + 2\epsilon_{\prf} + 2\epsilon_{\sLHAE})
+ \end{equation}
+\end{lemma}
+%
+\input{08_z2_app_secquic_proof_0quic_cc}
+
+
+%--------------------------------------------------------
+\subsection{Security of QUIC with CETV} \label{app:quic_cetv}
+%--------------------------------------------------------
+
+We prove Theorem~\ref{theorem:quic_cetv} by proving three lemmas.
+\begin{lemma} \label{lemma:quic_cetv_rsacce-sa}
+ $\Adv^{\rsaccesa}_{P}(A)$ is at most
+ \begin{equation}
+  \Adv^{\rsaccesa}_{P}(A) \leq \frac{n_s}{2^{\lambda}} + n_c(m_s \epsilon_{\sig} + n_s(\epsilon_{\prfodh} + \epsilon_{\prf} + \epsilon_{\sLHAE}))
+ \end{equation}
+\end{lemma}
+%
+\input{08_z3_app_secquic_proof_1quic_sa}
+
+\begin{lemma} \label{lemma:quic_rsacce-cc}
+ $\Adv^{\rsaccecc}_{P}(A)$ is at most
+ \begin{equation}
+  \Adv^{\rsaccecc}_{P}(A) \leq \Adv^{\rsaccesa}_{P}(A) + n_sn_c\ell(\epsilon_{\ddh} + 2\epsilon_{\prf} + 2\epsilon_{\sLHAE})
+ \end{equation}
+\end{lemma}
+%
+\input{08_z4_app_secquic_proof_1quic_cc}
+
+\begin{lemma} \label{lemma:quic_cetv_rsacce-cb}
+ $\Adv^{\rsaccecb}_{P}(A)$ is at most
+ \begin{eqnarray}
+  \Adv^{\rsaccecb}_{P}(A) &\leq& \epsilon_{client} + \epsilon_{server} \nonumber \\
+  &\leq& Adv^{\rsaccesa}_{P}(A) + n_c\ell(\epsilon_{\ddh} + 2\epsilon_{\prf} + \epsilon_{\sLHAE}) \nonumber \\
+   &+& \frac{n_s}{2^{\lambda}} + n_s(m_s\epsilon_{\sig} + \ell\epsilon_{\ddh} + 2\ell\epsilon_{\prf} + \ell\epsilon_{\sLHAE})
+ \end{eqnarray}
+\end{lemma}
+%
+\input{08_z5_app_secquic_proof_1quic_cb}
+
+%--------------------------------------------------------
+\subsection{Security of modified QUIC} \label{app:quic_tls}
+%--------------------------------------------------------
+
+We prove Theorem~\ref{theorem:quic_tls} by proving two lemmas.
+
+\begin{lemma} \label{lemma:quic_tls_rsacce-sa}
+ $\Adv^{\rsaccesa}_{P}(A)$ is at most
+ \begin{equation}
+  \Adv^{\rsaccesa}_{P}(A) \leq \frac{n_s n_c}{2^{\lambda}} m_s \epsilon_{\sig}
+ \end{equation}
+\end{lemma}
+%
+\input{08_z6_app_secquic_proof_2quic_sa}
+
+\begin{lemma} \label{lemma:quic_rsacce-cc}
+ $\Adv^{\rsaccecc}_{P}(A)$ is at most
+ \begin{equation}
+  \Adv^{\rsaccecc}_{P}(A) \leq \Adv^{\rsaccesa}_{P}(A) + n_sn_c\ell(\epsilon_{\ddh} + 2\epsilon_{\prf} + 2\epsilon_{\sLHAE})
+ \end{equation}
+\end{lemma}
+%
+\input{08_z7_app_secquic_proof_2quic_cc}
+
+\begin{lemma} \label{lemma:quic_tls_rsacce-cb}
+ $\Adv^{\rsaccecb}_{P}(A)$ is at most
+ \begin{eqnarray}
+  \Adv^{\rsaccecb}_{P}(A) &\leq& \epsilon_{client} + \epsilon_{server} \nonumber \\
+  &\leq& Adv^{\rsaccesa}_{P}(A) + n_c(\epsilon_{\ddh} + 2(\ell + 1)\epsilon_{\prf} + \ell\epsilon_{H} + \frac{\ell}{2^{\mu}}) \nonumber \\
+   &+& \frac{n_s}{2^{\lambda}} + n_s(\epsilon_{\ddh} + 2(\ell+1)\epsilon_{\prf} + \frac{\ell}{2^{\mu}})
+ \end{eqnarray}
+\end{lemma}
+%
+\input{08_z8_app_secquic_proof_2quic_cb}
