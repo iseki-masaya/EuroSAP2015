@@ -41,6 +41,8 @@
     $T_s^{\prime} = \receiveSHLO(m_2, \ik)$ \\
     $\shareInfo = (\NONC, \cid, T_s^{\prime}, t_c)$ \\
     $m = m_1 \| m_2$ \\
+    $\peer = S$ \\
+    $\Lambda = \accept$ \\
     $k = \getKey_c(\shareInfo, m, 0)$ \\
    \end{tabular}
   \end{minipage}%
@@ -68,6 +70,8 @@
     $m_2 = ret \| \SCFG_{pub} $ \\
     $\shareInfo = (\NONC, \cid, T_c, t_s^{\prime}) $ \\
     $m = m_1 \| m_2$ \\
+    $\peer = C$ \\
+    $\Lambda = \accept$ \\
     $k=\getKey_s(\shareInfo, m, 0)$ \\
    \end{tabular}
   \end{minipage}%

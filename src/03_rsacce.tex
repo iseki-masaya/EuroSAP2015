@@ -48,24 +48,21 @@ We denoted by $P_p$ a party with identity number $p$.
 In particular, $\Server_s$ has a unique key pair $(pk_s, sk_s)$, along with a certificate $cert_s=(s,pk_s)_{\text{CA}}$
 signed by a certificate authority CA.
 A party $P_p$ maintains a collection of oracles $\{\pi^p_{i,\ell }\}_{i,\ell}$
-where oracle $\pi^p_{i, \ell}$ models party $P_p$ executing a single instance of a protocol in the $\ell$-th resumption
+where oracle $\pi^p_{i, \ell}$ models party $P_p$ executing a single instance of a protocol in the $\ell$-th abbreviate handshake session
 derived from  the $i$-th full handshake session.
 When $\ell=0$, $\pi^p_{i,\ell}$ refers to the $i$-th full handshake session of $P_p$.
 The oracle $\pi^p_{i, \ell}$ maintains as internal state the following variables:
 
 \begin{itemize}
  \item{$\Lambda \in \{\accept, \preaccept, \reject, \emptyset\}$, the state of a handshake.}
-  \item{$k \in \mathcal{K}$, the session key where $\mathcal{K}$ is the key space of the protocol.}
-  \item{$\theta$, cache data used later for resumptions.}
-
-  \item{$\peer$, the intended partner. If $P_p$ is $\Client_c$, then $\pi^c_{i,\ell}$ maintains the identity of intended partener $\peer \in \Server$. Otherwise (if $P_p$ is $\Server_s$),
-  it maintains $\peer:=SCID$ where $SCID$ is a random string chosen by $\pi^s_{i,\ell}$.}
-  \item{$b$, the challenge bit chosen uniformly.}
+ \item{$ik, k \in \mathcal{K}$, the session key where $\mathcal{K}$ is the key space of the protocol. $ik$ is a initial key and $k$ is a forward secure key.}
+ \item{$\peer$, the intended partner. If $P_p$ is $\Client_c$, then $\pi^c_{i,\ell}$ maintains the identity of intended partener $\peer \in \Server$. Otherwise (if $P_p$ is $\Server_s$), it maintains $\peer:=SCID$ where $SCID$ is a random string chosen by $\pi^s_{i,\ell}$.}
+ \item{$b$, the challenge bit chosen uniformly.}
 
 % \item{$(b, C, u, v)$ are the variable to reply the adversary query. The detail about the adversary query is at (Sec.~\ref{sec:exec_env_adv}). $b \in \{0,1\}$ is a bit. $C$ is the array of ciphertexts. $u$ is the counter of Encrypt query, $v$ is the counter of Decrypt query.}
 \end{itemize}
 The inner state of each oracle is initialized to
- ( $\Lambda$ , k , $\theta$ , $\peer$) = ( $\emptyset$, $\emptyset$, $\emptyset$, $\emptyset$) ,
+ ( $\Lambda$ , ik, k, $\peer$) = ( $\emptyset$, $\emptyset$, $\emptyset$, $\emptyset$) ,
 where variable $V=\emptyset$ denotes that variable $V$ is undefined.
 On one hand, and
 $b$ is chosen uniformly and fixed.
