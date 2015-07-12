@@ -7,7 +7,7 @@
 % Encにはk_mac,T_s*のみを入れる。改ざんされてもikが不一致になるので、Client側では改ざんを検出できる
 % SCRA、CIDMA、SATMAはkを共有するためのクエリをサーバは待たなければならないが、提案法はそれをまたなくて良い。
 
-% \subsection{Handshake operations}
+\subsubsection{Handshake operations}
 \noindent
 \underline{$\scfgGen(sk_s)$:} \\
  $1.\ \ t_s \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
@@ -94,58 +94,58 @@
  $6.\ \ \quad r \in \strike$, or $time_{\NONC} \not\in \strike_{rng}$ \\
  $7.\ \ \quad \quad \Lambda = \text{'reject' and abort}$ \\
 \\
-% \subsection{Key operations}
-% \noindent
-% \underline{$\getKey_c(\shareInfo, m, \init)$:} \\
-%  $1.\ \ (\NONC, \cid ,T_s, t_c) = \shareInfo$ \\
-%  $2.\ \ pms = T_s^{t_c}$ \\
-%  $3.\ \ \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
-% \\
-% \underline{$\getKey_s(\shareInfo, m, \init)$:} \\
-%  $1.\ \ (\NONC, \cid ,T_c, t_s) = \shareInfo$ \\
-%  $2.\ \ pms = T_c^{t_s}$ \\
-%  $3.\ \ \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
-% \\
-% \underline{$\extractKey(pms, \NONC, \cid, m, \ell, \init)$:}\\
-%  $1.\ \ ms = \PRF(pms, \NONC)$ \\
-%  $2.\ \ \text{If } \init = 1$ \\
-%  $3.\ \ \quad str = \text{ QUIC key expansion }$ \\
-%  $4.\ \ \text{Else }$ \\
-%  $5.\ \ \quad str = \text{ QUIC forward secure expansion }$ \\
-%  $6.\ \ \info = str \| 0x00 \| \cid \| m \| \SCFG_{pub}$ \\
-%  $7.\ \ \return\ \text{the first $\ell$ octets (i.e. bytes) of T = }$ \\
-%  $\quad \quad \text{(T(1),T(2), ...), where for all $i \in \Nset$, $T(i) = $} $\\
-%  $\quad \quad \text{$\PRF(ms, T(i-1) \| \info \| 0x0i)$ and $T(0) = \epsilon$} $\\
-% \\
-% \subsection{Packet operations}
-% \noindent
-% \underline{$\getIV(H, \kappa, P)$:} \\
-%  $1.\ \ (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
-%  $2.\ \ \text{If } P \in \Client$ \\
-%  $3.\ \ \quad src = c, dst = s$ \\
-%  $4.\ \ \text{Else if} P \in \Server$ \\
-%  $5.\ \ \quad src = s, dst = c$ \\
-%  $6.\ \ (\cid, \sqn) = H$ \\
-%  $7.\ \ \return\ (\iv_{dst}, \sqn)$ \\
-% \\
-% \underline{$\pak(\kappa, \sqn, m)$:} \\
-%  $1.\ \ (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
-%  $2.\ \ \text{If } P \in \Client$ \\
-%  $3.\ \ \quad src = c, dst = s$ \\
-%  $4.\ \ \text{Else if } P \in \Server$ \\
-%  $5.\ \ \quad src = s, dst = c$ \\
-%  $6.\ \ \pInfo = (IP_{src}, IP_{dst}, port_{src}, port_{dst})$ \\
-%  $7.\ \ H = (\cid, \sqn)$ \\
-%  $8.\ \ \iv = \getIV(H, \kappa)$ \\
-%  $9.\ \ \return\ (\pInfo, \SE.\Enc(k_{dst}, \iv, H, m) )$ \\
-% \\
-% \underline{$\processPacket(\kappa, p_1,...,p_v)$:} \\
-%  $1.\ \ (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
-%  $2.\ \ \text{If } P \in \Client$ \\
-%  $3.\ \ \quad src = c, dst = s$ \\
-%  $4.\ \ \text{Else if} P \in \Server$ \\
-%  $5.\ \ \quad src = s, dst = c$ \\
-%  $6.\ \ \text{for each } \gamma \in [v]$ \\
-%  $7.\ \ \quad (H_{\gamma}, c_{\gamma}) = p_{\gamma}$ \\
-%  $8.\ \ \quad \iv_{\gamma} = \getIV(H_{\gamma}, \kappa)$ \\
-%  $9.\ \ \quad m_{\gamma} = \SE.\Dec(k_{src}, \iv_{\gamma}, H_{\gamma}, c_{\gamma})$ \\
+\subsubsection{Key operations}
+\noindent
+\underline{$\getKey_c(\shareInfo, m, \init)$:} \\
+ $1.\ \ (\NONC, \cid ,T_s, t_c) = \shareInfo$ \\
+ $2.\ \ pms = T_s^{t_c}$ \\
+ $3.\ \ \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
+\\
+\underline{$\getKey_s(\shareInfo, m, \init)$:} \\
+ $1.\ \ (\NONC, \cid ,T_c, t_s) = \shareInfo$ \\
+ $2.\ \ pms = T_c^{t_s}$ \\
+ $3.\ \ \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
+\\
+\underline{$\extractKey(pms, \NONC, \cid, m, \ell, \init)$:}\\
+ $1.\ \ ms = \PRF(pms, \NONC)$ \\
+ $2.\ \ \text{If } \init = 1$ \\
+ $3.\ \ \quad str = \text{ QUIC key expansion }$ \\
+ $4.\ \ \text{Else }$ \\
+ $5.\ \ \quad str = \text{ QUIC forward secure expansion }$ \\
+ $6.\ \ \info = str \| 0x00 \| \cid \| m \| \SCFG_{pub}$ \\
+ $7.\ \ \return\ \text{the first $\ell$ octets (i.e. bytes) of T = }$ \\
+ $\quad \quad \text{(T(1),T(2), ...), where for all $i \in \Nset$, $T(i) = $} $\\
+ $\quad \quad \text{$\PRF(ms, T(i-1) \| \info \| 0x0i)$ and $T(0) = \epsilon$} $\\
+\\
+\subsubsection{Packet operations}
+\noindent
+\underline{$\getIV(H, \kappa, P)$:} \\
+ $1.\ \ (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
+ $2.\ \ \text{If } P \in \Client$ \\
+ $3.\ \ \quad src = c, dst = s$ \\
+ $4.\ \ \text{Else if} P \in \Server$ \\
+ $5.\ \ \quad src = s, dst = c$ \\
+ $6.\ \ (\cid, \sqn) = H$ \\
+ $7.\ \ \return\ (\iv_{dst}, \sqn)$ \\
+\\
+\underline{$\pak(\kappa, \sqn, m)$:} \\
+ $1.\ \ (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
+ $2.\ \ \text{If } P \in \Client$ \\
+ $3.\ \ \quad src = c, dst = s$ \\
+ $4.\ \ \text{Else if } P \in \Server$ \\
+ $5.\ \ \quad src = s, dst = c$ \\
+ $6.\ \ \pInfo = (IP_{src}, IP_{dst}, port_{src}, port_{dst})$ \\
+ $7.\ \ H = (\cid, \sqn)$ \\
+ $8.\ \ \iv = \getIV(H, \kappa)$ \\
+ $9.\ \ \return\ (\pInfo, \SE.\Enc(k_{dst}, \iv, H, m) )$ \\
+\\
+\underline{$\processPacket(\kappa, p_1,...,p_v)$:} \\
+ $1.\ \ (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
+ $2.\ \ \text{If } P \in \Client$ \\
+ $3.\ \ \quad src = c, dst = s$ \\
+ $4.\ \ \text{Else if} P \in \Server$ \\
+ $5.\ \ \quad src = s, dst = c$ \\
+ $6.\ \ \text{for each } \gamma \in [v]$ \\
+ $7.\ \ \quad (H_{\gamma}, c_{\gamma}) = p_{\gamma}$ \\
+ $8.\ \ \quad \iv_{\gamma} = \getIV(H_{\gamma}, \kappa)$ \\
+ $9.\ \ \quad m_{\gamma} = \SE.\Dec(k_{src}, \iv_{\gamma}, H_{\gamma}, c_{\gamma})$ \\

@@ -4,5 +4,205 @@
 We let ${\negl}(\spar)$ to denote an unspecified function $f(\spar)$ such that
 $f(\spar) ={\spar}^{-\omega(1)}$, saying that such a function is negligible in $\spar$.
 We use the standard notations of digital signature, collision-resistant hash functions, and pseudo random functions.
-We also use a stateful symmetric encryption as well as a few known assumptions.
-For completeness, we provide their notions given in Appendix~\ref{app:def}.
+We also use a symmetric encryption as well as a few known assumptions.
+
+%--------------------------------------------------------
+\subsection{Digital Signature Schemes} \label{sec:signature}
+%--------------------------------------------------------
+A digital signature scheme consists of the following three algorithms $\SIG = (\Gen,\Sign,\Vfy)$, where
+\begin{itemize}
+ \item{$\Gen(1^{\spar})$ takes as input a security parameter $\kappa$ and generates a key pair $(pk, sk)$ where $pk$ is a verification key and $sk$ is secret key.}
+ \item{$\Sign(sk, m)$ takes as input a message $m$ and $sk$ and outputs a signature $\sigma$.}
+ \item{$\Vfy(pk,\sigma,m)$ takes as input $pk$, $\sigma$ and $m$ and outputs 1 if $\sigma$ is valid and 0 otherwise.}
+\end{itemize}
+\begin{definition}[EUF-CMA]
+  We say that $\SIG$ is $(t, \epsilon_{\sig})$-secure againt \textit{existentially  unforgeable under adaptive chosen-message attacks},
+% where $t\sets t(\spar)$ and $\epsilon_{\sig}\sets\epsilon_{\sig}(\spar)$,
+if for all PPT adversaries $A$ that run in time $t$, the experiment $\Expt^{\sf EUF}_{A}$
+in Fig.~\ref{fig:EUF-CMA} returns $1$ with at most probability $\epsilon_{\sf sig}$.
+
+\begin{figure*}[!htb]
+\begin{center}
+\fbox{
+\begin{minipage}[t]{0.38\textwidth}
+\begin{tabular}[t]{l}
+ $\Expt^{\sf EUF}_{A}\ \equiv$ \\
+ $\quad (pk,sk) \leftarrow \SIG.\Gen(1^k)$ \\
+ $\quad m^{\prime}, \sigma \leftarrow A^{\sf SIGN}(pk)$ \\
+ \quad returns $1$ iff \\
+ $(\quad m^{\prime} \not\in M) \, \wedge \, (\SIG.\Vfy(pk, m^{\prime}, \sigma) = 1)$ \\
+\end{tabular}
+\end{minipage}
+\vline \quad
+\begin{minipage}[t]{0.35\textwidth}
+\begin{tabular}[t]{l}
+ ${\sf Oracle\ SIGN(m)\ }\equiv$ \\
+ $\quad M = M \cup m$ \\
+ $\quad \text{returns }\SIG.\Sign(sk, m)$ \\
+\end{tabular}
+\end{minipage}
+}
+\caption{EUF-CMA security experiment}\label{fig:EUF-CMA}
+\end{center}
+\end{figure*}
+
+\end{definition}
+
+%--------------------------------------------------------
+\subsection{Collision-Resistant Hash Functions} \label{sec:CRH}
+%-------------------------------------------------------
+Let $\HashH\sets \{H\}$ be a hash function family from $\bits^*$ to $\bits^{\spar}$.
+We say that a hash-function family $\HashH$ is $(t,\epsilon_{H})$-collision-resistant
+(CR) if,
+for all adversaries $A$ that run in time $t$, it holds that
+\begin{equation}
+ \Pr[H \gets {\HashH}; \, (x,y) \gets A(H): \, x \neq y \, \wedge \,
+H(x) = H(y)] \leq \epsilon_{H}.
+\end{equation}
+
+%--------------------------------------------------------
+\subsection{Pseudo-Random Functions} \label{sec:prf}
+%--------------------------------------------------------
+%We basically follow the notation of~\cite{NR04}.
+Let $\{X_n,Y_n\}_{n \in \N}$ be a sequence of domains and let
+$\PRF = \{F_{s}\}_{s \in \Index}$ be a family of functions
+from $X_n$ to $Y_n$, indexed by
+$s \in \Index_{n}$ $(= \Index \cap \{0,1\}^{n})$, i.e.,
+$F_{s} : X_n \to Y_n$,
+where for every $n$ and $s \in \Index_n$,
+$\Index_n$ is efficiently samplable and  $F_s$ is efficiently computable.
+We say that $\PRF$ is $(t,\epsilon_{\prf})$-pseudo-random function (PRF) familiy if
+for all adversaries $A$ that run in time $t\sets t(n)$,
+\begin{eqnarray}
+|\Pr[s \gets {\Index}_{n}: \, A^{F_s(\cdot)}(1^n)=1] \, - \, \nonumber \\
+\Pr[s \gets {\Index}_{n}: \, A^{R_n}(1^n)=1] |
+\leq \epsilon_{\prf}(n),
+\end{eqnarray}
+where $R=\{R_n\}_{n\in \N}$ is the corresponding uniform function ensemble
+(i.e., $\forall n$, $R_n$ is uniformly distributed over the set of the functions
+from $X_n$ to $Y_n$).
+
+%--------------------------------------------------------
+\subsection{DDH and PRF-ODH Assumptions} \label{sec:assumption}
+%--------------------------------------------------------
+
+%--------------------------------------------------------
+%\subsection{The Decisional Diffie-Hellman Assumption} \label{sec:DDH Assumption}
+%--------------------------------------------------------
+Let $g$ be a generator of a finite cyclic group $G$ of prime order $q$, i.e.,
+$g \in G^{\times}(\sets G\backslash \{1\})$.
+%(where $|p|$ is the security parameter $\kappa$).
+
+\begin{definition}[Decisional Diffie-Hellman Assumption]
+ We say that the DDH problem is $(t,\epsilon_{\ddh})$-hard in $G$,
+if for all PPT adversaries $A$ that runs time in $t$,
+ it holds that
+ \begin{equation}
+  |\Pr[A(p,g,g^a,g^b,g^{ab}) = 1] - \Pr[A(p,g,g^a,g^b,g^c) = 1]| \leq \epsilon_{\ddh}
+ \end{equation}
+ where $g \getsr G^{\times}$ and $a,b,c \getsr \mathbb{Z}_{q}$.
+ We say that the DDH assumption holds in $G$ if for all polynomial (in $\spar$) $t(\spar)$,
+ there exists $\epsilon_{\ddh}(\spar)=\negl(\spar)$
+ such that the DDH problem is
+ $(t,\epsilon_{\ddh})$-hard in $G$.
+
+\end{definition}
+
+%--------------------------------------------------------
+%\subsection{PRF Oracle Diffie-Hellman} \label{sec:PRF-ODH}
+%--------------------------------------------------------
+%Let $G$ be a cyclic group of order $p$ generated by an element $g$.
+Let $f:G \times \bits^n \to \bits^{\mu}$ be a pseudo-random function (PRF) with
+key-space $G$ that maps $\bits^n$ to $\bits^{\mu}$ for some appropriate
+polynomials (in $\spar$) $n(\spar)$ and $\mu(\spar)$.
+
+\begin{definition}[PRF-ODH Assumption]
+ We say that the PRF-ODH problem on $f$ is $(t, \epsilon_{\sf prfodh})$-hard, if for all PPT adversaries $A=(A_1,A_2)$ that run in time $t$,
+ the experiment $\Expt^{\sf PRF-ODH}_{A}$ in Fig.~\ref{fig:PRF-ODH}
+ returns $1$ with probability at most $\epsilon_{\sf prfodh}$.
+ We say that the PRF-ODH assumption on $f$ holds if
+ for all polynomial (in $\spar$) $t(\spar)$,
+ there exists $\epsilon_{\sf prfodh}(\spar)=\negl(\spar)$
+ such that the PRF-ODH problem on $f$ is $(t,\epsilon_{\sf prfodh})$-hard.
+\begin{figure*}[!htb]
+\begin{center}
+\fbox{
+\begin{minipage}[t]{0.4\textwidth}
+\begin{tabular}[t]{l}
+ $\Expt^{\sf PRF-ODH}_{A}\ \equiv$ \\
+ $\quad g \getsd G^{\star};$
+ $\quad (st,\overline{m}) \gets A_1(g);$
+ $\quad \overline{u},v \getsd \mathbb{Z}_q$ \\
+ $\quad z_0 = f_{g^{\overline{u}v}}(m);$
+ $\quad z_1 \xleftarrow{\$} \{0,1\}^{\mu}$ \\
+ $\quad b \xleftarrow{\$} \{0,1\};$
+ $\quad b^{\prime} \leftarrow A_2^{\sf ODH(\cdot,\cdot)}(st,g^{\overline{u}},z_b)$ \\
+ \quad return $b^{\prime}$
+\end{tabular}
+\end{minipage}
+\vline \quad
+\begin{minipage}[t]{0.3\textwidth}
+\begin{tabular}[t]{l}
+ ${\sf Oracle\ ODH(h, m)\ }\equiv$ \\
+ $\quad \text{If } (h, m) = (g^{\overline{u}}, \overline{m}) \vee h \not\in G$ \\
+ $\quad \quad \text{return } \perp$ \\
+ $\quad \text{return }f_{h^v}(m)$ \\
+\end{tabular}
+\end{minipage}
+}
+\caption{PRF-ODH security experiment}\label{fig:PRF-ODH}
+\end{center}
+\end{figure*}
+\end{definition}
+
+%--------------------------------------------------------
+\subsection{Length-Hiding Authenticated Encryption} \label{sec:SE}
+%--------------------------------------------------------
+
+A symmetric encryption scheme consists of three algorithm $SE = (\Init, \Enc, \Dec)$.
+\begin{itemize}
+ \item{$\Enc(k,len,H,m)$ takes as input a secret key $k \in \{1,0\}^{\kappa}$, an output ciphertext length $len \in \mathbb{N}$, some header data $H \in \{0,1\}^{\ast}$, a plaintext $m \in \{0,1\}^{\ast}$. It outputs a ciphertext $c \in \{0,1\}^{len}$.
+ \item{$\Dec(k,H,c)$ takes as input a secret key $k \in \{1,0\}^{\kappa}$, some header data $H \in \{0,1\}^{\ast}$, a ciphertext $c \in \{0,1\}^{len}$}. It outputs a message $m$.}
+\end{itemize}
+
+\begin{definition}
+ We say that a symmetric encryption scheme $\SE = (\Enc,\Dec)$ is $(t, \epsilon_{\LHAE})$-secure, if for all PPT adversaries $A$ that running in time $t$, it holds that
+ \begin{eqnarray}
+  \Pr[b\xleftarrow{\$}\{0,1\}; k\xleftarrow{\$}\{0,1\}^{\kappa}; \nonumber \\
+   b^{\prime} \xleftarrow{\$} A^{\Encrypt, \Decrypt} : b = b^{\prime}] \leq \epsilon_{\LHAE},
+ \end{eqnarray}
+where Encrypt and Decrypt oracles are described in Fig.~\ref{fig:LHAE_Enc_Dec}.
+We say that $\SE$ is secure if
+ for all polynomial (in $\spar$) $t(\spar)$,
+ there exists $\epsilon_{\LHAE}(\spar)=\negl(\spar)$
+ such that $\SE$ is $(t, \epsilon_{\LHAE})$-secure.
+
+\end{definition}
+
+\begin{figure*}[!htb]
+\begin{center}
+\fbox{
+\begin{minipage}[t]{0.42\textwidth}
+\begin{tabular}[t]{l}
+ $\Encrypt(m_0,m_1,len,H)$: \\
+ $\quad C_0 \xleftarrow{\$} \SE.\Enc(k, len, H,m_0)$ \\
+ $\quad C_1 \xleftarrow{\$} \SE.\Enc(k, len, H,m_1)$ \\
+ $\quad \text{If } C_0 = \perp \text{ or } C_1 = \perp$ \\
+ $\quad \quad \text{return } \perp$ \\
+ $\quad \mathcal{C} = \mathcal{C} \cup C_b$ \\
+ $\quad \text{return } C_b$ \\
+\end{tabular}
+\end{minipage}
+\vline \quad
+\begin{minipage}[t]{0.42\textwidth}
+\begin{tabular}[t]{l}
+ $\Decrypt(C,H)$: \\
+ $\quad \text{If } b = 1 \wedge C \not\in \mathcal{C}$ \\
+ $\quad \quad \text{return } \SE.\Dec(k,H,C)$ \\
+ $\quad \text{return } \perp$ \\
+\end{tabular}
+\end{minipage}
+}
+\caption{Encrypt and Decrypt oracle in the LHAE security experiment}\label{fig:LHAE_Enc_Dec}
+\end{center}
+\end{figure*}

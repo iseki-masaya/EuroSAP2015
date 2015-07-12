@@ -1,14 +1,13 @@
 %=====================================================
 \section{``Resumable" Server-only Authenticated and Confidential Channel Establishment (RSACCE)} \label{sec:rsacce}
 %=====================================================
-
+\textcolor{blue}{
 We consider the security of QUIC and its variants.
 Our abstract model to capture the cryptographic core of them is a server-only
 authenticated and confidential channel establishment (SACCE) protocol~\cite{KPW13:SACCE},
 the server-only authentication version of an ACCE protocol~\cite{JKSS12:ACCE}.
 In our SACCE protocol, a client initiates an instance of the protocol and
 a server always sends the last message of the instance.
-
 We then extend the security notion of SACCE~\cite{KPW13:SACCE}
 to the notion of \textit{resumable} SACCE (RSACCE).
 The main difference is that this model treats ``resumption".
@@ -30,6 +29,7 @@ We also consider channel binding in order to make a protocol robust,
 in which a server should accept
 only if a resumed session is started by the initial client
 in the prior established full handshake session.
+}
 
 
 
@@ -152,7 +152,7 @@ We define the security model of resumable server-only authenticated confidential
 (RSACCE).
 
 
-\subsubsection{Matching Conversations.}
+\subsubsection{Matching Conversations}
 In our SACCE protocol, a client always initiates an instance of the protocol and
 a server always sends the last message of the instance.
 We define matching conversations as in~\cite{JKSS12:ACCE}.
@@ -180,7 +180,7 @@ by $\pi^{p^{\prime}}_{j,\ell'}$.
  and cannot know whether a client indeed receives it.
 \end{remark}
 
-\subsubsection{RSACCE Game.}
+\subsubsection{RSACCE Game}
 We define the RSACCE game between an adversary $A$ and a challenger.
 In this game, the challenger firstly instantiates the collection of oracles
 $\{\pi^p_{i,\ell}\}$.
@@ -204,7 +204,7 @@ Finally, the adversary outputs $(p, i, \ell, b^{\prime})$ and terminates.
  \end{itemize}
 \end{definition}
 
-\subsubsection{Security Requirements.}
+\subsubsection{Security Requirements}
 We now define the following advantage measures.
 
 \begin{definition}[Server Authentication] \label{def:rsacce-sa}
