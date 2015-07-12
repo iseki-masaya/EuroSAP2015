@@ -88,11 +88,8 @@ The adversary issues the following queries to the oracles:
     from $\pi^p_{i, \ell-1}$ (modeling an abbreviate handshake session).
     The adversary can send this returned message to any oracle even if this oracle is not intended partner of the oracle $\pi^p_{i, \ell}$.}
 
- \item {$\Reveal_{k}(\pi^p_{i,\ell})$ :
-    The oracle $\pi^p_{i,\ell}$ returns key $k$ to respond this query. }
-
- \item {$\Reveal_{ik}(\pi^p_{i,\ell})$ :
-    The oracle $\pi^p_{i,\ell}$ returns key $ik$ to respond this query. }
+ \item {$\Reveal(\pi^p_{i,\ell})$ :
+    The oracle $\pi^p_{i,\ell}$ returns key $ik$, $k$ and static Diffie-Hellman secret value to respond this query. }
 
  \item {$\Corrupt(P_p)$:
     If $P_p$ is $\Client_c$, then returns $\bot$. Otherwise, $P_p$ is $\Server_s$ and returns
@@ -190,11 +187,12 @@ Finally, the adversary outputs $(p, i, \ell, b^{\prime})$ and terminates.
  Assume a ``benign" adversary $A$, which picks two arbitrary oracles, $\pi^c_{i, \ell}$ and $\pi^s_{j, \ell^{\prime}}$,
  and performs a sequence of $\Send$-queries by faithfully forwarding all messages
  between $\pi^c_{i, \ell}$ and $\pi^s_{j, \ell^{\prime}}$.
- Let $k^c_{i, \ell}$ denote the key computed by $\pi^c_{i, \ell}$
- and let $k^s_{j, \ell^{\prime}}$ denote the key computed by $\pi^s_{j, \ell^{\prime}}$.
+ Let $ik^c_{i, \ell}$ and $k^c_{i, \ell}$ denote the key computed by $\pi^c_{i, \ell}$
+ and let $ik^s_{j, \ell^{\prime}}$ $k^s_{j, \ell^{\prime}}$ denote the key computed by $\pi^s_{j, \ell^{\prime}}$.
  We say that RSACCE protocol is \textit{correct}, if two arbitrary server and client oracles, $\pi^c_{i, \ell}$ and $\pi^s_{j, \ell^{\prime}}$, always hold that:
  \begin{itemize}
   \item{Both oracles, $\pi^c_{i, \ell}$ and $\pi^s_{j, \ell^{\prime}}$, have \textit{a matching conversation} with each other; and}
+  \item{Both initial keys, $ik^c_{i, \ell}$ and $ik^s_{j, \ell^{\prime}}$, are the same ($ik^c_{i, \ell} = ik^s_{j, \ell^{\prime}}$).}
   \item{Both session keys, $k^c_{i, \ell}$ and $k^s_{j, \ell^{\prime}}$, are the same ($k^c_{i, \ell} = k^s_{j, \ell^{\prime}}$).}
  \end{itemize}
 \end{definition}
@@ -207,7 +205,11 @@ We now define the following advantage measures.
  a client oracle $\pi^c_{i, \ell}$ such that the following conditions hold:
  \begin{itemize}
   \item{$\pi^c_{i, \ell}$ accepts when $A$ issues its $\tau_0$-th query with intended partner $\peer=s$, }
+
   \item{$\Server_s$ is $\tau_{s}$-corrupted with $\tau_0 < \tau_{s}$ and}
+
+  \item{For all $0\leq k \leq \ell$, the adversary does not issue a $\Reveal$ query to $\pi^s_{j, k}$ such that $\pi^s_{j, k}$ has a matching conversation with $\pi^c_{i, \ell}$.}
+
   \item{There is no server oracle $\pi^s_{j, \ell}$ such that $\pi^c_{i,\ell}$ has a matching conversation
   with $\pi^s_{j,\ell}$ or there exist plural oracles that have a matching conversation with $\pi^c_{i,\ell}$.}
  \end{itemize}
@@ -234,13 +236,13 @@ We now define the following advantage measures.
   \item{If $\pi^p_{i,\ell}$ is a client oracle,
   the intended pater $\Server_s$ is $\tau_s$-corrupted with $\tau_0 < \tau_s$. }
 
-  \item{If $P_p$ is a server $\Server_s$, then
-  there is a client $\Client_c$ maintaining oracle $\pi^c_{j,0}$ that has a matching
-  conversation with $\pi^s_{i,0}$.}
-
   \item{For all $0\leq k \leq \ell$, the adversary does not issue a $\Reveal$ query to
   $\pi^p_{i,k}$, nor to $\pi^{p^{\prime}}_{j,k}$ such that $\pi^p_{i,k}$ has a matching conversation
   with $\pi^{p^{\prime}}_{j,k}$.}
+
+  \item{If $P_p$ is a server $\Server_s$, then
+  there is a client $\Client_c$ maintaining oracle $\pi^c_{j,0}$ that has a matching
+  conversation with $\pi^s_{i,0}$.}
 
  \end{itemize}
  We say that protocol $\Pi$ has \textit{channel confidentiality}
