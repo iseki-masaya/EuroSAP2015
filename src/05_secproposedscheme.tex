@@ -1,5 +1,5 @@
 %=====================================================
-\section{Our proposed scheme} \label{sec:quic_tls}
+\section{Our proposed scheme} \label{sec:proposed_scheme}
 %=====================================================
 
 \input{05_z1_proposed_overview}
@@ -9,7 +9,7 @@ As mentioned in Sec.~\ref{sec:quic_cetv}, many steps in CETV is useless to eleva
 The abstract model of our proposed scheme is in Fig.~\ref{fig:quic_detail}.
 % In contrast to original QUIC, the client send Diffie-Hellman public value in first query and cached $rms$ which is derived from master secret in this protocol.
 
-\begin{theorem} \label{theorem:quic_tls}
+\begin{theorem} \label{theorem:proposed_scheme}
  Let $\mu$ be the output length of $\PRF$, let $\lambda$ be the length of $\SCID$, let $\nclient$ be the number of clients, let $\nserver$ be the number of servers, let $\noracle$ be the number of oracles of each parties, and let $n_{\ell}$ be the maximum number of resumptions. Assume that the $\PRF$ is $(t, \epsilon_{\prf})$-pseudo-random function family, the signature shceme $\SIG$ is $(t, \epsilon_{\sig})$-secure against existentially unforgeable under adaptive chosen-message attacks, the DDH problem on $G$ is $(t, \epsilon_{\ddh})$-hard, the PRF-ODH problem on $\PRF$ is $(t, \epsilon_{\prfodh})$-hard, the hash function family $\mathcal{H}$ is $(t,\epsilon_{H})$-collision-resistant (CR), the stateful symmetric encryption scheme $\SE$ is $(t, \epsilon_{\sLHAE})$-secure.
  Then for all PPT adversaries, our proposed scheme is \textbf{strong} RSACCE secure.
 \end{theorem}
@@ -24,3 +24,38 @@ Our proposed scheme can prevent the five attacks in~\cite{LJBN15:QUIC}.
  \item{Source-Address Token Manipulation Attack}
  \item{Crypto Stream Offset Attack}
 \end{itemize}
+
+%--------------------------------------------------------
+\subsection{Security of our proposed scheme} \label{sec:quic_proof}
+%--------------------------------------------------------
+
+We prove Theorem~\ref{theorem:quic_tls} by proving two lemmas.
+
+\begin{lemma} \label{lemma:proposed_scheme_rsacce-sa}
+ $\Adv^{\rsaccesa}_{P}(A)$ is at most
+ \begin{equation}
+  \Adv^{\rsaccesa}_{P}(A) \leq \frac{n_s n_c}{2^{\lambda}} m_s \epsilon_{\sig}
+ \end{equation}
+\end{lemma}
+%
+\input{05_z3_proposed_scheme_sa}
+
+\begin{lemma} \label{lemma:proposed_scheme_rsacce-cc}
+ $\Adv^{\rsaccecc}_{P}(A)$ is at most
+ \begin{equation}
+  \Adv^{\rsaccecc}_{P}(A) \leq \Adv^{\rsaccesa}_{P}(A) + n_sn_c\ell(\epsilon_{\ddh} + 2\epsilon_{\prf} + 2\epsilon_{\sLHAE})
+ \end{equation}
+\end{lemma}
+%
+\input{05_z4_proposed_scheme_cc}
+
+\begin{lemma} \label{lemma:proposed_scheme_tls_rsacce-cb}
+ $\Adv^{\rsaccecb}_{P}(A)$ is at most
+ \begin{eqnarray}
+  \Adv^{\rsaccecb}_{P}(A) &\leq& \epsilon_{client} + \epsilon_{server} \nonumber \\
+  &\leq& Adv^{\rsaccesa}_{P}(A) + n_c(\epsilon_{\ddh} + 2(\ell + 1)\epsilon_{\prf} + \ell\epsilon_{H} + \frac{\ell}{2^{\mu}}) \nonumber \\
+   &+& \frac{n_s}{2^{\lambda}} + n_s(\epsilon_{\ddh} + 2(\ell+1)\epsilon_{\prf} + \frac{\ell}{2^{\mu}})
+ \end{eqnarray}
+\end{lemma}
+%
+\input{05_z5_proposed_scheme_cb}
