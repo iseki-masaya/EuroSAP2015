@@ -77,21 +77,22 @@ The adversary issues the following queries to the oracles:
     The oracle will respond with an outgoing message according
     to the protocol specification and its internal state.
     The oracle $\pi^p_{i, \ell}$ replies with $\bot$, either
-    (a) if $\ell \geq 1$ and $\pi^p_{i, {\ell-1}}$ has state $\Lambda\neq\accept$,
+    (a) if $\ell \geq 1$ and $\pi^p_{i, {\ell-1}}$ has state $\Lambda\not\in {\accept, \preaccept}$,
     or
-    (b) if $\pi^p_{i,\ell}$ has reached state $\Lambda=\accept$.
+    (b) if $\pi^p_{i,\ell}$ has reached state $\Lambda\in{\accept,\preaccept}$.
     Otherwise, it does the following:
     If the adversary asks the first $\Send$-query to oracle $\pi^p_{i, \ell}$,
     then the oracle checks whether $m = \top$ consists of a special ``initiate client session'' symbol $\top$.
     If so, it responds with the first protocol message.
-    If $\ell \geq 1$ and $\pi^p_{i,\ell-1}$ accepts, then $\pi^p_{i,\ell}$ \textit{inherits} variables
-    $(\theta,\peer)$
-    from $\pi^p_{i, \ell-1}$ (modeling a resumption session).
+    If $\ell \geq 1$ and $\pi^p_{i,\ell-1}$ accepts, then $\pi^p_{i,\ell}$ \textit{inherits} $\peer$
+    from $\pi^p_{i, \ell-1}$ (modeling an abbreviate handshake session).
     The adversary can send this returned message to any oracle even if this oracle is not intended partner of the oracle $\pi^p_{i, \ell}$.}
 
- \item {$\Reveal(\pi^p_{i,\ell})$ :
-    The oracle $\pi^p_{i,\ell}$ returns key $k$ and cache data $\theta$
-    to respond this query. }
+ \item {$\Reveal_{k}(\pi^p_{i,\ell})$ :
+    The oracle $\pi^p_{i,\ell}$ returns key $k$ to respond this query. }
+
+ \item {$\Reveal_{ik}(\pi^p_{i,\ell})$ :
+    The oracle $\pi^p_{i,\ell}$ returns key $ik$ to respond this query. }
 
  \item {$\Corrupt(P_p)$:
     If $P_p$ is $\Client_c$, then returns $\bot$. Otherwise, $P_p$ is $\Server_s$ and returns
@@ -137,9 +138,6 @@ The adversary issues the following queries to the oracles:
  \label{fig:LHAE_rsacce}
 \end{center}
 \end{figure*}
-
-
- In this model, $\Reveal$ query exposes not only session key $k$ but also secret cache data $\theta$.
 
 %--------------------------------------------------------
 \subsection{Security Definition} \label{sec:sec_def}
