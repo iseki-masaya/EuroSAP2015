@@ -24,7 +24,8 @@
 \vspace{10pt}\\%
 %
 %
- \textbf{Game 3.} Let $T_{\pindexzero} = g^u$ denote the Diffie-Hellman share chosen by $\pOracleAstFull$, let $T_{\qindexzero} = g^v$ denote the share chosen by its partner $\qOracleAstFull$, and let $k_{\pindexzero}$ is the key computed by $\pOracleAstFull$. Thus, both oracles compute the premaster secret as $pms = g^{uv}$.
+ \textbf{Game 3 + 4$\ell$.} We repeat the game until randomizing the session between $\sOracleAstRes$ and $\cOracleAstRes$. Initially $\ell = 0$. The reason of repeating is that if the adversary can obtain the Diffie-Hellman value $k_{mac}$, then the adversary always can let the server accept and break channel binding.
+ Let $T_{\pindexell} = g^u$ denote the Diffie-Hellman share chosen by $\pOracleAstEll$, let $T_{\qindexell} = g^v$ denote the share chosen by its partner $\qOracleAstEll$, and let $\ik_{\pindexell}$ and $k_{\pindexell}$ are the key computed by $\pOracleAstEll$, let $pms_{\ik}$ and $ms_{\ik}$ denote a premaster secret and master secret for initial key, let $pms_{k}$ and $ms_{k}$ denote a premaster secret and master secret for session key. Thus, both oracles compute the premaster secret as $pms = g^{uv}$.
 
  The challenger in this game proceeds as before, however replaces the premaster secret $pms^{\prime}$ or $pms$ of $\pOracleAstFull$ and $\qOracleAstFull$ with a random group element $\widetilde{pms^{\prime}} = g^w$, $w \xleftarrow{\$} \Zset_p$. Note that both $g^u$ and $g^v$ are chosen by oracles $\pOracleAstFull$ and $\qOracleAstFull$, respectively, as otherwise $\pOracleAstFull$ would not have a matching conversation to $\qOracleAstFull$ and the game would be aborted.
 
@@ -36,9 +37,7 @@
  \end{equation}%
 %
 %
- \textbf{Game 4 + $3\ell$.} We repeat the game until randomizing the session between $\sOracleAstRes$ and $\cOracleAstRes$. Initially $\ell = 0$. The reason of repeating is that if the adversary can obtain the Diffie-Hellman value $T_s^{\ast}$, then the adversary always can let the server accept and break channel binding.
-
- In Game 4 + 3$\ell$ we make use of the fact that the premaster secret $\widetilde{pms^{\prime}}$ of $\cOracleAstEll$ and $\sOracleAstEll$ is chosen uniformly random. We thus replace the value $ms^{\prime} = \PRF(\widetilde{pms^{\prime}}, \NONC)$ with a random value $\widetilde{ms^{\prime}}$.
+ \textbf{Game 4 + $3\ell$.} In Game 4 + 3$\ell$ we make use of the fact that the premaster secret $\widetilde{pms^{\prime}}$ of $\cOracleAstEll$ and $\sOracleAstEll$ is chosen uniformly random. We thus replace the value $ms^{\prime} = \PRF(\widetilde{pms^{\prime}}, \NONC)$ with a random value $\widetilde{ms^{\prime}}$.
 
  Distinguish Game 4 + 3$\ell$ from Game 3 + 3$\ell$ implies an algorithm breaking the security of the pseudo random function $\PRF$, thus
  \begin{equation}

@@ -127,6 +127,7 @@
    \begin{tabular}{c}
     $m_5 = \CHLO(\STK, \SCFG_{pub}, k_{MAC})$ \\
     $\shareInfo = (\NONC, \cid, T_s, t_c^{\ast})$ \\
+    $\Lambda = \preaccept$ \\
     $\ik = \getKey_c(\shareInfo, m_5, 1)$ \\
    \end{tabular}
   \end{minipage}%
@@ -144,6 +145,7 @@
    \begin{tabular}{c}
     $\checkQuery(m_5, k_{\STK}, IP_c)$ \\
     $\shareInfo = (\NONC, \cid, T_c^{\ast}, t_s)$ \\
+    $\Lambda = \preaccept$ \\
     $\ik = \getKey_s(\shareInfo, m_5, 1)$ \\
    \end{tabular}
   \end{minipage}%
@@ -195,6 +197,7 @@
     $T_s^{\prime} = \receiveSHLO(m_8)$ \\
     $\shareInfo = (\NONC, \cid, T_s^{\prime}, t_c^{\ast})$ \\
     $m = m_5 \| m_8$ \\
+    $\Lambda = \accept$ \\
     $k = \getKey_c(\shareInfo, m, 0)$ \\
    \end{tabular}
   \end{minipage}%
@@ -215,6 +218,7 @@
     $m_{8} = \SHLO(m_5, \ik, \sqn_s)$ \\
     $\shareInfo = (\NONC, \cid, T_c^{\ast}, t_s^{\prime})$ \\
     $m = m_5 \| m_8$ \\
+    $\Lambda = \accept$ \\
     $k = \getKey_s(\shareInfo, m, 0)$ \\
    \end{tabular}
   \end{minipage}%

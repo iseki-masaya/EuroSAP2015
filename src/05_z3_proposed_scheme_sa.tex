@@ -6,49 +6,37 @@
  \end{equation}%
 %
 %
- \textbf{Game 1.} In this game we add an abort rule.
- The challenger aborts, if there exists any server oracle $\pi^s_{j, 0}$
-  that chooses a SCID which is not unique.
- More precisely, the game is aborted if the adversary ever makes a first $\Send$ query to a server oracle $\pi^s_{j, 0}$, and the oracle replies with SCID such that there exists some other server oracle $\pi^{s^{\prime}}_{j^{\prime}, 0}$ which has previously sampled the same SCID.
+ \textbf{Game 1.} We try to guess which client oracle will be the first oracle to break \textit{server authentication}. If our guess is wrong, i.e. if there is another client oracle that breaks \textit{server authentication} before, then we abort the game.
 
- In total less than the number of $\nserver \noracle$ SCID are sampled, each uniformly random from $\{0,1\}^{\lambda}$.
- Thus, the probability that a collision occurs is bounded by $(\nserver \noracle)^2 2^{-\lambda}$
+ Technically, the game is identical to Game 0, except for the following. The challenger guesses three random indexes $(c^{\ast}, i^{\ast}, \ell^{\ast}) \xleftarrow{\$} [\nclient] \times [\noracle] \times [n_{\ell}]$. If there exists a client oracle $\pi^c_{i,\ell}$ that breaks server authentication, and $(c, i, \ell) \neq c^{\ast}, i^{\ast}, \ell^{\ast})$, then the challenger aborts the game. Note that if the first oracle $\pi^c_{i,\ell}$ that breaks server authentication, then with probability $1/(\nclient \noracle n_{\ell})$ we have $(c,i,\ell) = (c^{\ast}, i^{\ast}, \ell^{\ast})$, and thus
  \begin{equation}
-  |\Adv_1 - \Adv_0| \leq \frac{(\nserver \noracle)^2}{2^{\lambda}}.
- \end{equation}%
-%
-%
- \textbf{Game 2.} We try to guess which client oracle will be the first oracle to break \textit{server authentication}. If our guess is wrong, i.e. if there is another client oracle that breaks \textit{server authentication} before, then we abort the game.
-
- Technically, the game is identical to Game 1, except for the following. The challenger guesses three random indices $(c^{\ast}, i^{\ast}, \ell^{\ast}) \xleftarrow{\$} [\nclient] \times [\noracle] \times [n_{\ell}]$. If there exists a client oracle $\pi^c_{i,\ell}$ that breaks server authentication, and $(c, i, \ell) \neq c^{\ast}, i^{\ast}, \ell^{\ast})$, then the challenger aborts the game. Note that if the first oracle $\pi^c_{i,\ell}$ that breaks server authentication, then with probability $1/(\nclient \noracle n_{\ell})$ we have $(c,i,\ell) = (c^{\ast}, i^{\ast}, \ell^{\ast})$, and thus
- \begin{equation}
-  \Adv_1 \leq \nclient \noracle n_{\ell} \Adv_2.
+  \Adv_0 \leq \nclient \noracle n_{\ell} \Adv_1.
  \end{equation}%
  Note that in this game the attacker can only break the security of the protocol, if oracle $\pi^{c^{\ast}}_{i^{\ast},\ell^{\ast}}$ is the first oracle that breaks server authentication, as otherwise the game is aborted.
 \vspace{10pt}\\%
 %
 %
- \textbf{Game 3.} Again the challenger proceeds as before, but we add an abort rule. We want to make sure that $\pi^{c^\ast}_{i^{\ast},0}$ receives as input exactly the Diffie-Hellman value $T_s$ that was selected by some other uncorrupted oracle.
+ \textbf{Game 2.} Again the challenger proceeds as before, but we add an abort rule. We want to make sure that $\pi^{c^\ast}_{i^{\ast},0}$ receives as input exactly the Diffie-Hellman value $T_s$ in $\SCFG_{pub}$ that was selected by some other uncorrupted server oracle.
 
- Technically, we abort and raise event $\abort_\SIG$, if oracle $\pi^{c^{\ast}}_{i^{\ast},0}$ ever receives as input a message $\cert_s$ indicating intended partner $\peer = s$ and message $(T_s,\sigma_s,SCID)$ such taht $\sigma_s$ is a valid signature over $T_s\|SCID$, however there exists no oracle $\pi^s_{j,0}$ which has previously output $\sigma_s$. Clearly we have
+ Technically, we abort and raise event $\abort_\SIG$, if oracle $\pi^{c^{\ast}}_{i^{\ast},0}$ ever receives as input a message $\cert_s$ indicating intended partner $\peer = s$ and server config $\SCFG_{pub} = (\SCID, T_s, \expy, \sigma_s, \cert_s)$ such taht $\sigma_s$ is a valid signature over $\SCID \| T_s \| \expy \| \cert_s$, however there exists no oracle $\pi^s_{j,0}$ which has previously output $\sigma_s$. Clearly we have
  \begin{equation}
-  |\Adv_3 - \Adv_2| = \Pr[\abort_{\SIG}].
+  |\Adv_2 - \Adv_1| = \Pr[\abort_{\SIG}].
  \end{equation}%
 
- Note that the experiment is aborted, if $\pi^{c^{\ast}}_{i^{\ast},0}$ satisfies server authentication, due to Game 2. This means that server $\Server_s$ must be $\tau_s$-corrupted with $\tau_s = \infty$ (i.e. not corrupted) when $\pi^{c^{\ast}}_{i^{\ast},0}$ accepts (as otherwise $\pi^{c^{\ast}}_{i^{\ast},0}$ satisfies server authentication). To show that $\Pr[\abort_{\SIG}] \leq \ell \epsilon_{\SIG}$, we construct a signature forger as follows. The forger receives as input a public key $pk^{\ast}$ and simulates the challenger for $\mathcal{A}$. It guesses an index $\phi \xleftarrow{\$}[\nserver]$, sets $pk_{\phi} = pk^{\ast}$, and generates all long-term public/secret keys as before. Then it proceeds as the challenger in Game 3, except that it uses its chosen message oracle to generate a signature under $pk_{\phi}$ when necessary.
+ Note that the experiment is aborted, if $\pi^{c^{\ast}}_{i^{\ast},0}$ satisfies server authentication, due to Game 1. This means that server $\Server_s$ must be $\tau_s$-corrupted with $\tau_s = \infty$ (i.e. not corrupted) when $\pi^{c^{\ast}}_{i^{\ast},0}$ accepts (as otherwise $\pi^{c^{\ast}}_{i^{\ast},0}$ satisfies server authentication). To show that $\Pr[\abort_{\SIG}] \leq \ell \epsilon_{\SIG}$, we construct a signature forger as follows. The forger receives as input a public key $pk^{\ast}$ and simulates the challenger for $\mathcal{A}$. It guesses an index $\phi \xleftarrow{\$}[\nserver]$, sets $pk_{\phi} = pk^{\ast}$, and generates all long-term public/secret keys as before. Then it proceeds as the challenger in Game 3, except that it uses its chosen message oracle to generate a signature under $pk_{\phi}$ when necessary.
 
  If $\phi = s$, which happens with probability $1/\nserver$, then the forger can use the signature received by $\pi^{c^{\ast}}_{i^{\ast},\ell^{\ast}}$ to break the EUF-CMA security of the signature scheme with success probability $\epsilon_{\SIG}$, so $\Pr[\abort_{\SIG}]/\ell \leq \epsilon_{\SIG}$. Therefore if $\Pr[\abort_{\SIG}]$ is not negligible, then $\epsilon_{\SIG}$ is not negligible as well and we have
  \begin{equation}
-  |\Adv_3 - \Adv_2| = \nserver \epsilon_{\SIG}.
+  |\Adv_2 - \Adv_1| = \nserver \epsilon_{\SIG}.
  \end{equation}%
 
- Note that in Game 3 oracle $\pi^{c^{\ast}}_{i^{\ast},0}$ receives as input a Diffie-Hellman value $T_s$ such that $T_s$ was chosen by another oracle, but not by the attacker. Note also that there is unique oracle that issued a signature $\sigma_s$ containing SCID.
+ Note that in Game 2 oracle $\pi^{c^{\ast}}_{i^{\ast},0}$ receives as input a Diffie-Hellman value $T_s$ such that $T_s$ was chosen by another oracle, but not by the attacker. Note also that there is unique oracle that issued a signature $\sigma_s$ containing SCID.
 \vspace{10pt}\\%
 %
 %
- \textbf{Game 4.} In this game we want to make sure that we know which oracle $\pi^s_{j,0}$ will issue the signature $\sigma_s$ that $\cOracleAstFull$ receives. Note that this signature includes SCID which is unique due to Game 1. Therefore the challenger in this game proceeds as before, however additionally guesses two indices $(s^{\ast}, j^{\ast}) \xleftarrow{\$} [\nserver] \times [\noracle]$.
+ \textbf{Game 3.} In this game we want to make sure that we know which oracle $\pi^s_{j,0}$ will issue the signature $\sigma_s$ that $\cOracleAstFull$ receives. The challenger in this game proceeds as before, however additionally guesses two indices $(s^{\ast}, j^{\ast}) \xleftarrow{\$} [\nserver] \times [\noracle]$.
 
- We know that there must exists at least one oracle that outputs $\sigma_s$ such that $\sigma_s$ is forwarded to $\cOracleAstFull$, due to Game 3. Thus we have
+ We know that there must exists at least one oracle that outputs $\sigma_s$ such that $\sigma_s$ is forwarded to $\cOracleAstFull$, due to Game 2. Thus we have
  \begin{equation}
   \Adv_3 \leq \nserver \noracle \Adv_4
  \end{equation}%
@@ -56,36 +44,36 @@
  \vspace{10pt}\\
 %
 %
- \textbf{Game 5.} Let $T_{\cIndexAstRes} = g^u$ denote the Diffie-Hellman share chosen by $\cOracleAstRes$, let $T_{\sIndexAstRes} = g^v$ denote the share chosen by its partner $\sOracleAstRes$, and let $k_{\cIndexAstRes}$ is the key computed by $\cOracleAstRes$. Thus, both oracles compute the premaster secret as $pms^{\prime} = g^{uv}$.
+ \textbf{Game 4.} Let $T_{\cIndexAstRes} = g^u$ denote the Diffie-Hellman share chosen by $\cOracleAstRes$, let $T_{\sIndexAstRes} = g^v$ denote the share chosen by its partner $\sOracleAstRes$, and let $ik_{\cIndexAstRes}$ and $k_{\cIndexAstRes}$ are the key computed by $\cOracleAstRes$, let $pms_{\ik}$ and $ms_{\ik}$ denote a premaster secret and master secret for initial key, let $pms_{k}$ and $ms_{k}$ denote a premaster secret and master secret for session key. Thus, both oracles compute the premaster secret as $pms = g^{uv}$.
 
- The challenger in this game proceeds as before, however replaces the premaster secret $pms^{\prime}$ of $\cOracleAstRes$ and $\sOracleAstRes$ with a random group element $\widetilde{pms^{\prime}} = g^w$, $w \xleftarrow{\$} \Zset_p$. Note that both $g^u$ and $g^v$ are chosen by oracles $\cOracleAstRes$ and $\sOracleAstRes$, respectively, as otherwise $\cOracleAstRes$ would not have a matching conversation to $\sOracleAstRes$ and the game would be aborted.
+ The challenger in this game proceeds as before, however replaces the premaster secret $pms_{\ik}$ of $\cOracleAstRes$ and $\sOracleAstRes$ with a random group element $\widetilde{pms_{\ik}} = g^w$, $w \xleftarrow{\$} \Zset_p$. Note that both $g^u$ and $g^v$ are chosen by oracles $\cOracleAstRes$ and $\sOracleAstRes$, respectively, as otherwise $\cOracleAstRes$ would not have a matching conversation to $\sOracleAstRes$ and the game would be aborted.
 
- Distinguish Game 5 from Game 4 implies an algorithm solving the decisional Diffie-Hellman problem, thus
+ Distinguish Game 4 from Game 3 implies an algorithm solving the decisional Diffie-Hellman problem, thus
  \begin{equation}
-  |\Adv_{5} - \Adv_{4}| \leq \epsilon_{\ddh}
+  |\Adv_{4} - \Adv_{3}| \leq \epsilon_{\ddh}
  \end{equation}%
 %
 %
- \textbf{Game 6.} In this game we replace the value $ms^{\prime} = \PRF(\widetilde{pms^{\prime}}, \NONC)$ with a random value $\widetilde{ms}$.
+ \textbf{Game 5.} In this game we replace the value $ms_{\ik} = \PRF(\widetilde{pms_{\ik}}, \NONC)$ with a random value $\widetilde{ms_{\ik}}$.
+
+ Distinguishing Game 5 from Game 4 implies an algorithm breaking the security of the pseudo random function $\PRF$, thus
+ \begin{equation}
+  |\Adv_{5} - \Adv_{4}| \leq \epsilon_{\prf}
+ \end{equation}%
+%
+%
+ \textbf{Game 6.} In this game we replace the function $\PRF(\widetilde{ms_{\ik}},\cdot)$ with a random function. If $\sOracleAstRes$ uses the same master secret $\widetilde{ms_{\ik}}$ as $\cOracleAstRes$, then the function $\PRF(\widetilde{ms_{\ik}},\cdot)$ used by $\sOracleAstRes$ is replaced as well. Of course the same random function is used for both oracles sharing the same $\widetilde{ms_{\ik}}$.
 
  Distinguishing Game 6 from Game 5 implies an algorithm breaking the security of the pseudo random function $\PRF$, thus
  \begin{equation}
-  |\Adv_{6} - \Adv_{5}| \leq \epsilon_{\prf}
+  |\Adv_6 - \Adv_5| \leq \epsilon_{\prf}.
  \end{equation}%
 %
 %
- \textbf{Game 7.} In this game we replace the function $\PRF(\widetilde{ms^{\prime}},\cdot)$ with a random function. If $\sOracleAstRes$ uses the same master secret $\widetilde{ms^{\prime}}$ as $\cOracleAstRes$, then the function $\PRF(\widetilde{ms^{\prime}},\cdot)$ used by $\sOracleAstRes$ is replaced as well. Of course the same random function is used for both oracles sharing the same $\widetilde{ms^{\prime}}$.
+ \textbf{Game 7.} Now we use that the key $\ik$ used by $\cOracleAstRes$ and $\sOracleAstRes$ in the symmetric encryption scheme uniformly at random and independent of all QUIC handshake messages.
 
- Distinguishing Game 7 from Game 6 implies an algorithm breaking the security of the pseudo random function $\PRF$, thus
+ The adversary have to make ciphertext $c$ such that $\SE$.$\Dec$ ( $\ik$, $\iv$, H, $c$) $\neq \perp$ without knowing the key $k$. It implies an algorithm breaking the LHAE security of the symmetric encryption scheme, we have
  \begin{equation}
-  |\Adv_7 - \Adv_6| \leq \epsilon_{\prf}.
- \end{equation}%
-%
-%
- \textbf{Game 8.} Now we use that the key $k$ used by $\cOracleAstRes$ and $\sOracleAstRes$ in the stateful symmetric encryption scheme uniformly at random and independent of all QUIC handshake messages.
-
- The adversary have to make ciphertext $c$ such that $\SE$.$\Dec$ ( k , c , H , $st_d$ ) $\neq \perp$ without knowing the key $k$. It implies an algorithm breaking the sLHAE security of the symmetric encryption scheme, we have
- \begin{equation}
-  \Adv_8 \leq 1/2 + \epsilon_{\sLHAE}.
+  \Adv_7 \leq 1/2 + \epsilon_{\LHAE}.
  \end{equation}%
 \end{proof}
