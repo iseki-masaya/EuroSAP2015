@@ -48,14 +48,3 @@ We prove Theorem~\ref{theorem:proposed_scheme} by proving two lemmas.
 \end{lemma}
 %
 \input{05_z4_proposed_scheme_cc}
-
-\begin{lemma} \label{lemma:proposed_scheme_tls_rsacce-cb}
- $\Adv^{\rsaccecb}_{P}(A)$ is at most
- \begin{eqnarray}
-  \Adv^{\rsaccecb}_{P}(A) &\leq& \epsilon_{client} + \epsilon_{server} \nonumber \\
-  &\leq& Adv^{\rsaccesa}_{P}(A) + n_c(\epsilon_{\ddh} + 2(\ell + 1)\epsilon_{\prf} + \ell\epsilon_{H} + \frac{\ell}{2^{\mu}}) \nonumber \\
-   &+& \frac{n_s}{2^{\lambda}} + n_s(\epsilon_{\ddh} + 2(\ell+1)\epsilon_{\prf} + \frac{\ell}{2^{\mu}})
- \end{eqnarray}
-\end{lemma}
-%
-\input{05_z5_proposed_scheme_cb}
