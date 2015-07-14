@@ -228,22 +228,18 @@ We now define the following advantage measures.
  $\Adv^{\rsaccecc}_{\Pi}$ (A) is defined to be $x$ - $\frac{1}{2}$ where $x$ is the probability that the adversary $A$ outputs $(p, i, \ell, b^{\prime})$, with $0\leq \ell$,
  such that $b = b^{\prime}$ where $b^{\prime} \in \bits$ is set during the $\Encrypt(\pi^p_{i,\ell},\dots)$ query and we define $b=\bot$ unless the following conditions hold:
  \begin{itemize}
-%  \item{$\pi_{s,0}^i$ reaches state $\Lambda=\accept$.}
-  \item{$\pi^p_{i,\ell}$ reaches state $\Lambda=\preaccept$ when $A$ issues
+  \item{$\pi^p_{i,\ell}$ reaches state $\Lambda \in {\preaccept, \accept}$ when $A$ issues
   its $\tau_0$-th query. (It implies by definition that for all $0\leq k < \ell$,
   $\pi^p_{i,k}$ has already accepted.)}
 
   \item{If $\pi^p_{i,\ell}$ is a client oracle,
   the intended pater $\Server_s$ is $\tau_s$-corrupted with $\tau_0 < \tau_s$. }
 
+  \item{If $P_p$ is a server $\Server_s$, then there is a client $\Client_c$ maintaining oracle $\pi^c_{j,0}$ that has a matching conversation with $\pi^s_{i,0}$.}
+
   \item{For all $0\leq k \leq \ell$, the adversary does not issue a $\Reveal$ query to
-  $\pi^p_{i,k}$, nor to $\pi^{p^{\prime}}_{j,k}$ such that $\pi^p_{i,k}$ has a matching conversation
+  either $\pi^p_{i,k}$, nor to $\pi^{p^{\prime}}_{j,k}$ such that $\pi^p_{i,k}$ has a matching conversation
   with $\pi^{p^{\prime}}_{j,k}$.}
-
-  \item{If $P_p$ is a server $\Server_s$, then
-  there is a client $\Client_c$ maintaining oracle $\pi^c_{j,0}$ that has a matching
-  conversation with $\pi^s_{i,0}$.}
-
  \end{itemize}
  We say that protocol $\Pi$ has \textit{channel confidentiality}
  if $\Adv^{\rsaccecc}_{\Pi}(A)$ is negligible in $\kappa$.
@@ -251,57 +247,10 @@ We now define the following advantage measures.
 
 \begin{remark}
 We extend the security requirement of \textit{channel confidentiality} of SACCE~\cite{KPW13:SACCE}.
-The original security notion takes care of message confidentiality of ciphertexts
-sent by a (honest) client, only.  It is because an adversary can trivially play a role of an honest client and
-have a matching conversation with a (honest) server with the same session key.
-In our definition, the third condition indicates that an adversary may send
-the $\Encrypt$ query to even \textit{server} $\Server_s$
-(to break message confidentiality of the challenge ciphertext sent by \textit{server oracle} $\pi^s_{i,\ell}$)
-as long as the initial full handshake is established between
-$\Server_s$ and an \textit{honest} client $\Client_c$ (not the adversary).
-Later, if the adversary can hijack some resumption session and
-share a new session key with server $\Server_s$,
-then it can break our channel confidentiality.
-The forth condition specifies forward-secrecy in the sense that message confidentiality of $\pi^p_{i,\ell}$
-is preserved, as long as the prior related oracles (including itself), $\pi^p_{i,k}$,
-with $0\leq k\leq \ell$, or their peer oracles do not reveal their cached data and session keys.
-\end{remark}
-
-We now present an additional advantage measure.
-
-\begin{definition}[Channel Binding] \label{def:rsacce-cb}
- $\Adv^{\rsaccecb}_{\Pi}$ (A) is the probability that when $A$ terminates, there exists
- a server oracle $\pi^s_{j, \ell}$, with $0< \ell$, such that the following conditions hold:
-
- \begin{itemize}
-  \item{$\pi^s_{j,\ell}$ reaches state $\Lambda=\accept$ when $A$ issues
-  its $\tau_0$-th query. (It implies by definition that for all $0\leq k < \ell$,
-  $\pi^s_{j,k}$ has already accepted.)}
-
-  \item{There is a client $\Client_c$ maintaining an oracle $\pi^c_{i,0}$ with $\peer=s$
-  that has a matching conversation with $\pi^s_{j,0}$.}
-
-  \item{For all $0\leq k \leq \ell$, the adversary does not issue a $\Reveal$ query either to
-  $\pi^c_{i,k}$ nor to $\pi^s_{j,k}$,
-  such that $\pi^c_{i,k}$ has a matching conversation with $\pi^s_{j,k}$.}
-
-  \item{Client oracle $\pi^c_{i, \ell}$  does not have a matching conversation
-  with $\pi^s_{j,\ell}$.}
-%  \item{Client oracle $\pi^j_{t, \ell}$ has state $\peer \neq i$.}
-
- \end{itemize}
- We say that protocol $\Pi$ has \textit{channel confidentiality}
- if $\Adv^{\rsaccecc}_{\Pi}$ (A) is negligible in $\kappa$.
-\end{definition}
-
-\begin{remark}
-Channel binding is a security property to protect something like client authentication.
-While clients do not have certificates, one would need a guarantee that if a server accepts
-in a resumption session, the server should have a matching conversation only with the client
-in the initially established full handshake session.
-We note that to break channel binding, it is unnecessary for an adversary to share a session key with a server
-(if so, it breaks channel confidentiality).
-If an adversary breaks channel binding, then the client and server could not resume a new resumption session.
+The original security notion takes care of message confidentiality of ciphertexts sent by a (honest) client, only. It is because an adversary can trivially play a role of an honest client and
+have a matching conversation with a (honest) server with the same session key. In our definition, the third condition indicates that an adversary may send the $\Encrypt$ query to even \textit{server} $\Server_s$ (to break message confidentiality of the challenge ciphertext sent by \textit{server oracle} $\pi^s_{i,\ell}$) as long as the initial full handshake is established between
+$\Server_s$ and an \textit{honest} client $\Client_c$ (not the adversary). Later, if the adversary can hijack some abbreviate handshake session and share a new session key with server $\Server_s$, then it can break our channel confidentiality.
+The forth condition specifies forward-secrecy in the sense that message confidentiality of $\pi^p_{i,\ell}$ is preserved, as long as the prior related oracles (including itself), $\pi^p_{i,k}$, with $0\leq k\leq \ell$, or their peer oracles do not reveal their cached data and session keys.
 \end{remark}
 
 \subsubsection{RSACCE security}
@@ -309,5 +258,5 @@ We define the RSACCE security.
 
 \begin{definition}[RSACCE secure]
  We say that the protocol $\Pi$ is RSACCE secure if $\Pi$ satisfies \textbf{correctness},
- \textbf{server authentication}, \textbf{channel confidentiality}, and \textbf{channel binding}.
+ \textbf{server authentication}, \textbf{channel confidentiality}.
 \end{definition}
