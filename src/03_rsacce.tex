@@ -10,25 +10,21 @@ In our SACCE protocol, a client initiates an instance of the protocol and
 a server always sends the last message of the instance.
 We then extend the security notion of SACCE~\cite{KPW13:SACCE}
 to the notion of \textit{resumable} SACCE (RSACCE).
-The main difference is that this model treats ``resumption".
-As mentioned above, a resumption is an abbreviated handshake session
-taking advantage of a prior established full handshake session
+The main difference is that this model treats abbreviate handshakes.
+As mentioned above, an abbreviate handshake takes advantage
+of a prior established full handshake session
 between the same client and server.
-To treat resumptions in the server-only authenticated setting,
+To treat abbreviate handshakes in the server-only authenticated setting,
 we should take into account the attack \textbf{where an adversarial client fools a server
-and impersonates the initial client in a resumption session.}
+and impersonates the initial client in an abbreviate handshake session.}
 Depending on the extent of the attack, we define two security requirements,
-denoted \textit{channel confidentiality} and \textit{channel binding}.
+denoted \textit{server authentications} and \textit{channel confidentiality}.
 The channel confidentiality implies that, in contrast to SACCE,
 an adversary is allowed to submit
-an encryption query \textit{not only to a client but to a server} in a resumption session.
+an encryption query \textit{not only to a client but to a server} in an abbreviate handshake session.
 We note that if an adversary can make a handshake with a server with the same session
-key in some resumption session, then it can indeed break message confidentiality of
+key in some abbreviate handshake session, then it can indeed break message confidentiality of
 a ciphertext sent by the server.
-We also consider channel binding in order to make a protocol robust,
-in which a server should accept
-only if a resumed session is started by the initial client
-in the prior established full handshake session.
 }
 
 
