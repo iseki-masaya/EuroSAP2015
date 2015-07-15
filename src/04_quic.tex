@@ -2,9 +2,23 @@
 \section{Quick UDP Internet Connections} \label{sec:quic}
 %=====================================================
 
-Quick UDP Internet Connections (QUIC) is a protocol developed by Google. This protocol is still under development. The abstract model of QUIC is described in Fig.~\ref{fig:quic_abst}. The concepts of QUIC are (1) to reduce connectivity overheads before a client sends encrypted data and (2) to obtain better security guarantee than TLS.
-To realize concept (1), QUIC is not defined over TCP but UDP, because TCP requires three-move handshake before initiating a cryptographic handshake, but UDP does not have. In addition, a client can send encrypted data concurrently with CHLO.
-To realize concept (2), QUIC supports only secure cipher suites. Especially, a support algorithm of key exchange is only ephemeral elliptic curve Diffie-Hellman.
+Quick UDP Internet Connections (QUIC) is a protocol
+developed by Google. This protocol is still under
+development.
+The abstract model of QUIC is described in
+Fig.~\ref{fig:quic_abst}.
+The concepts of QUIC are (1) to reduce connectivity
+overheads before a client sends encrypted data and
+(2) to obtain better security guarantee than TLS.
+To realize concept (1), QUIC is not defined over
+TCP but UDP, because TCP requires three-move handshake
+before initiating a cryptographic handshake, but UDP
+does not have. In addition, a client can send encrypted
+data concurrently with CHLO.
+To realize concept (2), QUIC supports only secure cipher
+suites.
+Especially, a support algorithm of key exchange is only
+ephemeral elliptic curve Diffie-Hellman.
 
 Unlike TLS, QUIC does not support client authentication.
 
@@ -17,19 +31,36 @@ Unlike TLS, QUIC does not support client authentication.
 
 We note that QUIC is not RSACCE secure.
 Although QUIC has a mechanism to prevent forgery,
-whose mechanisms is called \textit{source-address token} (see below),
-the adversary can forge an abbreviate handshake query as follows:
-An adversary can obtain SCID from $\REJ$ response,
-which is the first response from a server oracle.
-Then, the adversary make $(\overline{T}_c^{\prime}, \overline{\NONC}^{\prime})$
-and send $(\overline{T}_c^{\prime}, \SCID, \overline{\NONC}^{\prime})$ to the
-server after a full handshake between the server and its intended partner is established.
-The server cannot distinguish whether the query in resumption comes from
-the intended partner or not. Because there is no authentication
-mechanism in this query. The server accepts this query and calculates
-the session key with the value of adversary. The adversary does not
-know the session key because $T_s^{\ast}$ is encrypted however a
-session key between the client and the server does not match.
+whose mechanisms is called \textit{source-address token}
+(see below), the adversary can forge an abbreviate handshake
+query as follows: An adversary can obtain SCID from $\REJ$
+response, which is the first response from a server oracle.
+Then, the adversary make $(\overline{T}_c^{\prime},
+\overline{\NONC}^{\prime})$ and send $(\overline{T}_c^{\prime},
+\SCID, \overline{\NONC}^{\prime})$ to the server after a
+full handshake between the server and its intended partner
+is established.
+The server cannot distinguish whether the query in resumption
+comes from the intended partner or not. Because there is no
+authentication mechanism in this query. The server accepts
+this query and calculates the session key with the value
+of adversary.
+The adversary does not know the session key because
+$T_s^{\ast}$ is encrypted however a session key between the
+client and the server does not match.
 
 \subsubsection{Source Address Token} \label{sec:source_address_token}
-Source-address token ($\STK$) is introduced to QUIC in order to prevent IP address spoofing. A server generates and sends a new STK every time he sends a message to a client. The client updates STK when the client receives a new one from the server and sends it back along with his message. $\STK$ is an opaque byte string from the client's point of view. From the server's point of view it's an authenticated-encryption block that contains, at least, the client's IP address and a time stamp by the server. $\STK$ is encrypted except for the first server's query ($\REJ$). However, in our model the adversary has full control over the communication network and hence it can obtain $\STK$ and use it to forge a future query.
+Source-address token ($\STK$) is introduced to QUIC in order to
+prevent IP address spoofing.
+A server generates and sends a new STK every time he sends a
+message to a client.
+The client updates STK when the client receives a new one from
+the server and sends it back along with his message.
+$\STK$ is an opaque byte string from the client's point of view.
+From the server's point of view it's an authenticated-encryption
+block that contains, at least, the client's IP address and a time
+stamp by the server.
+$\STK$ is encrypted except for the first server's query ($\REJ$).
+However, in our model the adversary has full control over the
+communication network and hence it can obtain $\STK$ and use it to
+forge a future query.

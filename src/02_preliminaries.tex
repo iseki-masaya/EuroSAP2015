@@ -1,25 +1,39 @@
 %=====================================================
 \section{Preliminaries}\label{sec:pre}
 %=====================================================
-We let ${\negl}(\spar)$ to denote an unspecified function $f(\spar)$ such that
-$f(\spar) ={\spar}^{-\omega(1)}$, saying that such a function is negligible in $\spar$.
-We use the standard notations of digital signature, collision-resistant hash functions, and pseudo random functions.
-We also use a symmetric encryption as well as a few known assumptions.
+We let ${\negl}(\spar)$ to denote an unspecified
+function $f(\spar)$ such that
+$f(\spar) ={\spar}^{-\omega(1)}$, saying that such a
+function is negligible in $\spar$.
+We use the standard notations of digital signature,
+collision-resistant hash functions, and pseudo random
+functions.
+We also use a symmetric encryption as well as a few
+known assumptions.
 
-%--------------------------------------------------------
+%=====================================================
 \subsection{Digital Signature Schemes} \label{sec:signature}
-%--------------------------------------------------------
-A digital signature scheme consists of the following three algorithms $\SIG = (\Gen,\Sign,\Vfy)$, where
+%=====================================================
+A digital signature scheme consists of the following
+three algorithms $\SIG = (\Gen,\Sign,\Vfy)$, where
 \begin{itemize}
- \item{$\Gen(1^{\spar})$ takes as input a security parameter $\kappa$ and generates a key pair $(pk, sk)$ where $pk$ is a verification key and $sk$ is secret key.}
- \item{$\Sign(sk, m)$ takes as input a message $m$ and $sk$ and outputs a signature $\sigma$.}
- \item{$\Vfy(pk,\sigma,m)$ takes as input $pk$, $\sigma$ and $m$ and outputs 1 if $\sigma$ is valid and 0 otherwise.}
+ \item{$\Gen(1^{\spar})$ takes as input a security
+ parameter $\kappa$ and generates a key pair $(pk, sk)$
+ where $pk$ is a verification key and $sk$ is secret
+ key.}
+ \item{$\Sign(sk, m)$ takes as input a message $m$ and
+ $sk$ and outputs a signature $\sigma$.}
+ \item{$\Vfy(pk,\sigma,m)$ takes as input $pk$, $\sigma$
+ and $m$ and outputs 1 if $\sigma$ is valid and 0
+ otherwise.}
 \end{itemize}
 \begin{definition}[EUF-CMA]
-  We say that $\SIG$ is $(t, \epsilon_{\sig})$-secure againt \textit{existentially  unforgeable under adaptive chosen-message attacks},
-% where $t\sets t(\spar)$ and $\epsilon_{\sig}\sets\epsilon_{\sig}(\spar)$,
-if for all PPT adversaries $A$ that run in time $t$, the experiment $\Expt^{\sf EUF}_{A}$
-in Fig.~\ref{fig:EUF-CMA} returns $1$ with at most probability $\epsilon_{\sf sig}$.
+We say that $\SIG$ is $(t, \epsilon_{\sig})$-secure
+againt \textit{existentially unforgeable under
+adaptive chosen-message attacks}, if for all PPT
+adversaries $A$ that run in time $t$, the experiment
+$\Expt^{\sf EUF}_{A}$ in Fig.~\ref{fig:EUF-CMA} returns
+$1$ with at most probability $\epsilon_{\sf sig}$.
 
 \begin{figure*}[!htb]
 \begin{center}
@@ -48,82 +62,82 @@ in Fig.~\ref{fig:EUF-CMA} returns $1$ with at most probability $\epsilon_{\sf si
 
 \end{definition}
 
-%--------------------------------------------------------
+%=====================================================
 \subsection{Collision-Resistant Hash Functions} \label{sec:CRH}
-%-------------------------------------------------------
-Let $\HashH\sets \{H\}$ be a hash function family from $\bits^*$ to $\bits^{\spar}$.
-We say that a hash-function family $\HashH$ is $(t,\epsilon_{H})$-collision-resistant
-(CR) if,
-for all adversaries $A$ that run in time $t$, it holds that
+%=====================================================
+Let $\HashH\sets \{H\}$ be a hash function family from
+$\bits^*$ to $\bits^{\spar}$.
+We say that a hash-function family $\HashH$ is
+$(t,\epsilon_{H})$-collision-resistant (CR) if, for all
+adversaries $A$ that run in time $t$, it holds that
 \begin{equation}
- \Pr[H \gets {\HashH}; \, (x,y) \gets A(H): \, x \neq y \, \wedge \,
-H(x) = H(y)] \leq \epsilon_{H}.
+ \Pr[H \gets {\HashH}; \, (x,y) \gets A(H): \, x \neq y
+ \, \wedge \,(x) = H(y)] \leq \epsilon_{H}.
 \end{equation}
 
-%--------------------------------------------------------
+%=====================================================
 \subsection{Pseudo-Random Functions} \label{sec:prf}
-%--------------------------------------------------------
-%We basically follow the notation of~\cite{NR04}.
-Let $\{X_n,Y_n\}_{n \in \N}$ be a sequence of domains and let
-$\PRF = \{F_{s}\}_{s \in \Index}$ be a family of functions
-from $X_n$ to $Y_n$, indexed by
-$s \in \Index_{n}$ $(= \Index \cap \{0,1\}^{n})$, i.e.,
-$F_{s} : X_n \to Y_n$,
-where for every $n$ and $s \in \Index_n$,
-$\Index_n$ is efficiently samplable and  $F_s$ is efficiently computable.
-We say that $\PRF$ is $(t,\epsilon_{\prf})$-pseudo-random function (PRF) familiy if
-for all adversaries $A$ that run in time $t\sets t(n)$,
+%=====================================================
+Let $\{X_n,Y_n\}_{n \in \N}$ be a sequence of domains
+and let $\PRF = \{F_{s}\}_{s \in \Index}$ be a family
+of functions from $X_n$ to $Y_n$, indexed by $s \in
+\Index_{n}$ $(= \Index \cap \{0,1\}^{n})$, i.e.,
+$F_{s} : X_n \to Y_n$, where for every $n$ and
+$s \in \Index_n$, $\Index_n$ is efficiently samplable
+and $F_s$ is efficiently computable.
+We say that $\PRF$ is $(t,\epsilon_{\prf})$-pseudo-random
+function (PRF) familiy if for all adversaries $A$ that
+run in time $t\sets t(n)$,
 \begin{eqnarray}
-|\Pr[s \gets {\Index}_{n}: \, A^{F_s(\cdot)}(1^n)=1] \, - \, \nonumber \\
-\Pr[s \gets {\Index}_{n}: \, A^{R_n}(1^n)=1] |
-\leq \epsilon_{\prf}(n),
+ |\Pr[s \gets {\Index}_{n}: \, A^{F_s(\cdot)}(1^n)=1] \, - \, \nonumber \\
+ \Pr[s \gets {\Index}_{n}: \, A^{R_n}(1^n)=1] |
+ \leq \epsilon_{\prf}(n),
 \end{eqnarray}
-where $R=\{R_n\}_{n\in \N}$ is the corresponding uniform function ensemble
-(i.e., $\forall n$, $R_n$ is uniformly distributed over the set of the functions
-from $X_n$ to $Y_n$).
+where $R=\{R_n\}_{n\in \N}$ is the corresponding uniform
+function ensemble (i.e., $\forall n$, $R_n$ is uniformly
+distributed over the set of the functions from $X_n$ to
+$Y_n$).
 
-%--------------------------------------------------------
+%=====================================================
 \subsection{DDH and PRF-ODH Assumptions} \label{sec:assumption}
-%--------------------------------------------------------
-
-%--------------------------------------------------------
-%\subsection{The Decisional Diffie-Hellman Assumption} \label{sec:DDH Assumption}
-%--------------------------------------------------------
-Let $g$ be a generator of a finite cyclic group $G$ of prime order $q$, i.e.,
+%=====================================================
+Let $g$ be a generator of a finite cyclic group $G$ of
+prime order $q$, i.e.,
 $g \in G^{\times}(\sets G\backslash \{1\})$.
-%(where $|p|$ is the security parameter $\kappa$).
 
 \begin{definition}[Decisional Diffie-Hellman Assumption]
- We say that the DDH problem is $(t,\epsilon_{\ddh})$-hard in $G$,
-if for all PPT adversaries $A$ that runs time in $t$,
- it holds that
+ We say that the DDH problem is $(t,\epsilon_{\ddh})$-hard
+ in $G$, if for all PPT adversaries $A$ that runs time
+ in $t$, it holds that
  \begin{equation}
-  |\Pr[A(p,g,g^a,g^b,g^{ab}) = 1] - \Pr[A(p,g,g^a,g^b,g^c) = 1]| \leq \epsilon_{\ddh}
+  |\Pr[A(p,g,g^a,g^b,g^{ab}) = 1] - \Pr[A(p,g,g^a,g^b,g^c)
+  = 1]| \leq \epsilon_{\ddh}
  \end{equation}
- where $g \getsr G^{\times}$ and $a,b,c \getsr \mathbb{Z}_{q}$.
- We say that the DDH assumption holds in $G$ if for all polynomial (in $\spar$) $t(\spar)$,
- there exists $\epsilon_{\ddh}(\spar)=\negl(\spar)$
- such that the DDH problem is
- $(t,\epsilon_{\ddh})$-hard in $G$.
-
+ where $g \getsr G^{\times}$ and
+ $a,b,c \getsr \mathbb{Z}_{q}$.
+ We say that the DDH assumption holds in $G$ if for all
+ polynomial (in $\spar$) $t(\spar)$, there exists
+ $\epsilon_{\ddh}(\spar)=\negl(\spar)$ such that the
+ DDH problem is $(t,\epsilon_{\ddh})$-hard in $G$.
 \end{definition}
 
-%--------------------------------------------------------
-%\subsection{PRF Oracle Diffie-Hellman} \label{sec:PRF-ODH}
-%--------------------------------------------------------
-%Let $G$ be a cyclic group of order $p$ generated by an element $g$.
-Let $f:G \times \bits^n \to \bits^{\mu}$ be a pseudo-random function (PRF) with
-key-space $G$ that maps $\bits^n$ to $\bits^{\mu}$ for some appropriate
-polynomials (in $\spar$) $n(\spar)$ and $\mu(\spar)$.
+Let $f:G \times \bits^n \to \bits^{\mu}$ be a pseudo-random
+function (PRF) with key-space $G$ that maps $\bits^n$ to
+$\bits^{\mu}$ for some appropriate polynomials (in $\spar$)
+$n(\spar)$ and $\mu(\spar)$.
 
 \begin{definition}[PRF-ODH Assumption]
- We say that the PRF-ODH problem on $f$ is $(t, \epsilon_{\sf prfodh})$-hard, if for all PPT adversaries $A=(A_1,A_2)$ that run in time $t$,
- the experiment $\Expt^{\sf PRF-ODH}_{A}$ in Fig.~\ref{fig:PRF-ODH}
- returns $1$ with probability at most $\epsilon_{\sf prfodh}$.
- We say that the PRF-ODH assumption on $f$ holds if
- for all polynomial (in $\spar$) $t(\spar)$,
- there exists $\epsilon_{\sf prfodh}(\spar)=\negl(\spar)$
- such that the PRF-ODH problem on $f$ is $(t,\epsilon_{\sf prfodh})$-hard.
+ We say that the PRF-ODH problem on $f$ is
+ $(t, \epsilon_{\sf prfodh})$-hard, if for all PPT
+ adversaries $A=(A_1,A_2)$ that run in time $t$,
+ the experiment $\Expt^{\sf PRF-ODH}_{A}$ in
+ Fig.~\ref{fig:PRF-ODH} returns $1$ with probability at
+ most $\epsilon_{\sf prfodh}$.
+ We say that the PRF-ODH assumption on $f$ holds if for
+ all polynomial (in $\spar$) $t(\spar)$, there exists
+ $\epsilon_{\sf prfodh}(\spar)=\negl(\spar)$ such that
+ the PRF-ODH problem on $f$ is
+ $(t,\epsilon_{\sf prfodh})$-hard.
 \begin{figure*}[!htb]
 \begin{center}
 \fbox{
@@ -155,28 +169,41 @@ polynomials (in $\spar$) $n(\spar)$ and $\mu(\spar)$.
 \end{figure*}
 \end{definition}
 
-%--------------------------------------------------------
+%=====================================================
 \subsection{Length-Hiding Authenticated Encryption} \label{sec:SE}
-%--------------------------------------------------------
+%=====================================================
 
-A symmetric encryption scheme consists of three algorithm $SE = (\Init, \Enc, \Dec)$.
+A symmetric encryption scheme consists of three algorithm
+$SE = (\Init, \Enc, \Dec)$.
 \begin{itemize}
- \item{$\Enc(k,\iv,H,m)$ takes as input a secret key $k \in \{1,0\}^{\kappa}$, a initial vector $\iv$, an output ciphertext length $len \in \mathbb{N}$, some header data $H \in \{0,1\}^{\ast}$, and a plaintext $m \in \{0,1\}^{\ast}$. It outputs a ciphertext $c \in \{0,1\}^{len}$.
- \item{$\Dec(k,\iv,H,c)$ takes as input a secret key $k \in \{1,0\}^{\kappa}$, a initial vector $\iv$, some header data $H \in \{0,1\}^{\ast}$, and a ciphertext $c \in \{0,1\}^{len}$}. It outputs a message $m$.}
+ \item{$\Enc(k,\iv,H,m)$ takes as input a secret key
+ $k \in \{1,0\}^{\kappa}$, a initial vector $\iv$, an
+ output ciphertext length $len \in \mathbb{N}$, some
+ header data $H \in \{0,1\}^{\ast}$, and a plaintext
+ $m \in \{0,1\}^{\ast}$.
+ It outputs a ciphertext $c \in \{0,1\}^{len}$.}
+ \item{$\Dec(k,\iv,H,c)$ takes as input a secret key
+ $k \in \{1,0\}^{\kappa}$, a initial vector $\iv$,
+ some header data $H \in \{0,1\}^{\ast}$, and a
+ ciphertext $c \in \{0,1\}^{len}$}. It outputs a
+ message $m$.}
 \end{itemize}
 
 \begin{definition}
- We say that a symmetric encryption scheme $\SE = (\Enc,\Dec)$ is $(t, \epsilon_{\LHAE})$-secure, if for all PPT adversaries $A$ that running in time $t$, it holds that
+ We say that a symmetric encryption scheme
+ $\SE = (\Enc,\Dec)$ is $(t, \epsilon_{\LHAE})$-secure,
+ if for all PPT adversaries $A$ that running in time
+ $t$, it holds that
  \begin{eqnarray}
   \Pr[b\xleftarrow{\$}\{0,1\}; k\xleftarrow{\$}\{0,1\}^{\kappa}; \nonumber \\
    b^{\prime} \xleftarrow{\$} A^{\Encrypt, \Decrypt} : b = b^{\prime}] \leq \epsilon_{\LHAE},
  \end{eqnarray}
-where Encrypt and Decrypt oracles are described in Fig.~\ref{fig:LHAE_Enc_Dec}.
-We say that $\SE$ is secure if
- for all polynomial (in $\spar$) $t(\spar)$,
- there exists $\epsilon_{\LHAE}(\spar)=\negl(\spar)$
- such that $\SE$ is $(t, \epsilon_{\LHAE})$-secure.
-
+ where Encrypt and Decrypt oracles are described in
+ Fig.~\ref{fig:LHAE_Enc_Dec}.
+ We say that $\SE$ is secure if for all polynomial
+ (in $\spar$) $t(\spar)$, there exists
+ $\epsilon_{\LHAE}(\spar)=\negl(\spar)$ such that $\SE$
+ is $(t, \epsilon_{\LHAE})$-secure.
 \end{definition}
 
 \begin{figure*}[!htb]
