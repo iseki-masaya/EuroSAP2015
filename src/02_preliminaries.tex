@@ -161,8 +161,8 @@ polynomials (in $\spar$) $n(\spar)$ and $\mu(\spar)$.
 
 A symmetric encryption scheme consists of three algorithm $SE = (\Init, \Enc, \Dec)$.
 \begin{itemize}
- \item{$\Enc(k,len,H,m)$ takes as input a secret key $k \in \{1,0\}^{\kappa}$, an output ciphertext length $len \in \mathbb{N}$, some header data $H \in \{0,1\}^{\ast}$, a plaintext $m \in \{0,1\}^{\ast}$. It outputs a ciphertext $c \in \{0,1\}^{len}$.
- \item{$\Dec(k,H,c)$ takes as input a secret key $k \in \{1,0\}^{\kappa}$, some header data $H \in \{0,1\}^{\ast}$, a ciphertext $c \in \{0,1\}^{len}$}. It outputs a message $m$.}
+ \item{$\Enc(k,\iv,H,m)$ takes as input a secret key $k \in \{1,0\}^{\kappa}$, a initial vector $\iv$, an output ciphertext length $len \in \mathbb{N}$, some header data $H \in \{0,1\}^{\ast}$, and a plaintext $m \in \{0,1\}^{\ast}$. It outputs a ciphertext $c \in \{0,1\}^{len}$.
+ \item{$\Dec(k,\iv,H,c)$ takes as input a secret key $k \in \{1,0\}^{\kappa}$, a initial vector $\iv$, some header data $H \in \{0,1\}^{\ast}$, and a ciphertext $c \in \{0,1\}^{len}$}. It outputs a message $m$.}
 \end{itemize}
 
 \begin{definition}
@@ -184,9 +184,9 @@ We say that $\SE$ is secure if
 \fbox{
 \begin{minipage}[t]{0.42\textwidth}
 \begin{tabular}[t]{l}
- $\Encrypt(m_0,m_1,len,H)$: \\
- $\quad C_0 \xleftarrow{\$} \SE.\Enc(k, len, H,m_0)$ \\
- $\quad C_1 \xleftarrow{\$} \SE.\Enc(k, len, H,m_1)$ \\
+ $\Encrypt(m_0,m_1,\iv,H)$: \\
+ $\quad C_0 \xleftarrow{\$} \SE.\Enc(k, \iv, H,m_0)$ \\
+ $\quad C_1 \xleftarrow{\$} \SE.\Enc(k, \iv, H,m_1)$ \\
  $\quad \text{If } C_0 = \perp \text{ or } C_1 = \perp$ \\
  $\quad \quad \text{return } \perp$ \\
  $\quad \mathcal{C} = \mathcal{C} \cup C_b$ \\
@@ -196,9 +196,9 @@ We say that $\SE$ is secure if
 \vline \quad
 \begin{minipage}[t]{0.42\textwidth}
 \begin{tabular}[t]{l}
- $\Decrypt(C,H)$: \\
+ $\Decrypt(C,\iv,H)$: \\
  $\quad \text{If } b = 1 \wedge C \not\in \mathcal{C}$ \\
- $\quad \quad \text{return } \SE.\Dec(k,H,C)$ \\
+ $\quad \quad \text{return } \SE.\Dec(k,\iv,H,C)$ \\
  $\quad \text{return } \perp$ \\
 \end{tabular}
 \end{minipage}
