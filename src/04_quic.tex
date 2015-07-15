@@ -2,7 +2,7 @@
 \section{Quick UDP Internet Connections} \label{sec:quic}
 %=====================================================
 
-Quick UDP Internet Connections (QUIC) is a protocol developed by Google. This protocol is still under development. The abstract model of QUIC is described in Fig.~\ref{fig:quic}. The concepts of QUIC are (1) to reduce connectivity overheads before a client sends encrypted data and (2) to obtain better security guarantee than TLS.
+Quick UDP Internet Connections (QUIC) is a protocol developed by Google. This protocol is still under development. The abstract model of QUIC is described in Fig.~\ref{fig:quic_abst}. The concepts of QUIC are (1) to reduce connectivity overheads before a client sends encrypted data and (2) to obtain better security guarantee than TLS.
 To realize concept (1), QUIC is not defined over TCP but UDP, because TCP requires three-move handshake before initiating a cryptographic handshake, but UDP does not have. In addition, a client can send encrypted data concurrently with CHLO.
 To realize concept (2), QUIC supports only secure cipher suites. Especially, a support algorithm of key exchange is only ephemeral elliptic curve Diffie-Hellman.
 
