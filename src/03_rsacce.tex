@@ -131,13 +131,14 @@ oracles:
  \item {$\Reveal(\pi^p_{i,\ell})$:
  The oracle $\pi^p_{i,\ell}$ returns session keys
  $\ik$, $\key$, and other secrets related the session
- keys such as static Diffie-Hellman secret value or
- master secret to respond this query.}
+ keys such as master secret to respond this query.}
 
  \item {$\Corrupt(P_p)$:
  If $P_p$ is $\Client_c$, then returns $\bot$.
  Otherwise, $P_p$ is $\Server_s$ and returns long-term
- secret key $\sk_s$.
+ secret key $\sk_s$ and other secrets which are kept
+ for a long time such as static Diffie-Hellman secret
+ value.
  If $P_p$ is $\Server_s$ and $\Corrupt(P_p)$ is the
  $\tau$-th query issued by the adversary, $P_p$ is said
  $\tau$-\textit{corrupted}.
@@ -287,11 +288,6 @@ We now define the following advantage measures.
   \item{$\Server_s$ is $\tau_{s}$-corrupted with
   $\tau_0 < \tau_{s}$ and}
 
-  \item{For all $0\leq k \leq \ell$, the adversary does
-  not issue a $\Reveal$ query to $\pi^s_{j, k}$ such that
-  $\pi^s_{j, k}$ has a matching conversation with
-  $\pi^c_{i, \ell}$.}
-
   \item{There is no server oracle $\pi^s_{j, \ell}$ such
   that $\pi^c_{i,\ell}$ has a matching conversation with
   $\pi^s_{j,\ell}$ or there exist plural oracles that have
@@ -309,10 +305,10 @@ We now define the following advantage measures.
  parter (server). In contrast to the original
  definition~\cite{KPW13:SACCE}, we allow an adversary to
  submit $\Corrupt$ queries.
- In our definition, the third condition ensure the
- consistency of the server in abbreviate handshake sessions.
- If the adversary can issue $\Reveal$ query to the server
- oracle $\pi^s_{j, k}$ where $0\leq k \leq \ell$, she can
+ In our definition, the second condition ensure the
+ consistency of the server handshake sessions.
+ If the adversary can issue $\Corrupt$ query to the server
+ $\Server_s$ before $\pi^s_{j, \ell}$ reaches accept, she can
  impersonate the server because she can make valid response
  (SHLO) using secret values such as static server's
  Diffie-Hellman secret value or master secret.
@@ -342,11 +338,11 @@ We now define the following advantage measures.
   $\pi^c_{j,0}$ that has a matching conversation with
   $\pi^s_{i,0}$.}
 
-  \item{For all $0\leq k \leq \ell$, the adversary
-  does not issue a $\Reveal$ query to either
-  $\pi^p_{i,k}$, nor to $\pi^{p^{\prime}}_{j,k}$ such
-  that $\pi^p_{i,k}$ has a matching conversation with
-  $\pi^{p^{\prime}}_{j,k}$.}
+  \item{The adversary does not issue a $\Reveal$ query
+  to either $\pi^p_{i,\ell}$, nor to
+  $\pi^{p^{\prime}}_{j,\ell}$ such that $\pi^p_{i,\ell}$
+  has a matching conversation with
+  $\pi^{p^{\prime}}_{j,\ell}$.}
  \end{itemize}
  We say that protocol $\Pi$ has
  \textit{channel confidentiality} if
@@ -372,12 +368,10 @@ $\Client_c$ (not the adversary). Later, if the
 adversary can hijack some abbreviate handshake session
 and share a new session key with server $\Server_s$,
 then it can break our channel confidentiality.
-The forth condition specifies forward-secrecy in the
+The second condition specifies forward-secrecy in the
 sense that message confidentiality of $\pi^p_{i,\ell}$
-is preserved, as long as the prior related oracles
-(including itself), $\pi^p_{i,k}$, with
-$0\leq k\leq \ell$, or their peer oracles do not reveal
-their session keys and secrets related the keys.
+is preserved, as long as the $\Server_s$ does not
+corrupt their long-term secret.
 \end{remark}
 
 \subsubsection{RSACCE security}
