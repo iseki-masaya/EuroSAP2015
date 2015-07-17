@@ -1,0 +1,107 @@
+%=====================================================
+\subsubsection{Initial Key Agreement}
+%=====================================================
+In this phase, the client sends an inchoate client
+hello (inchoateCHLO) which contains connection id
+and some information such as server name, protocol
+version, and user agent id. In our definition,
+the some informations are omitted.
+\\
+\noindent
+\underline{$\inchoateCHLO()$:} \\
+ $1.\ \ \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
+ $2.\ \ \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
+ $3.\ \ \return\ (\pInfo, \cid)$ \\
+%
+After the server receives inchoate client hello, it
+sends a rejection (REJ). The rejection (REJ) contains
+source address token (STK), server config (SCFG),
+a certificate, and a signature of server config generated
+by the server long term secret key. The client use
+STK in future queries to demonstrate ownership of their
+source IP address.
+\\
+\noindent
+\underline{$\REJ(m, \SCFG_{pub})$:} \\
+ $1.\ \ (\pInfo, \cid) = m$ \\
+ $2.\ \ \STK = \makeSTK()$ \\
+ $3.\ \ \pInfo = (IP_s, IP_c, port_s, port_c)$ \\
+ $4.\ \ \return\ (\pInfo, \cid, \SCFG_{pub}, \STK)$ \\
+\underline{$\makeSTK()$:} \\
+ $1.\ \ \iv_{\STK} \xleftarrow{\$} \{0,1\}^{96}$ \\
+ $2.\ \ \plaintext = IP_c \| currentTime$ \\
+ $3.\ \ \STK \leftarrow \iv_{\STK} \|
+        \SE.\Enc(k_{\STK}, len,\iv_{\STK},
+        \plaintext)$ \\
+ $4.\ \ \return\ \STK$ \\
+%
+After the client receives a rejection (REJ), the client
+checks the server config and generate NONC which consists
+of a random value and current time, and ephemeral
+Diffie-Hellman values.
+The client sends a client hello (CHLO) to the server.
+We define a client hello in 1-RTT connection as initialCHLO.
+\\
+\noindent
+\underline{$\initialCHLO(m)$:} \\
+ $1.\ \ (\pInfo, \cid, \SCFG_{pub}, \STK) = m$ \\
+ $2.\ \ \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
+ $3.\ \ \checkSCFG(\SCFG_{pub})$ \\
+ $4.\ \ t_c \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $5.\ \ T_c = g^{t_c}$ \\
+ $6.\ \ r \xleftarrow{\$} \{0,1\}^{160}$ \\
+ $7.\ \ \NONC \leftarrow currentTime \| r$ \\
+ $8.\ \ \return\ (\pInfo, \cid, \STK, \SCID, \NONC, T_c)$ \\
+\underline{$\checkSCFG(\SCFG_{pub})$:} \\
+ $1.\ \ (\SCID, T_s, \expy, \sigma_s, \cert_s) = \SCFG_{pub}$ \\
+ $2.\ \ \text{If } \expy \leq currentTime$ \\
+ $3.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+ $4.\ \ pk_s = \getPK(cert_s)$ \\
+ $5.\ \ \text{If } \SIG.\Vfy(pk_s, \sigma_s, \doc) = \perp$ \\
+ $6.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+%
+After the server receives a initial client hello, the
+server check this query. $\STK$ is an opaque byte string
+from the client's point of view. From the server's point
+of view it's an authenticated-encryption block that
+contains, at least, the client's IP address and a time
+stamp by the server. The server decrypt $\STK$ and
+validate time and source IP address. $\NONC$ is
+concatenation of time and a random value. The server
+register the time and random value and validate each
+$\NONC$ to ensure that it does not process the same
+connection twice. This checks prevent a part of replay
+attacks.
+\\
+\noindent
+\underline{$\checkQuery(\STK, k_{\STK}, \NONC, IP_c)$:} \\
+ $1.\ \ (\iv_{\STK}, c) = \STK$ \\
+ $2.\ \ (IP_c^{\prime}, time_{\STK}) = \SE.\Dec(k_{\STK}, \iv_{\STK}, c)$ \\
+ $3.\ \ (time_{\NONC}, r) = \NONC$ \\
+ $4.\ \ \text{If } (IP_c^{\prime}, currentTime) = \perp$, or \\
+ $5.\ \ \quad IP_c^{\prime} \neq IP_c$, or $time_{\STK} \leq time_{allowed}$\\
+ $6.\ \ \quad r \in \strike$, or $time_{\NONC} \not\in \strike_{rng}$ \\
+ $7.\ \ \quad \quad \Lambda = \text{'reject' and abort}$ \\
+%
+After the server validate initial client hello or the
+client sends initial client hello, they calculate initial
+key.
+\noindent
+\underline{$\getKey_c(\shareInfo, m, \init)$:} \\
+ $1.\ \ (\NONC, \cid ,T_s, t_c) = \shareInfo$ \\
+ $2.\ \ pms = T_s^{t_c}$ \\
+ $3.\ \ \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
+\underline{$\getKey_s(\shareInfo, m, \init)$:} \\
+ $1.\ \ (\NONC, \cid ,T_c, t_s) = \shareInfo$ \\
+ $2.\ \ pms = T_c^{t_s}$ \\
+ $3.\ \ \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
+\underline{$\extractKey(pms, \NONC, \cid, m, \ell, \init)$:}\\
+ $1.\ \ ms = \PRF(pms, \NONC)$ \\
+ $2.\ \ \text{If } \init = 1$ \\
+ $3.\ \ \quad str = \text{ QUIC key expansion }$ \\
+ $4.\ \ \text{Else }$ \\
+ $5.\ \ \quad str = \text{ QUIC forward secure expansion }$ \\
+ $6.\ \ \info = str \| 0x00 \| \cid \| m \| \SCFG_{pub}$ \\
+ $7.\ \ \return\ \text{the first $\ell$ octets (i.e. bytes) of T = }$ \\
+ $\quad \quad \text{(T(1),T(2), ...), where for all $i \in \Nset$, $T(i) = $} $\\
+ $\quad \quad \text{$\PRF(ms, T(i-1) \| \info \| 0x0i)$ and $T(0) = \epsilon$} $\\

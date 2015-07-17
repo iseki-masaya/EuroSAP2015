@@ -1,0 +1,27 @@
+%=====================================================
+\subsubsection{Key Agreement}
+%=====================================================
+In this phase, the server run $\SHLO$ to share forward
+secure key $\key$ and the client validate the query running
+$\receiveSHLO$.
+\\
+\noindent
+\underline{$\SHLO(m, \ik, \sqn)$:} \\
+ $1.\ \ (\pInfo, \cid, \STK, \SCID, \NONC, T_c) = m$ \\
+ $2.\ \ (\ik_c, \ik_s, \iv_c, \iv_s) = \ik$ \\
+ $3.\ \ t_s^{\prime} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $4.\ \ T_s^{\prime} = g^{t_s^{\prime}}$ \\
+ $5.\ \ \STK = \makeSTK()$ \\
+ $6.\ \ H = (\cid, \sqn)$ \\
+ $7.\ \ \plaintext = \SCFG_{pub} \| T_s^{\prime} \| \STK $\\
+ $8.\ \ c = \SE.\Enc(\ik_c, \iv_c \| \sqn, H, \plaintext)$ \\
+ $9.\ \ \return\ (\pInfo, H, c)$ \\
+\underline{$\receiveSHLO(m, \ik)$:} \\
+ $1.\ \ (\pInfo, H, c) = m$ \\
+ $2.\ \ (\ik_c, \ik_s, \iv_c, \iv_s) = \ik$ \\
+ $3.\ \ (\cid, \sqn) = H$ \\
+ $4.\ \ \plaintext = \SE.\Dec(\ik_c, \iv_c \| \sqn, H, c)$ \\
+ $5.\ \ \text{If }\plaintext = \perp$ \\
+ $6.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+ $7.\ \ \SCFG_{pub} \| T_s^{\prime} \| \STK  = \plaintext $ \\
+ $8.\ \ \return\ T_s^{\prime}$ \\

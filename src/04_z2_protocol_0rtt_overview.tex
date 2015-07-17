@@ -1,0 +1,153 @@
+\begin{figure*}[!htp]
+ \begin{center}
+
+\begin{enumerate}
+ \item{Initial Key Agreement} \\
+% client side
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $m_1 = \CHLO(\STK, \SCFG_{pub})$ \\
+    $\shareInfo = (\NONC, \cid, T_s, t_c^{\ast})$ \\
+    $\ik = \getKey_c(\shareInfo, m_1, 1)$ \\
+    $\Lambda = \preaccept$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+% middle
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $\xrightarrow{m_1}$ \\
+   $ $ \\
+  \end{tabular}
+ \end{minipage}%
+% server side
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $\checkQuery(\STK, k_{\STK}, \NONC, IP_c)$ \\
+    $\shareInfo = (\NONC, \cid, T_c^{\ast}, t_s) $ \\
+    $\ik=\getKey_s(\shareInfo, m_1, 1)$ \\
+    $\Lambda = \preaccept$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \item{Initial Data Exchange} \\
+% client side
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $\text{for each } \alpha \in {\MsgCntC{1}+1,...,\MsgCntC{2}}$ \\
+    $\sqn_c = \alpha + 3$ \\
+    $m_{2}^{\alpha} = \pak(\ik, sqn_c, M_c^{\alpha})$ \\
+    $m_{2} = (m_{2}^{\MsgCntC{1}+1},...,m_{2}^{\MsgCntC{2}})$ \\
+    $\processPacket(\ik, m_{3})$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+% middle
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $ $ \\
+   $\xrightarrow{m_{2}}$ \\
+   $\xleftarrow{m_{3}}$ \\
+  \end{tabular}
+ \end{minipage}%
+% server side
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $\text{for each } \beta \in {\MsgCntS{1}+1,...,\MsgCntS{2}}$ \\
+    $\sqn_s = \beta + 2$ \\
+    $m_{3}^{\beta} = \pak(\ik, \sqn_s, M_s^{\beta})$ \\
+    $m_{3} = (m_{3}^{\MsgCntS{1}+1},...,m_{3}^{\MsgCntS{2}})$ \\
+    $\processPacket(\ik, m_{2})$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \item{Key Agreement} \\
+% client side
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $ $ \\
+    $T_s^{\prime} = \receiveSHLO(m_{4}, \ik)$ \\
+    $\shareInfo = (\NONC, \cid ,T_s^{\prime}, t_c^{\ast}) $ \\
+    $m = m_1 \| m_{4}$ \\
+    $k = \getKey_c(\shareInfo, m_1, 0)$ \\
+    $\Lambda = \accept$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+% middle
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $\xleftarrow{m_{4}}$ \\
+   $ $ \\
+  \end{tabular}
+ \end{minipage}%
+% server side
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $ \sqn_s = \MsgCntS{2} + 3$ \\
+    $m_{4} = \SHLO(m_1, \ik, \sqn)$ \\
+    $\shareInfo = (\NONC, \cid, T_c^{\ast}, t_s^{\prime})$ \\
+    $m = m_1 \| m_{4}$ \\
+    $k = \getKey_s(\shareInfo, m, 0)$ \\
+    $\Lambda = \accept$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \item{Data Exchange} \\
+% client side
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $\text{for each } \alpha \in {\MsgCntC{2}+1,...,\MsgCntC{3}}$ \\
+    $\sqn_c = \alpha + 3$ \\
+    $m_{5}^{\alpha} = \pak(k, sqn_c, M_c^{\alpha})$ \\
+    $m_{5} = (m_{5}^{\MsgCntC{2}+1},...,m_{5}^{\MsgCntC{3}})$ \\
+    $\processPacket(k, m_{6})$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+% middle
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $ $ \\
+   $\xrightarrow{m_{5}}$ \\
+   $\xleftarrow{m_{6}}$ \\
+  \end{tabular}
+ \end{minipage}%
+% server side
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $\text{for each } \beta \in {\MsgCntS{2}+1,...,\MsgCntS{3}}$ \\
+    $\sqn_s = \beta + 3$ \\
+    $m_{6}^{\beta} = \pak(k, \sqn_s, M_s^{\beta})$ \\
+    $m_{6} = (m_{6}^{\MsgCntS{2}+1},...,m_{6}^{\MsgCntS{3}})$ \\
+    $\processPacket(\ik, m_{5})$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+\end{enumerate}
+ \caption{Abstract model of the 0-RTT QUIC handshake}\label{fig:quic_abst_0rtt}
+ \end{center}
+\end{figure*}

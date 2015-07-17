@@ -1,0 +1,15 @@
+%=====================================================
+\subsubsection{Initial Key Agreement}
+%=====================================================
+In this phase, the client sends an client with source
+address token $\STK$.
+\\
+\noindent
+\underline{$\CHLO(\STK, \SCFG_{pub})$:} \\
+ $1.\ \ \cid \xleftarrow{\$} \{0,1\}^{64}$ \\
+ $2.\ \ r \xleftarrow{\$} \{0,1\}^{160}$ \\
+ $3.\ \ \NONC \leftarrow currentTime \| r$ \\
+ $4.\ \ t_c^{\ast} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $5.\ \ T_c^{\ast} = g^{t_c^{\ast}}$ \\
+ $6.\ \ \pInfo = (IP_{src}, IP_{dst}, port_{src}, port_{dst})$ \\
+ $7.\ \ \return\ (\pInfo, \cid, \STK, \SCID, \NONC, T_c^{\ast})$ \\

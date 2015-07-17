@@ -157,51 +157,52 @@ FS13:ACCE,GKS13:RACCE,BDKSS14:SSH,BFKPSB14:TLS}.
 Still, the security model for analysing a server-only
 authenticated connection of TLS, i.e., Server-Only
 Authenticated and Confidential Channel Establishment
-(SACCE)~\cite{KPW13:SACCE}, does not capture our
-security issues.
-This is because, besides not treating the resumption
-originally, the SACCE security model only concerns,
-which is more essential, \textit{server} authentication
-and a \textit{client's} message confidentiality.
-However, these issues appear in (some kind of)
-\textit{client} authentication and \textit{server}
-confidentiality.
+(SACCE)~\cite{KPW13:SACCE}, is not appropriate for QUIC.
+There are two reasons. First, the abstract model of
+handshake between QUIC and TLS is different. In QUIC,
+the client and server share two keys which are initial
+key $ik$ and forward secure key $k$ and secrets are not
+reused in an abbreviate handshake. On the other hand,
+in TLS, the client and server share one key and reuse
+the secrets in an abbreviate handshake. Second, the
+security model proposed in the previous study
+~\cite{FG14:QUIC,LJBN15:QUIC} does not
+consider the consistency of the client between a full
+handshake and abbreviate handshakes.
+The second reasons is important in order to prevent the
+attacks \cite{LJBN15:QUIC}.
 
 %=====================================================
 \subsection{Our Results} \label{sec:proposal}
 %=====================================================
 
-To treat the security issues above, we introduce a new
+Our contributions are:
+\begin{itemize}
+ \item{A security model which is appropriate for QUIC
+ and more secure than QACCE.}
+
+ \item{A new scheme which is more secure and efficient
+ than original one.}
+\end{itemize}
+
+We introduce a new
 security model, what we call \textit{Resumable} SACCE
 (RSACCE) security, where we consider a server's message
 confidentiality, as well as a client's message
 confidentiality, where an adversary is allowed to send
 an encryption query to a \textit{server} (to break a
 server's message confidentiality) both in the full
-handshake session and its successor resumption sessions,
+handshake session and the abbreviate handshake sessions,
 as far as the server establishes the initial full
 handshake session with a \textit{honest} client.
-We also provide a stronger model, called strong RSACCE
-security, where we ensure that a sever can establish a
-resumption session only with the \textit{same} client
-as initially connected in the full handshake session.
-We require in that model forward secrecy among all
-independent sessions.
-For resumption to be effective, we compromise but still
-require some level of forward secrecy among related
-resumption sessions.
+We also consider the consistency of the client between
+0-RTT connections and 1-RTT connections, although a
+server does not ensure the consistency in QUIC.
+The consistency of the client between 0-RTT connections
+and 1-RTT connections prevent one of the attacks.
 
 We propose a more efficient and secure protocol with
 the spirit of QUIC.
 In~\cite{LJBN15:QUIC}, they find the five attacks for
 QUIC.
-Our proposal scheme can prevent these attacks.
-
-We analyse QUIC as it is, and prove that QUIC meets
-RSACCE security, but it does not meet the strong
-RSACCE one.
-We also analyse an optional version of QUIC with CETV,
-QUIC with an optional client encrypted tag value (CETV)
-mechanism, and show that it meets strong RSACCE security.
-Finally, we present a more efficient protocol than QUIC,
-which satisfies strong RSACCE security.
+Our proposal scheme can prevent the four attacks.

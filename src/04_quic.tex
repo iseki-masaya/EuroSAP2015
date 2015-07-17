@@ -3,10 +3,8 @@
 %=====================================================
 
 Quick UDP Internet Connections (QUIC) is a protocol
-developed by Google. This protocol is still under
+developed by Google and this protocol is still under
 development.
-The abstract model of QUIC is described in
-Fig.~\ref{fig:quic_abst}.
 The concepts of QUIC are (1) to reduce connectivity
 overheads before a client sends encrypted data and
 (2) to obtain better security guarantee than TLS.
@@ -14,20 +12,64 @@ To realize concept (1), QUIC is not defined over
 TCP but UDP, because TCP requires three-move handshake
 before initiating a cryptographic handshake, but UDP
 does not have. In addition, a client can send encrypted
-data concurrently with CHLO.
+data concurrently with CHLO which is second query of the
+client.
 To realize concept (2), QUIC supports only secure cipher
-suites.
-Especially, a support algorithm of key exchange is only
-ephemeral elliptic curve Diffie-Hellman.
+suites. Especially, a support algorithm of key exchange
+is only ephemeral elliptic curve Diffie-Hellman.
 
-Unlike TLS, QUIC does not support client authentication.
+There are two type connections, 1 round trip time (RTT)
+connection and 0 round trip time connection, in QUIC.
+The former case is called 1-RTT connection, the latter
+case is called 0-RTT connection.
+The first time a client connects to a server, the client
+must perform 1-RTT handshake to acquire a necessary
+information
+
+%=====================================================
+\subsection{1-RTT Connection Establishment} \label{sec:quic_1rtt}
+%=====================================================
+
+We provide the abstract model of QUIC for 1-RTT in
+Fig.~\ref{fig:quic_abst_1rtt}.
+%
+\input{04_z1_protocol_1rtt_overview}
+%
+We define five phases of QUIC handshake in 1-RTT.
+(1) \textbf{Initiate},
+(2) \textbf{Initial Key Agreement},
+(3) \textbf{Initial Data Exchange},
+(4) \textbf{Key Agreement}, and
+(5) \textbf{Data Exchange}.
+
+\input{04_quic_01_01_initiate}
+\input{04_quic_01_02_init_key_agr}
+\input{04_quic_01_03_init_data_exchange}
+\input{04_quic_01_04_key_agr}
+\input{04_quic_01_05_data_exchange}
+
+%=====================================================
+\subsection{0-RTT Connection Establishment} \label{sec:quic_0rtt}
+%=====================================================
+
+We provide the abstract model of QUIC for 0-RTT in
+Fig.~\ref{fig:quic_abst_0rtt}.
+%
+\input{04_z2_protocol_0rtt_overview}
+%
+We define four phases of QUIC handshake in 0-RTT.
+(1) \textbf{Initial Key Agreement},
+(2) \textbf{Initial Data Exchange},
+(3) \textbf{Key Agreement}, and
+(4) \textbf{Data Exchange}.
+The flow of (2), (3), (4) is the same as the 1-RTT
+handshake.
+
+\input{04_quic_02_01_init_key_agr}
 
 %=====================================================
 \subsection{Security of QUIC} \label{sec:quic_detail}
 %=====================================================
-
-\input{04_z1_protocol_overview}
-\input{04_z2_protocol_operations}
 
 We note that QUIC is not RSACCE secure.
 Although QUIC has a mechanism to prevent forgery,

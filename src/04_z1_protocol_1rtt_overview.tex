@@ -3,6 +3,7 @@
 
 \begin{enumerate}
  \item{Initiate} \\
+% client side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
   \centering
@@ -13,12 +14,14 @@
    \end{tabular}
   \end{minipage}%
  }
+% middle
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
    $ $ \\
   \end{tabular}
  \end{minipage}%
+% server side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
    \centering
@@ -30,12 +33,14 @@
   \end{minipage}%
  }
  \item{Initial Key Agreement} \\
+% client side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
   \centering
    \begin{tabular}{c}
     $m_1 = \inchoateCHLO()$ \\
     $m_3 = \initialCHLO(m_2)$ \\
+    $ $ \\
     $\shareInfo = (\NONC, \cid, T_s, t_c)$ \\
     $m = m_1 \| m_2 \| m_3$ \\
     $\ik = \getKey_c(\shareInfo, m, 1)$ \\
@@ -44,6 +49,7 @@
    \end{tabular}
   \end{minipage}%
  }
+% middle
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
@@ -51,13 +57,18 @@
    $\xleftarrow{m_2}$ \\
    $\xrightarrow{m_3}$ \\
    $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
   \end{tabular}
  \end{minipage}%
+% server side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
    \centering
    \begin{tabular}{c}
     $m_2 = \REJ(m_1, \SCFG_{pub})$ \\
+    $ $ \\
     $\checkQuery(\STK, k_{\STK}, \NONC, IP_c)$ \\
     $\shareInfo = (\NONC, \cid, T_c, t_s) $ \\
     $m = m_1 \| m_2 \| m_3$ \\
@@ -68,6 +79,7 @@
   \end{minipage}%
  }
  \item{Initial Data Exchange} \\
+% client side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
   \centering
@@ -80,6 +92,7 @@
    \end{tabular}
   \end{minipage}%
  }
+% middle
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
@@ -89,6 +102,7 @@
    $\xleftarrow{m_5}$ \\
   \end{tabular}
  \end{minipage}%
+% server side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
    \centering
@@ -102,6 +116,7 @@
   \end{minipage}%
  }
  \item{Key Agreement} \\
+% client side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
   \centering
@@ -115,6 +130,7 @@
    \end{tabular}
   \end{minipage}%
  }
+% middle
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
@@ -123,6 +139,7 @@
    $ $ \\
   \end{tabular}
  \end{minipage}%
+% server side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
    \centering
@@ -137,6 +154,7 @@
   \end{minipage}%
  }
  \item{Data Exchange} \\
+% client side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
   \centering
@@ -149,6 +167,7 @@
    \end{tabular}
   \end{minipage}%
  }
+% middle
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
@@ -157,6 +176,7 @@
    $\xleftarrow{m_8}$ \\
   \end{tabular}
  \end{minipage}%
+% server side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
    \centering
@@ -169,140 +189,7 @@
    \end{tabular}
   \end{minipage}%
  }
- \item{Key Exchange} \\
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-  \centering
-   \begin{tabular}{c}
-    $m_9 = \CHLO(\STK, \SCFG_{pub})$ \\
-    $\shareInfo = (\NONC, \cid, T_s, t_c^{\ast})$ \\
-    $\ik = \getKey_c(\shareInfo, m_9, 1)$ \\
-    $\Lambda = \preaccept$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \begin{minipage}[t]{0.13\textwidth}
-  \centering
-  \begin{tabular}{c}
-   $\xrightarrow{m_9}$ \\
-   $ $ \\
-  \end{tabular}
- \end{minipage}%
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-   \centering
-   \begin{tabular}{c}
-    $\checkQuery(\STK, k_{\STK}, \NONC, IP_c)$ \\
-    $\shareInfo = (\NONC, \cid, T_c^{\ast}, t_s) $ \\
-    $\ik=\getKey_s(\shareInfo, m_9, 1)$ \\
-    $\Lambda = \preaccept$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \item{Initial Data Exchange after 0-RTT} \\
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-  \centering
-   \begin{tabular}{c}
-    $\text{for each } \alpha \in {\MsgCntC{1}+1,...,\MsgCntC{2}}$ \\
-    $\sqn_c = \alpha + 3$ \\
-    $m_{10}^{\alpha} = \pak(\ik, sqn_c, M_c^{\alpha})$ \\
-    $m_{10} = (m_{10}^{\MsgCntC{1}+1},...,m_{10}^{\MsgCntC{2}})$ \\
-    $\processPacket(\ik, m_{11})$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \begin{minipage}[t]{0.13\textwidth}
-  \centering
-  \begin{tabular}{c}
-   $ $ \\
-   $ $ \\
-   $\xrightarrow{m_{10}}$ \\
-   $\xleftarrow{m_{11}}$ \\
-  \end{tabular}
- \end{minipage}%
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-   \centering
-   \begin{tabular}{c}
-    $\text{for each } \beta \in {\MsgCntS{1}+1,...,\MsgCntS{2}}$ \\
-    $\sqn_s = \beta + 2$ \\
-    $m_{11}^{\beta} = \pak(\ik, \sqn_s, M_s^{\beta})$ \\
-    $m_{11} = (m_{11}^{\MsgCntS{1}+1},...,m_{11}^{\MsgCntS{2}})$ \\
-    $\processPacket(\ik, m_{10})$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \item{Key Agreement after 0-RTT} \\
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-  \centering
-   \begin{tabular}{c}
-    $ $ \\
-    $T_s^{\prime} = \receiveSHLO(m_{12}, \ik)$ \\
-    $\shareInfo = (\NONC, \cid ,T_s^{\prime}, t_c^{\ast}) $ \\
-    $m = m_9 \| m_{12}$ \\
-    $k = \getKey_c(\shareInfo, m_9, 0)$ \\
-    $\Lambda = \accept$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \begin{minipage}[t]{0.13\textwidth}
-  \centering
-  \begin{tabular}{c}
-   $ $ \\
-   $\xleftarrow{m_{12}}$ \\
-   $ $ \\
-  \end{tabular}
- \end{minipage}%
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-   \centering
-   \begin{tabular}{c}
-    $ \sqn_s = \MsgCntS{2} + 3$ \\
-    $m_{12} = \SHLO(m_9, \ik, \sqn)$ \\
-    $\shareInfo = (\NONC, \cid, T_c^{\ast}, t_s^{\prime})$ \\
-    $m = m_9 \| m_{12}$ \\
-    $k = \getKey_s(\shareInfo, m, 0)$ \\
-    $\Lambda = \accept$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \item{Data Exchange after 0-RTT} \\
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-  \centering
-   \begin{tabular}{c}
-    $\text{for each } \alpha \in {\MsgCntC{2}+1,...,\MsgCntC{3}}$ \\
-    $\sqn_c = \alpha + 3$ \\
-    $m_{13}^{\alpha} = \pak(k, sqn_c, M_c^{\alpha})$ \\
-    $m_{13} = (m_{13}^{\MsgCntC{2}+1},...,m_{13}^{\MsgCntC{3}})$ \\
-    $\processPacket(k, m_{14})$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \begin{minipage}[t]{0.13\textwidth}
-  \centering
-  \begin{tabular}{c}
-   $ $ \\
-   $ $ \\
-   $\xrightarrow{m_{13}}$ \\
-   $\xleftarrow{m_{14}}$ \\
-  \end{tabular}
- \end{minipage}%
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-   \centering
-   \begin{tabular}{c}
-    $\text{for each } \beta \in {\MsgCntS{2}+1,...,\MsgCntS{3}}$ \\
-    $\sqn_s = \beta + 3$ \\
-    $m_{14}^{\beta} = \pak(k, \sqn_s, M_s^{\beta})$ \\
-    $m_{14} = (m_{14}^{\MsgCntS{2}+1},...,m_{14}^{\MsgCntS{3}})$ \\
-    $\processPacket(\ik, m_{13})$ \\
-   \end{tabular}
-  \end{minipage}%
- }
-\end{enumerate}
- \caption{Abstract model of the QUIC handshake}\label{fig:quic_abst}
+ \end{enumerate}
+ \caption{Abstract model of the 1-RTT QUIC handshake}\label{fig:quic_abst_1rtt}
  \end{center}
 \end{figure*}

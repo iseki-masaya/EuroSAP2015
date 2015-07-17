@@ -1,0 +1,30 @@
+%=====================================================
+\subsubsection{Initiate}
+%=====================================================
+In this phase, a client do nothing and a server make
+$k_{\STK}$ and run $\scfgGen$ and $\SIG.\Gen$ to
+generate server config (SCFG) and long term secret
+and public key.
+SCFG is composed of seven parameters AEAD, SCID, PDMD,
+PUBS, KEXS, and OBIT, and EXPY. The important parameters
+are SCID which is an opaque 16 byte identifier for
+this server config, PUBS which is server's
+Diffie-Hellman public value, and EXPY which is expiry time
+for this server config. The details of other parameters
+are described in~\cite{QUIC:Crypto}.
+Our definition consider only important parameters.
+\\
+\noindent
+\underline{$\scfgGen(sk_s)$:} \\
+ $1.\ \ t_s \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $2.\ \ T_s = g^{t_s}$ \\
+ $3.\ \ \SCID = \Hash(T_s \| \expy)$ \\
+ $4.\ \ str = \text{ QUIC server config signature }$ \\
+ $5.\ \ \doc = str \| 0x00 \| \SCID \| T_s \| \expy$ \\
+ $6.\ \ \sigma_s = \SIG.\Sign(sk_s, \doc)$ \\
+ $7.\ \ \SCFG_{pub} = (\SCID, T_s, \expy, \sigma_s, \cert_s)$ \\
+ $8.\ \ \return\ (\SCFG_{pub}, t_s)$ \\
+%
+Note that the generation of $\SCFG$ and the signing
+of its public parameters are done independently of
+client's connection requests.
