@@ -130,8 +130,8 @@ oracles:
 
  \item {$\Reveal(\pi^p_{i,\ell})$:
  The oracle $\pi^p_{i,\ell}$ returns session keys
- $\ik$, $\key$, and other secrets related the session
- keys such as master secret to respond this query.}
+ $\ik$, $\key$, and other secrets such as a master
+ secret or source-address token to respond this query.}
 
  \item {$\Corrupt(P_p)$:
  If $P_p$ is $\Client_c$, then returns $\bot$.
@@ -216,10 +216,11 @@ by $\pi^{p^{\prime}}_{j,\ell'}$.
  to $\ell=\ell'$,
  \begin{itemize}
   \item{Both oracles, $\pi^c_{i, \ell}$ and
-  $\pi^s_{j,\ell'}$, accept and
+  $\pi^s_{j,\ell'}$, accept ($\Lambda \in \{\accept, \preaccept}$) and
   $T^c_{i,\ell} = T^s_{j,\ell'}$; or}
 
-  \item{The server oracle $\pi^s_{j, \ell'}$ accepts,
+  \item{The server oracle $\pi^s_{j, \ell'}$ accepts
+  ($\Lambda \in \{\accept, \preaccept}$),
   and $T^c_{i,\ell}$ is a prefix of $T^s_{j,\ell'}$.}
  \end{itemize}
 \end{definition}
@@ -282,7 +283,8 @@ We now define the following advantage measures.
  $A$ terminates, there is a client oracle $\pi^c_{i, \ell}$
  such that the following conditions hold:
  \begin{itemize}
-  \item{$\pi^c_{i, \ell}$ accepts when $A$ issues its
+  \item{$\pi^c_{i, \ell}$ accepts
+  ($\Lambda \in \{\accept, \preaccept}$) when $A$ issues its
   $\tau_0$-th query with intended partner $\peer=s$, }
 
   \item{$\Server_s$ is $\tau_{s}$-corrupted with
@@ -298,7 +300,7 @@ We now define the following advantage measures.
 \end{definition}
 
 \begin{remark}
- The \textit{server authentication}  is a natural extension
+ The \textit{server authentication} is a natural extension
  of the counter part of~\cite{KPW13:SACCE}, which implies
  that if a client accepts, protocol $\Pi$ guarantees that
  the client has a matching conversation with the intended
@@ -323,8 +325,8 @@ We now define the following advantage measures.
  $\Encrypt(\pi^p_{i,\ell},\dots)$ query and we define
  $b=\bot$ unless the following conditions hold:
  \begin{itemize}
-  \item{$\pi^p_{i,\ell}$ reaches state
-  $\Lambda \in \{ \preaccept, \accept \}$ when $A$
+  \item{$\pi^p_{i,\ell}$ accepts
+  ($\Lambda \in \{\accept, \preaccept}$) when $A$
   issues its $\tau_0$-th query. (It implies by
   definition that for all $0\leq k < \ell$,
   $\pi^p_{i,k}$ has already accepted.)}
