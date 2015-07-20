@@ -1,0 +1,177 @@
+\begin{figure*}[htb]
+\begin{center}
+
+1-RTT connection establishment for initial key \vspace{10pt}\\
+
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ $\quad Client$ \\
+ $ $ \\
+ $1.\ \ \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
+ $2.\ \ m_1 = \cid$ \\
+ $ $\\
+ $1.\ \ \checkSCFG(\SCFG_{pub})$ \\
+ $2.\ \ t_c \xleftarrow{\$} \Zset_{q}^{\ast} $ \\
+ $3.\ \ T_c = g^{t_c} $ \\
+ $4.\ \ \NONC \xleftarrow{\$} \{0,1\}^{160} $ \\
+ $5.\ \ \shareInfo = (\NONC, \cid, \SCFG.T_s, t_c)$ \\
+ $6.\ \ m = m_1 \| m_2 \| m_3$ \\
+ $7.\ \ \ik = \getKey_c(\shareInfo, m, 1)$ \\
+ $8.\ \ \doc = T_c, \NONC, \STK, \SCFG.\SCID$ \\
+ $9.\ \ \mac = \PRF(\ik, \doc)$ \\
+ $10.\  m_3 = (\doc, \mac)$ \\
+\end{tabular}
+\end{minipage}%
+}
+% middle
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $\xrightarrow{m_1}$ \\
+   $ $ \\
+   $\xleftarrow{m_2}$ \\
+   $ $ \\
+   $ $ \\
+   $\xrightarrow{m_3}$ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+  \end{tabular}
+ \end{minipage}%
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ $\quad Server$ \\
+ $ $ \\
+ $ $ \\
+ $1.\ \ \text{choose } \SCFG $\\
+ $2.\ \ \STK = \SE.\Enc(\key_{\STK}, time\|IP_c)$ \\
+ $3.\ \ m_2 = (\SCFG_{pub}, \STK)$ \\
+ $ $ \\
+ $ $ \\
+ $ $ \\
+ $1.\ \ \checkQuery(\STK, k_{\STK}, \NONC, IP_c)$ \\
+ $2.\ \ \shareInfo = (\NONC, \cid, T_c, \SCFG.t_s)$ \\
+ $3.\ \ m = m_1 \| m_2 \| m_3$ \\
+ $4.\ \ \ik = \getKey_s(\shareInfo, m, 1)$ \\
+ $5.\ \ \doc = T_c, \NONC, \STK, \SCFG.\SCID$ \\
+ $6.\ \ \text{If }\mac \neq \PRF(\key_{\mac}, \doc)$ \\
+ $7.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+\end{tabular}
+\end{minipage}%
+} \vspace{10pt}
+
+1-RTT connection establishment for forward secure key
+\vspace{10pt}\\
+
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ $ $ \\
+ $ $ \\
+ $ $ \\
+ $ $ \\
+ $1.\ \ T_s^{\prime} \| \STK = \SE.\Dec(\ik, m_4)$ \\
+ $ $ \\
+ $ $ \\
+ $1.\ \ \shareInfo = (\NONC, \cid, T_s^{\prime}, t_c)$ \\
+ $2.\ \ m = m_1 \| m_2 \| m_3 \| m_4 $ \\
+ $3.\ \ \key = \getKey_c(\shareInfo, m, 0)$ \\
+\end{tabular}
+\end{minipage}%
+}
+\begin{minipage}[t]{0.13\textwidth}
+\centering
+\begin{tabular}[c]{l}
+ $ $\\
+ $ $\\
+ $ $\\
+ $\xleftarrow{m_4}$\\
+ $ $\\
+ $ $\\
+ $ $\\
+ $ $\\
+ $ $\\
+\end{tabular}
+\end{minipage}%
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ $1.\ \ t_s^{\prime} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $2.\ \ T_s^{\prime} = g^{t_s^{\prime}}$ \\
+ $3.\ \ \key_{\mac} \xleftarrow{\$} \{0,1\}^{\lambda}$ \\
+ $4.\ \ \STK = \SE.\Enc(\key_{\STK}, time\|IP_c\|\key_{\mac})$ \\
+ $5.\ \ \plaintext = T_s^{\prime} \| \STK \| \key_{\mac}$ \\
+ $6.\ \ m_4 = \SE.\Enc(\ik, \plaintext)$ \\
+ $ $ \\
+ $1.\ \ \shareInfo = (\NONC, \cid, T_c, t_s^{\prime})$ \\
+ $2.\ \ m = m_1 \| m_2 \| m_3 \| m_4 $ \\
+ $3.\ \ \key = \getKey_s(\shareInfo, m, 0)$ \\
+\end{tabular}
+\end{minipage}%
+} \vspace{10pt}
+
+0-RTT connection establishment
+\vspace{10pt}\\
+
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ $1.\ \ \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
+ $2.\ \ t_c \xleftarrow{\$} \Zset_{q}^{\ast} $ \\
+ $3.\ \ T_c = g^{t_c} $ \\
+ $4.\ \ \NONC \xleftarrow{\$} \{0,1\}^{160} $ \\
+ $5.\ \ \doc = T_c \| \NONC \| \cid \| \STK \| \SCFG.\SCID$ \\
+ $6.\ \ \mac = \PRF(\key_{mac}, \doc)$ \\
+ $7.\ \ m_5 = (\doc, \mac)$ \\
+ $ $ \\
+ $1.\ \ \shareInfo = (\NONC, \cid, \SCFG.T_s, t_c)$ \\
+ $2.\ \ m = m_5$ \\
+ $3.\ \ \ik = \getKey_c(\shareInfo, m, 1)$ \\
+\end{tabular}
+\end{minipage}%
+}
+% middle
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $\xrightarrow{m_5}$ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+  \end{tabular}
+ \end{minipage}%
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ $ $\\
+ $ $\\
+ $ $\\
+ $1.\ \ \checkQuery(\STK, k_{\STK}, \NONC, IP_c)$ \\
+ $2.\ \ \key_{\mac} = \SE.\Dec(\key_{\STK}, \STK) $\\
+ $3.\ \ \doc = T_c \| \NONC \| \cid \| \STK \| \SCFG.\SCID$ \\
+ $4.\ \ \text{If }\mac \neq \PRF(\key_{\mac}, \doc)$ \\
+ $5.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+ $ $\\
+ $1.\ \ \shareInfo = (\NONC, \cid, T_c, \SCFG.t_s)$ \\
+ $2.\ \ m = m_1 \| m_2 \| m_3$ \\
+ $3.\ \ \ik = \getKey_s(\shareInfo, m, 1)$ \\
+\end{tabular}
+\end{minipage}%
+}
+
+\caption{Abstract model of the propesed QUIC}\label{fig:quic_tls}
+\end{center}
+\end{figure*}
