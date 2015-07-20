@@ -1,0 +1,149 @@
+\begin{figure*}[!htp]
+ \begin{center}
+
+\begin{enumerate}
+ \item{Initial Key Agreement} \\
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $m_5 = \CHLO(\STK, \SCFG_{pub}, k_{MAC})$ \\
+    $\shareInfo = (\NONC, \cid, T_s, t_c^{\ast})$ \\
+    $\Lambda = \preaccept$ \\
+    $\ik = \getKey_c(\shareInfo, m_5, 1)$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $\xrightarrow{m_5}$ \\
+   $ $ \\
+  \end{tabular}
+ \end{minipage}%
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $\checkQuery(m_5, k_{\STK}, IP_c)$ \\
+    $\shareInfo = (\NONC, \cid, T_c^{\ast}, t_s)$ \\
+    $\Lambda = \preaccept$ \\
+    $\ik = \getKey_s(\shareInfo, m_5, 1)$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \item{Initial Data Exchange} \\
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $\text{for each } \alpha \in {\MsgCntC{0}+1,...,\MsgCntC{1}}$ \\
+    $\sqn_c = \alpha + 2$ \\
+    $m_{6}^{\alpha} = \pak(ik, sqn_c, M_c^{\alpha})$ \\
+    $ $ \\
+    $m_{6} = (m_{6}^{\MsgCntC{0}+1},...,m_{6}^{\MsgCntC{1}})$ \\
+    $\processPacket(ik, m_{7})$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $\xrightarrow{m_{6}}$ \\
+   $\xleftarrow{m_{7}}$ \\
+  \end{tabular}
+ \end{minipage}%
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $\text{for each } \beta \in {\MsgCntS{0}+1,...,\MsgCntS{1}}$ \\
+    $\sqn_s = \beta + 2$ \\
+    $m_{7}^{\beta} = \pak(ik, \sqn_s, M_s^{\beta})$ \\
+    $ $ \\
+    $m_{7} = (m_{7}^{\MsgCntS{0}+1},...,m_{7}^{\MsgCntS{1}})$ \\
+    $\processPacket(ik, m_{6})$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \item{Key Agreement} \\
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $ $ \\
+    $T_s^{\prime} = \receiveSHLO(m_8)$ \\
+    $\shareInfo = (\NONC, \cid, T_s^{\prime}, t_c^{\ast})$ \\
+    $m = m_5 \| m_8$ \\
+    $\Lambda = \accept$ \\
+    $k = \getKey_c(\shareInfo, m, 0)$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $\xleftarrow{m_{8}}$ \\
+   $ $ \\
+  \end{tabular}
+ \end{minipage}%
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $ \sqn_s = \MsgCntS{1} + 3$ \\
+    $m_{8} = \SHLO(m_5, \ik, \sqn_s)$ \\
+    $\shareInfo = (\NONC, \cid, T_c^{\ast}, t_s^{\prime})$ \\
+    $m = m_5 \| m_8$ \\
+    $\Lambda = \accept$ \\
+    $k = \getKey_s(\shareInfo, m, 0)$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \item{Data Exchange} \\
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $\text{for each } \alpha \in {\MsgCntC{1}+1,...,\MsgCntC{2}}$ \\
+    $\sqn_c = \alpha + 3$ \\
+    $m_{9}^{\alpha} = \pak(k, sqn_c, M_c^{\alpha})$ \\
+    $ $ \\
+    $m_{9} = (m_{9}^{\MsgCntC{1}+1},...,m_{9}^{\MsgCntC{2}})$ \\
+    $\processPacket(k, m_{10})$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $\xrightarrow{m_{9}}$ \\
+   $\xleftarrow{m_{10}}$ \\
+  \end{tabular}
+ \end{minipage}%
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $\text{for each } \beta \in {\MsgCntS{1}+1,...,\MsgCntS{2}}$ \\
+    $\sqn_s = \beta + 3$ \\
+    $m_{10}^{\beta} = \pak(k, \sqn_s, M_s^{\beta})$ \\
+    $ $ \\
+    $m_{10} = (m_{10}^{\MsgCntS{1}+1},...,m_{10}^{\MsgCntS{2}})$ \\
+    $\processPacket(ik, m_{9})$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+\end{enumerate}
+ \caption{Abstract model of 0-RTT our proposed scheme}\label{fig:quic_prop_0rtt}
+ \end{center}
+\end{figure*}

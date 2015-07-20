@@ -6,11 +6,41 @@ We note that QUIC is not RSACCE secure.
 We propose a new scheme which satisfy RSACCE secure and
 reduce interactions.
 
-The abstract model of our proposed scheme is in
-Fig.~\ref{fig:quic_prop}.
+%=====================================================
+\subsection{1-RTT Connection Establishment} \label{sec:quic_prop_1rtt}
+%=====================================================
 
-\input{05_z1_proposed_overview}
+The abstract model of our proposed scheme is in
+Fig.~\ref{fig:quic_prop_1rtt}.
+
+\input{05_z1_proposed_1rtt_overview}
+
+We define three phases of our proposed scheme handshake in 1-RTT.
+(1) \textbf{Initiate},
+(2) \textbf{Key Agreement},
+(3) \textbf{Data Exchange}.
+
+%=====================================================
+\subsection{0-RTT Connection Establishment} \label{sec:quic_prop_0rtt}
+%=====================================================
+
+The abstract model of our proposed scheme is in
+Fig.~\ref{fig:quic_prop_0rtt}.
+
+\input{05_z2_proposed_0rtt_overview}
+
+We define four phases of our proposed scheme handshake in 0-RTT.
+(1) \textbf{Initial Key Agreement},
+(2) \textbf{Initial Data Exchange},
+(3) \textbf{Key Agreement}, and
+(4) \textbf{Data Exchange}.
+The flow of (2), (3), (4) is the same as the 1-RTT
+handshake.
 \input{05_z2_proposed_operations}
+
+%=====================================================
+\subsection{Security of our proposed scheme} \label{sec:quic_proof}
+%=====================================================
 
 \begin{theorem} \label{theorem:proposed_scheme}
  Let $\mu$ be the output length of $\PRF$, let $\lambda$ be
@@ -40,10 +70,6 @@ Our proposed scheme can prevent the five attacks in~\cite{LJBN15:QUIC}.
  \item{Source-Address Token Manipulation Attack}
  \item{Crypto Stream Offset Attack}
 \end{itemize}
-
-%--------------------------------------------------------
-\subsection{Security of our proposed scheme} \label{sec:quic_proof}
-%--------------------------------------------------------
 
 We prove Theorem~\ref{theorem:proposed_scheme} by proving two lemmas.
 

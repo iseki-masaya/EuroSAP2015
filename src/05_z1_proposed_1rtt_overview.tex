@@ -1,0 +1,129 @@
+\begin{figure*}[!htp]
+ \begin{center}
+
+\begin{enumerate}
+ \item{Initiate} \\
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $ $ \\
+    $ $ \\
+    $ $ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $ $ \\
+   $ $ \\
+  \end{tabular}
+ \end{minipage}%
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $(pk_s, sk_s) = \SIG.\Gen()$ \\
+    $(\SCFG_{pub}, t_s) = \scfgGen(sk_s)$ \\
+    $k_{\STK} \xleftarrow{\$} \{0,1\}^{\lambda}$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \item{Key Agreement} \\
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $m_1 = \inchoateCHLO()$ \\
+    $ $ \\
+    $\shareInfo = (\NONC, \cid, T_s, t_c) $ \\
+    $\ik = \getKey_c(\shareInfo, m_1, 1) $ \\
+    $T_s^{\prime} = \receiveSHLO(m_2, \ik)$ \\
+    $\shareInfo = (\NONC, \cid, T_s^{\prime}, t_c)$ \\
+    $m = m_1 \| m_2$ \\
+    $\peer = S$ \\
+    $\Lambda = \accept$ \\
+    $k = \getKey_c(\shareInfo, m, 0)$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $\xrightarrow{m_1}$ \\
+   $ $ \\
+   $\xleftarrow{m_2}$ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+  \end{tabular}
+ \end{minipage}%
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $ $ \\
+    $\shareInfo = (\NONC, \cid, T_c, t_s)$ \\
+    $\ik = \getKey_s(\shareInfo, m_1, 1)$ \\
+    $ret = \SHLO(m_1, \ik, 0)$ \\
+    $m_2 = ret \| \SCFG_{pub} $ \\
+    $\shareInfo = (\NONC, \cid, T_c, t_s^{\prime}) $ \\
+    $m = m_1 \| m_2$ \\
+    $\peer = C$ \\
+    $\Lambda = \accept$ \\
+    $k=\getKey_s(\shareInfo, m, 0)$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \item{Data Exchange} \\
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+  \centering
+   \begin{tabular}{c}
+    $ $ \\
+    $ $ \\
+    $ $ \\
+    $\text{for each } \alpha \in {0,...,\MsgCntC{0}}$ \\
+    $\sqn_c = \alpha + 1$ \\
+    $m_3^{\alpha} = \pak(k, sqn_c, M_c^{\alpha})$ \\
+    $ $ \\
+    $m_3 = (m_3^{0},...,m_3^{\MsgCntC{0}})$ \\
+    $\processPacket(k, m_4)$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+ \begin{minipage}[t]{0.13\textwidth}
+  \centering
+  \begin{tabular}{c}
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $\xrightarrow{m_3}$ \\
+   $\xleftarrow{m_4}$ \\
+  \end{tabular}
+ \end{minipage}%
+ \fbox{
+  \begin{minipage}[t]{0.38\textwidth}
+   \centering
+   \begin{tabular}{c}
+    $\text{If the first message in $m_3$ does not come} $ \\
+    $\text{in $\duration$ QUIC regards the first query as}$ \\
+    $\text{DoS attack and this connection is closed.}$ \\
+    $\text{for each } \beta \in {0,...,\MsgCntS{0}}$ \\
+    $\sqn_s = \beta + 1$ \\
+    $m_4^{\beta} = \pak(k, \sqn_s, M_s^{\beta})$ \\
+    $ $ \\
+    $m_4 = (m_4^{\MsgCntS{0}+1},...,m_4^{\MsgCntS{1}})$ \\
+    $\processPacket(ik, m_3)$ \\
+   \end{tabular}
+  \end{minipage}%
+ }
+\end{enumerate}
+
+ \caption{Abstract model of 1-RTT our proposed scheme}\label{fig:quic_prop_1rtt}
+ \end{center}
+\end{figure*}
