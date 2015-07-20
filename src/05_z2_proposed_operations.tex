@@ -29,7 +29,7 @@
  $7.\ \ \plaintext = T_{s}^{\prime} \| \STK \| k_{MAC} \| \SCID$\\
  $8.\ \ H = (\cid, \sqn)$ \\
  $9.\ \ c = \SE.\Enc(\ik_c, \iv_c \| \sqn, H, \plaintext)$ \\
- $10.\  \return\ (\pInfo, \cid, H, c)$ \\
+ $10.\  \return\ (\pInfo, \cid, \SCFG_{pub}, H, c)$ \\
 \\
 \underline{$\makeSTK()$:} \\
  $1.\ \ \iv_{\STK} \xleftarrow{\$} \{0,1\}^{96}$ \\
@@ -39,7 +39,7 @@
  $5.\ \ \return\ \STK$ \\
 \\
 \underline{$\receiveSHLO(m, \ik)$:} \\
- $1.\ \ (\pInfo, \cid, \SCFG_{pub}, H, c, \fin) = m$ \\
+ $1.\ \ (\pInfo, \cid, \SCFG_{pub}, H, c) = m$ \\
  $2.\ \ (\ik_c, \ik_s, \iv_c, \iv_s) = \ik$ \\
  $3.\ \ (\cid, \sqn) = H$ \\
  $4.\ \ \plaintext = \SE.\Dec(\ik_c, \iv_c \| \sqn, H, c)$ \\
@@ -57,7 +57,7 @@
  $4.\ \ t_c^{\ast} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
  $5.\ \ T_c^{\ast} = g^{t_c^{\ast}}$ \\
  $6.\ \ \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
- $7.\ \ \doc = \cid \| \NONC \| T_c^{\ast}$ \\
+ $7.\ \ \doc = T_c^{\ast}$ \| \NONC \| \cid \| \STK \| \SCID \\
  $8.\ \ \mac = \PRF(k_{MAC}, \doc) $ \\
  $9.\ \ \return\ (\pInfo, \cid, \STK, \SCID, \NONC, T_c^{\ast}, \mac)$ \\
 \\
