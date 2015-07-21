@@ -196,7 +196,7 @@ authenticated confidential channel establishment (RSACCE).
 \subsubsection{Matching Conversations}
 In our SACCE protocol, a client always initiates an
 instance of the protocol and a server always sends the
-last message of the instance.
+last message of the instance in a whole handshake.
 We define matching conversations as in~\cite{JKSS12:ACCE}.
 We denote by $T^p_{i,\ell}$ the transcript of
 $\pi^p_{i,\ell}$, i.e., the history of all messages sent
@@ -209,14 +209,34 @@ $T^p_{i,\ell}$ contains at least one message, and
 $T^p_{i,\ell}$ is identical to
 $T^{p^{\prime}}_{j,\ell'}$ except the last message sent
 by $\pi^{p^{\prime}}_{j,\ell'}$.
+In QUIC, there are two type keys initial key $\ik$ and
+forward secure key $key$.
+We define two type Matching conversations according to
+a state of the instance.
 
-\begin{definition}[Matching conversations]
+\begin{definition}[Matching conversations for initial key]
  We say that $\pi^c_{i,\ell}$ and $\pi^s_{j,\ell'}$ have
- a matching conversation with each other if  in addition
+ a matching conversation for initial key with each other if
+ in addition to $\ell=\ell'$,
+ \begin{itemize}
+  \item{Both oracles, $\pi^c_{i, \ell}$ and
+  $\pi^s_{j,\ell'}$, accept ($\Lambda \in \preaccept$) and
+  $T^c_{i,\ell} = T^s_{j,\ell'}$}
+ \end{itemize}
+\end{definition}
+\begin{remark}
+ The client reach a state $\preaccept$ before sending the
+ message to a server. However, the client can know whether
+ a server indeed receives it since the server will send the
+ last message to a client.
+\end{remark}
+\begin{definition}[Matching conversations for forward secure key]
+ We say that $\pi^c_{i,\ell}$ and $\pi^s_{j,\ell'}$ have
+ a matching conversation with each other if in addition
  to $\ell=\ell'$,
  \begin{itemize}
   \item{Both oracles, $\pi^c_{i, \ell}$ and
-  $\pi^s_{j,\ell'}$, accept ($\Lambda \in \{\accept, \preaccept\}$) and
+  $\pi^s_{j,\ell'}$, accept ($\Lambda = \accept$) and
   $T^c_{i,\ell} = T^s_{j,\ell'}$; or}
 
   \item{The server oracle $\pi^s_{j, \ell'}$ accepts
@@ -283,14 +303,23 @@ We now define the following advantage measures.
  $A$ terminates, there is a client oracle $\pi^c_{i, \ell}$
  such that the following conditions hold:
  \begin{itemize}
-  \item{$\pi^c_{i, \ell}$ accepts
-  ($\Lambda \in \{\accept, \preaccept\}$) when $A$ issues its
+  \item{If $\ell = 0$, then $\pi^c_{i, 0}$ accepts
+  ($\Lambda \in \{\accept, \preaccept\}$), else $\pi^c_{i, \ell}$
+  accepts ($\Lambda = \accept$) when $A$ issues its
   $\tau_0$-th query with intended partner $\peer=s$, }
 
   \item{$\Server_s$ is $\tau_{s}$-corrupted with
   $\tau_0 < \tau_{s}$ and}
 
-  \item{There is no server oracle $\pi^s_{j, \ell}$ such
+  \item{If $\ell = 0$, there is no server oracle
+  $\pi^s_{j, 0}$ such
+  that $\pi^c_{i,0}$ has a matching conversation for initial
+  key with
+  $\pi^s_{j,0}$ or there exist plural oracles that have
+  a matching conversation for initial key with $\pi^c_{i,0}$.}
+
+  \item{If $\ell \neq 0$, there is no server oracle
+  $\pi^s_{j, \ell}$ such
   that $\pi^c_{i,\ell}$ has a matching conversation with
   $\pi^s_{j,\ell}$ or there exist plural oracles that have
   a matching conversation with $\pi^c_{i,\ell}$.}
@@ -314,6 +343,9 @@ We now define the following advantage measures.
  impersonate the server because she can make valid response
  (SHLO) using secret values such as static server's
  Diffie-Hellman secret value or master secret.
+ \textcolor{red}{
+ 0-RTTと1-RTTでmatching conversationの種類が異なる理由を説明する。
+ }
  \end{remark}
 
 \begin{definition}[Channel Confidentiality] \label{def:rsacce-cc}
