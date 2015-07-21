@@ -19,6 +19,10 @@ We define three phases of our proposed scheme handshake in 1-RTT.
 (1) \textbf{Initiate},
 (2) \textbf{Key Agreement},
 (3) \textbf{Data Exchange}.
+The flow of (1), (3) are the same as the same as the original QUIC
+handshake in 1-RTT.
+
+\input{05_prop_01_02_key_agr}
 
 %=====================================================
 \subsection{0-RTT Connection Establishment} \label{sec:quic_prop_0rtt}
@@ -34,7 +38,7 @@ We define four phases of our proposed scheme handshake in 0-RTT.
 (2) \textbf{Initial Data Exchange},
 (3) \textbf{Key Agreement}, and
 (4) \textbf{Data Exchange}.
-The flow of (2), (3), (4) is the same as the 1-RTT
+The flow of (2), (3), (4) are the same as the 1-RTT
 handshake.
 \input{05_z2_proposed_operations}
 

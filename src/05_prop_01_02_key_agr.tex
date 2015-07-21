@@ -1,0 +1,64 @@
+%=====================================================
+\subsubsection{Key Agreement}
+%=====================================================
+In this phase, the client sends an initial client
+hello (initialCHLO) which contains connection id,
+a client's Diffie-Hellman public value $T_c$, a client
+nonce $\NONC$, and some information such as server name,
+protocol version, and user agent id. In our definition,
+the some informations are omitted.
+\\
+\noindent
+\underline{$\initialCHLO()$:} \\
+ $1.\ \ \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
+ $2.\ \ \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
+ $3.\ \ t_c \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $4.\ \ T_c = g^{t_c}$ \\
+ $5.\ \ r \xleftarrow{\$} \{0,1\}^{160}$ \\
+ $6.\ \ \NONC = currentTime \| r$ \\
+ $7.\ \ \return\ (\pInfo, \cid, \NONC, T_c)$ \\
+%
+After the server receives initial client hello, it
+sends a server hello (SHLO). The server hello contains
+source address token (STK), server config (SCFG),
+a certificate, a signature of server config generated
+by the server long term secret key, ephemeral server's
+Diffie-Hellman public value $T_s^{\prime}$. The client use
+STK in future queries to demonstrate ownership of their
+source IP address.
+\\
+\noindent
+\underline{$\SHLO(m, \ik, \sqn)$:} \\
+ $1.\ \ (\pInfo, \cid, \NONC, T_c) = m$ \\
+ $2.\ \ \STK = \makeSTK()$ \\
+ $3.\ \ \pInfo = (IP_s, IP_c, port_s, port_c)$ \\
+ $4.\ \ (\ik_c, \ik_s, \iv_c, \iv_s) = \ik$ \\
+ $5.\ \ t_s^{\prime} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $6.\ \ T_s^{\prime} = g^{t_s^{\prime}}$ \\
+ $7.\ \ \plaintext = T_{s}^{\prime} \| \STK \| k_{MAC} \| \SCID$\\
+ $8.\ \ H = (\cid, \sqn)$ \\
+ $9.\ \ c = \SE.\Enc(\ik_c, \iv_c \| \sqn, H, \plaintext)$ \\
+ $10.\  \return\ (\pInfo, \cid, \SCFG_{pub}, H, c)$ \\
+\\
+\underline{$\makeSTK()$:} \\
+ $1.\ \ \iv_{\STK} \xleftarrow{\$} \{0,1\}^{96}$ \\
+ $2.\ \ k_{MAC} \xleftarrow{\$} \{0,1\}^{\mu}$ \\
+ $3.\ \ \plaintext = IP_c \| currentTime \| k_{\MAC}$ \\
+ $4.\ \ \STK \leftarrow \iv_{\STK} \| \SE.\Enc(k_{\STK}, len, \iv_{\STK}, \plaintext)$ \\
+ $5.\ \ \return\ \STK$ \\
+%
+After the client receives
+\\
+\noindent
+\underline{$\receiveSHLO(m, \ik)$:} \\
+ $1.\ \ (\pInfo, \cid, \SCFG_{pub}, H, c) = m$ \\
+ $2.\ \ (\ik_c, \ik_s, \iv_c, \iv_s) = \ik$ \\
+ $3.\ \ (\cid, \sqn) = H$ \\
+ $4.\ \ \plaintext = \SE.\Dec(\ik_c, \iv_c \| \sqn, H, c)$ \\
+ $5.\ \ \text{If }\plaintext = \perp$ \\
+ $6.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+ $7.\ \ T_{s}^{\prime} \| \STK \| k_{MAC} \| \SCID^{\prime} = \plaintext $ \\
+ $8.\ \ \text{If }\SCID^{\prime} \neq \SCID$ \\
+ $9.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+ $10.\  \return\ T_s^{\prime}$ \\
+\\
