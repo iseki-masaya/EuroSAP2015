@@ -3,6 +3,7 @@
 
 \begin{enumerate}
  \item{Initiate} \\
+% client side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
   \centering
@@ -13,6 +14,7 @@
    \end{tabular}
   \end{minipage}%
  }
+% middle
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
@@ -21,6 +23,7 @@
    $ $ \\
   \end{tabular}
  \end{minipage}%
+% server side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
    \centering
@@ -32,23 +35,25 @@
   \end{minipage}%
  }
  \item{Key Agreement} \\
+% client side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
   \centering
    \begin{tabular}{c}
     $m_1 = \initialCHLO()$ \\
     $ $ \\
-    $\shareInfo = (\NONC, \cid, T_s, t_c) $ \\
-    $\ik = \getKey_c(\shareInfo, m_1, 1) $ \\
+    $\shareInfo_c = (\NONC, \cid, T_s, t_c) $ \\
+    $\ik = \getKey_c(\shareInfo_c, m_1, 1) $ \\
     $T_s^{\prime} = \receiveSHLO(m_2, \ik)$ \\
-    $\shareInfo = (\NONC, \cid, T_s^{\prime}, t_c)$ \\
+    $\shareInfo_c^{\prime} = (\NONC, \cid, T_s^{\prime}, t_c)$ \\
     $m = m_1 \| m_2$ \\
     $\peer = S$ \\
     $\Lambda = \accept$ \\
-    $k = \getKey_c(\shareInfo, m, 0)$ \\
+    $k = \getKey_c(\shareInfo_c^{\prime}, m, 0)$ \\
    \end{tabular}
   \end{minipage}%
  }
+% middle
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
@@ -61,24 +66,26 @@
    $ $ \\
   \end{tabular}
  \end{minipage}%
+% server side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
    \centering
    \begin{tabular}{c}
     $ $ \\
-    $\shareInfo = (\NONC, \cid, T_c, t_s)$ \\
-    $\ik = \getKey_s(\shareInfo, m_1, 1)$ \\
+    $\shareInfo_s = (\NONC, \cid, T_c, t_s)$ \\
+    $\ik = \getKey_s(\shareInfo_s, m_1, 1)$ \\
     $ret = \SHLO(m_1, \ik, 0)$ \\
     $m_2 = ret \| \SCFG_{pub} $ \\
-    $\shareInfo = (\NONC, \cid, T_c, t_s^{\prime}) $ \\
+    $\shareInfo_s^{\prime} = (\NONC, \cid, T_c, t_s^{\prime}) $ \\
     $m = m_1 \| m_2$ \\
     $\peer = C$ \\
     $\Lambda = \accept$ \\
-    $k=\getKey_s(\shareInfo, m, 0)$ \\
+    $k=\getKey_s(\shareInfo_s^{\prime}, m, 0)$ \\
    \end{tabular}
   \end{minipage}%
  }
  \item{Data Exchange} \\
+% client side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
   \centering
@@ -95,6 +102,7 @@
    \end{tabular}
   \end{minipage}%
  }
+% middle
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
@@ -106,6 +114,7 @@
    $\xleftarrow{m_4}$ \\
   \end{tabular}
  \end{minipage}%
+% server side
  \fbox{
   \begin{minipage}[t]{0.38\textwidth}
    \centering
