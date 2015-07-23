@@ -16,14 +16,15 @@ Our definition consider only important parameters.
 \\
 \noindent
 \underline{$\scfgGen(sk_s)$:} \\
- $1.\ \ t_s \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
- $2.\ \ T_s = g^{t_s}$ \\
- $3.\ \ \SCID = \Hash(T_s \| \expy)$ \\
- $4.\ \ str = \text{ QUIC server config signature }$ \\
- $5.\ \ \doc = str \| 0x00 \| \SCID \| T_s \| \expy$ \\
- $6.\ \ \sigma_s = \SIG.\Sign(sk_s, \doc)$ \\
- $7.\ \ \SCFG_{pub} = (\SCID, T_s, \expy, \sigma_s, \cert_s)$ \\
- $8.\ \ \return\ (\SCFG_{pub}, t_s)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad t_s \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $\prob.\quad T_s = g^{t_s}$ \\
+ $\prob.\quad \SCID = \Hash(T_s \| \expy)$ \\
+ $\prob.\quad str = \text{ QUIC server config signature }$ \\
+ $\prob.\quad \doc = str \| 0x00 \| \SCID \| T_s \| \expy$ \\
+ $\prob.\quad \sigma_s = \SIG.\Sign(sk_s, \doc)$ \\
+ $\prob.\quad \SCFG_{pub} = (\SCID, T_s, \expy, \sigma_s, \cert_s)$ \\
+ $\prob.\quad \return\ (\SCFG_{pub}, t_s)$ \\
 %
 Note that the generation of $\SCFG$ and the signing
 of its public parameters are done independently of

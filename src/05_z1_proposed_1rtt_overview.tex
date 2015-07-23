@@ -42,14 +42,15 @@
    \begin{tabular}{c}
     $m_1 = \initialCHLO()$ \\
     $ $ \\
+    $\checkSCFG(\SCFG_{pub}) $ \\
     $\shareInfo_c = (\NONC, \cid, T_s, t_c) $ \\
     $\ik = \getKey_c(\shareInfo_c, m_1, 1) $ \\
     $T_s^{\prime} = \receiveSHLO(m_2, \ik)$ \\
     $\shareInfo_c^{\prime} = (\NONC, \cid, T_s^{\prime}, t_c)$ \\
     $m = m_1 \| m_2$ \\
     $\peer = S$ \\
-    $\Lambda = \accept$ \\
     $k = \getKey_c(\shareInfo_c^{\prime}, m, 0)$ \\
+    $\Lambda = \accept$ \\
    \end{tabular}
   \end{minipage}%
  }
@@ -72,6 +73,7 @@
    \centering
    \begin{tabular}{c}
     $ $ \\
+    $ $ \\
     $\shareInfo_s = (\NONC, \cid, T_c, t_s)$ \\
     $\ik = \getKey_s(\shareInfo_s, m_1, 1)$ \\
     $ret = \SHLO(m_1, \ik, 0)$ \\
@@ -79,8 +81,8 @@
     $\shareInfo_s^{\prime} = (\NONC, \cid, T_c, t_s^{\prime}) $ \\
     $m = m_1 \| m_2$ \\
     $\peer = C$ \\
-    $\Lambda = \accept$ \\
     $k=\getKey_s(\shareInfo_s^{\prime}, m, 0)$ \\
+    $\Lambda = \accept$ \\
    \end{tabular}
   \end{minipage}%
  }

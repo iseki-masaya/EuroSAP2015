@@ -9,30 +9,33 @@ $\processPacket$.
 \\
 \noindent
 \underline{$\getIV(H, \kappa, P)$:} \\
- $1.\ \ (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
- $2.\ \ \text{If } P \in \Client$ \\
- $3.\ \ \quad src = c, dst = s$ \\
- $4.\ \ \text{Else if} P \in \Server$ \\
- $5.\ \ \quad src = s, dst = c$ \\
- $6.\ \ (\cid, \sqn) = H$ \\
- $7.\ \ \return\ (\iv_{dst}, \sqn)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
+ $\prob.\quad \text{If } P \in \Client$ \\
+ $\prob.\quad \quad src = c, dst = s$ \\
+ $\prob.\quad \text{Else if} P \in \Server$ \\
+ $\prob.\quad \quad src = s, dst = c$ \\
+ $\prob.\quad (\cid, \sqn) = H$ \\
+ $\prob.\quad \return\ (\iv_{dst}, \sqn)$ \\
 \underline{$\pak(\kappa, \sqn, m)$:} \\
- $1.\ \ (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
- $2.\ \ \text{If } P \in \Client$ \\
- $3.\ \ \quad src = c, dst = s$ \\
- $4.\ \ \text{Else if } P \in \Server$ \\
- $5.\ \ \quad src = s, dst = c$ \\
- $6.\ \ \pInfo = (IP_{src}, IP_{dst}, port_{src}, port_{dst})$ \\
- $7.\ \ H = (\cid, \sqn)$ \\
- $8.\ \ \iv = \getIV(H, \kappa)$ \\
- $9.\ \ \return\ (\pInfo, \SE.\Enc(k_{dst}, \iv, H, m) )$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
+ $\prob.\quad \text{If } P \in \Client$ \\
+ $\prob.\quad \quad src = c, dst = s$ \\
+ $\prob.\quad \text{Else if } P \in \Server$ \\
+ $\prob.\quad \quad src = s, dst = c$ \\
+ $\prob.\quad \pInfo = (IP_{src}, IP_{dst}, port_{src}, port_{dst})$ \\
+ $\prob.\quad H = (\cid, \sqn)$ \\
+ $\prob.\quad \iv = \getIV(H, \kappa)$ \\
+ $\prob.\quad \return\ (\pInfo, \SE.\Enc(k_{dst}, \iv, H, m) )$ \\
 \underline{$\processPacket(\kappa, p_1,...,p_v)$:} \\
- $1.\ \ (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
- $2.\ \ \text{If } P \in \Client$ \\
- $3.\ \ \quad src = c, dst = s$ \\
- $4.\ \ \text{Else if} P \in \Server$ \\
- $5.\ \ \quad src = s, dst = c$ \\
- $6.\ \ \text{for each } \gamma \in [v]$ \\
- $7.\ \ \quad (H_{\gamma}, c_{\gamma}) = p_{\gamma}$ \\
- $8.\ \ \quad \iv_{\gamma} = \getIV(H_{\gamma}, \kappa)$ \\
- $9.\ \ \quad m_{\gamma} = \SE.\Dec(k_{src}, \iv_{\gamma}, H_{\gamma}, c_{\gamma})$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (k_c, k_s, \iv_c, \iv_s) = \kappa$ \\
+ $\prob.\quad \text{If } P \in \Client$ \\
+ $\prob.\quad \quad src = c, dst = s$ \\
+ $\prob.\quad \text{Else if} P \in \Server$ \\
+ $\prob.\quad \quad src = s, dst = c$ \\
+ $\prob.\quad \text{for each } \gamma \in [v]$ \\
+ $\prob.\quad \quad (H_{\gamma}, c_{\gamma}) = p_{\gamma}$ \\
+ $\prob.\quad \quad \iv_{\gamma} = \getIV(H_{\gamma}, \kappa)$ \\
+ $\prob.\quad \quad m_{\gamma} = \SE.\Dec(k_{src}, \iv_{\gamma}, H_{\gamma}, c_{\gamma})$ \\

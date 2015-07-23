@@ -208,3 +208,16 @@
 \newcommand{\Client}{\mathcal{C}}
 \newcommand{\Server}{\mathcal{S}}
 \newcommand{\Party}{\mathcal{P}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% How to make STK
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\makeSTKQUIC}{\ensuremath{
+\ifORIGINAL
+\STK = \SE.\Enc(\key_{\STK}, time\|IP_c)
+\else
+\STK = \SE.\Enc(\key_{\STK}, time\|IP_c\|\key_{mac})
+\fi
+}}

@@ -9,9 +9,10 @@ the some informations are omitted.
 \\
 \noindent
 \underline{$\inchoateCHLO()$:} \\
- $1.\ \ \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
- $2.\ \ \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
- $3.\ \ \return\ (\pInfo, \cid)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
+ $\prob.\quad \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
+ $\prob.\quad \return\ (\pInfo, \cid)$ \\
 %
 After the server receives inchoate client hello, it
 sends a rejection (REJ). The rejection (REJ) contains
@@ -23,17 +24,19 @@ source IP address.
 \\
 \noindent
 \underline{$\REJ(m, \SCFG_{pub})$:} \\
- $1.\ \ (\pInfo, \cid) = m$ \\
- $2.\ \ \STK = \makeSTK()$ \\
- $3.\ \ \pInfo = (IP_s, IP_c, port_s, port_c)$ \\
- $4.\ \ \return\ (\pInfo, \cid, \SCFG_{pub}, \STK)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\pInfo, \cid) = m$ \\
+ $\prob.\quad \STK = \makeSTK()$ \\
+ $\prob.\quad \pInfo = (IP_s, IP_c, port_s, port_c)$ \\
+ $\prob.\quad \return\ (\pInfo, \cid, \SCFG_{pub}, \STK)$ \\
 \underline{$\makeSTK()$:} \\
- $1.\ \ \iv_{\STK} \xleftarrow{\$} \{0,1\}^{96}$ \\
- $2.\ \ \plaintext = IP_c \| currentTime$ \\
- $3.\ \ \STK \leftarrow \iv_{\STK} \|
+ \setcounter{nombre}{0}%
+ $\prob.\quad \iv_{\STK} \xleftarrow{\$} \{0,1\}^{96}$ \\
+ $\prob.\quad \plaintext = IP_c \| currentTime$ \\
+ $\prob.\quad \STK \leftarrow \iv_{\STK} \|
         \SE.\Enc(k_{\STK}, len,\iv_{\STK},
         \plaintext)$ \\
- $4.\ \ \return\ \STK$ \\
+ $\prob.\quad \return\ \STK$ \\
 %
 After the client receives a rejection (REJ), the client
 checks the server config and generate NONC which consists
@@ -44,21 +47,24 @@ We define a client hello in 1-RTT connection as initialCHLO.
 \\
 \noindent
 \underline{$\initialCHLO(m)$:} \\
- $1.\ \ (\pInfo, \cid, \SCFG_{pub}, \STK) = m$ \\
- $2.\ \ \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
- $3.\ \ \checkSCFG(\SCFG_{pub})$ \\
- $4.\ \ t_c \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
- $5.\ \ T_c = g^{t_c}$ \\
- $6.\ \ r \xleftarrow{\$} \{0,1\}^{160}$ \\
- $7.\ \ \NONC \leftarrow currentTime \| r$ \\
- $8.\ \ \return\ (\pInfo, \cid, \STK, \SCID, \NONC, T_c)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\pInfo, \cid, \SCFG_{pub}, \STK) = m$ \\
+ $\prob.\quad \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
+ $\prob.\quad t_c \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $\prob.\quad T_c = g^{t_c}$ \\
+ $\prob.\quad r \xleftarrow{\$} \{0,1\}^{160}$ \\
+ $\prob.\quad \NONC \leftarrow currentTime \| r$ \\
+ $\prob.\quad \return\ (\pInfo, \cid, \STK, \SCID, \NONC, T_c)$ \\
 \underline{$\checkSCFG(\SCFG_{pub})$:} \\
- $1.\ \ (\SCID, T_s, \expy, \sigma_s, \cert_s) = \SCFG_{pub}$ \\
- $2.\ \ \text{If } \expy \leq currentTime$ \\
- $3.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
- $4.\ \ pk_s = \getPK(cert_s)$ \\
- $5.\ \ \text{If } \SIG.\Vfy(pk_s, \sigma_s, \doc) = \perp$ \\
- $6.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\SCID, T_s, \expy, \sigma_s, \cert_s) = \SCFG_{pub}$ \\
+ $\prob.\quad \text{If } \expy \leq currentTime$ \\
+ $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
+ $\prob.\quad pk_s = \getPK(cert_s)$ \\
+ $\prob.\quad str = \text{ QUIC server config signature }$ \\
+ $\prob.\quad \doc = str \| 0x00 \| \SCID \| T_s \| \expy$ \\
+ $\prob.\quad \text{If } \SIG.\Vfy(pk_s, \sigma_s, \doc) = \perp$ \\
+ $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
 %
 After the server receives a initial client hello, the
 server check this query. $\STK$ is an opaque byte string
@@ -75,33 +81,37 @@ attacks.
 \\
 \noindent
 \underline{$\checkQuery(\STK, k_{\STK}, \NONC, IP_c)$:} \\
- $1.\ \ (\iv_{\STK}, c) = \STK$ \\
- $2.\ \ (IP_c^{\prime}, time_{\STK}) = \SE.\Dec(k_{\STK}, \iv_{\STK}, c)$ \\
- $3.\ \ (time_{\NONC}, r) = \NONC$ \\
- $4.\ \ \text{If } (IP_c^{\prime}, currentTime) = \perp$, or \\
- $5.\ \ \quad IP_c^{\prime} \neq IP_c$, or $time_{\STK} \leq time_{allowed}$\\
- $6.\ \ \quad r \in \strike$, or $time_{\NONC} \not\in \strike_{rng}$ \\
- $7.\ \ \quad \quad \Lambda = \text{'reject' and abort}$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\iv_{\STK}, c) = \STK$ \\
+ $\prob.\quad (IP_c^{\prime}, time_{\STK}) = \SE.\Dec(k_{\STK}, \iv_{\STK}, c)$ \\
+ $\prob.\quad (time_{\NONC}, r) = \NONC$ \\
+ $\prob.\quad \text{If } (IP_c^{\prime}, currentTime) = \perp$, or \\
+ $\prob.\quad \quad IP_c^{\prime} \neq IP_c$, or $time_{\STK} \leq time_{allowed}$\\
+ $\prob.\quad \quad r \in \strike$, or $time_{\NONC} \not\in \strike_{rng}$ \\
+ $\prob.\quad \quad \quad \Lambda = \text{'reject' and abort}$ \\
 %
 After the server validate initial client hello or the
 client sends initial client hello, they calculate initial
 key.
 \noindent
 \underline{$\getKey_c(\shareInfo, m, \init)$:} \\
- $1.\ \ (\NONC, \cid ,T_s, t_c) = \shareInfo$ \\
- $2.\ \ pms = T_s^{t_c}$ \\
- $3.\ \ \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\NONC, \cid ,T_s, t_c) = \shareInfo$ \\
+ $\prob.\quad pms = T_s^{t_c}$ \\
+ $\prob.\quad \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
 \underline{$\getKey_s(\shareInfo, m, \init)$:} \\
- $1.\ \ (\NONC, \cid ,T_c, t_s) = \shareInfo$ \\
- $2.\ \ pms = T_c^{t_s}$ \\
- $3.\ \ \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\NONC, \cid ,T_c, t_s) = \shareInfo$ \\
+ $\prob.\quad pms = T_c^{t_s}$ \\
+ $\prob.\quad \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
 \underline{$\extractKey(pms, \NONC, \cid, m, \ell, \init)$:}\\
- $1.\ \ ms = \PRF(pms, \NONC)$ \\
- $2.\ \ \text{If } \init = 1$ \\
- $3.\ \ \quad str = \text{ QUIC key expansion }$ \\
- $4.\ \ \text{Else }$ \\
- $5.\ \ \quad str = \text{ QUIC forward secure expansion }$ \\
- $6.\ \ \info = str \| 0x00 \| \cid \| m \| \SCFG_{pub}$ \\
- $7.\ \ \return\ \text{the first $\ell$ octets (i.e. bytes) of T = }$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad ms = \PRF(pms, \NONC)$ \\
+ $\prob.\quad \text{If } \init = 1$ \\
+ $\prob.\quad \quad str = \text{ QUIC key expansion }$ \\
+ $\prob.\quad \text{Else }$ \\
+ $\prob.\quad \quad str = \text{ QUIC forward secure expansion }$ \\
+ $\prob.\quad \info = str \| 0x00 \| \cid \| m \| \SCFG_{pub}$ \\
+ $\prob.\quad \return\ \text{the first $\ell$ octets (i.e. bytes) of T = }$ \\
  $\quad \quad \text{(T(1),T(2), ...), where for all $i \in \Nset$, $T(i) = $} $\\
  $\quad \quad \text{$\PRF(ms, T(i-1) \| \info \| 0x0i)$ and $T(0) = \epsilon$} $\\

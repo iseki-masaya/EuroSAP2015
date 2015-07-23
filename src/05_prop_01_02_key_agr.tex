@@ -10,13 +10,14 @@ the some informations are omitted.
 \\
 \noindent
 \underline{$\initialCHLO()$:} \\
- $1.\ \ \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
- $2.\ \ \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
- $3.\ \ t_c \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
- $4.\ \ T_c = g^{t_c}$ \\
- $5.\ \ r \xleftarrow{\$} \{0,1\}^{160}$ \\
- $6.\ \ \NONC = currentTime \| r$ \\
- $7.\ \ \return\ (\pInfo, \cid, \NONC, T_c)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
+ $\prob.\quad \pInfo = (IP_c, IP_s, port_c, port_s)$ \\
+ $\prob.\quad t_c \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $\prob.\quad T_c = g^{t_c}$ \\
+ $\prob.\quad r \xleftarrow{\$} \{0,1\}^{160}$ \\
+ $\prob.\quad \NONC = currentTime \| r$ \\
+ $\prob.\quad \return\ (\pInfo, \cid, \NONC, T_c)$ \\
 %
 After the server receives initial client hello, it
 sends a server hello (SHLO). The server hello contains
@@ -29,36 +30,51 @@ source IP address.
 \\
 \noindent
 \underline{$\SHLO(m, \ik, \sqn)$:} \\
- $1.\ \ (\pInfo, \cid, \NONC, T_c) = m$ \\
- $2.\ \ \STK = \makeSTK()$ \\
- $3.\ \ \pInfo = (IP_s, IP_c, port_s, port_c)$ \\
- $4.\ \ (\ik_c, \ik_s, \iv_c, \iv_s) = \ik$ \\
- $5.\ \ t_s^{\prime} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
- $6.\ \ T_s^{\prime} = g^{t_s^{\prime}}$ \\
- $7.\ \ \plaintext = T_{s}^{\prime} \| \STK \| k_{MAC} \| \SCID$\\
- $8.\ \ H = (\cid, \sqn)$ \\
- $9.\ \ c = \SE.\Enc(\ik_c, \iv_c \| \sqn, H, \plaintext)$ \\
- $10.\  \return\ (\pInfo, \cid, \SCFG_{pub}, H, c)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\pInfo, \cid, \NONC, T_c) = m$ \\
+ $\prob.\quad \STK = \makeSTK()$ \\
+ $\prob.\quad \pInfo = (IP_s, IP_c, port_s, port_c)$ \\
+ $\prob.\quad (\ik_c, \ik_s, \iv_c, \iv_s) = \ik$ \\
+ $\prob.\quad t_s^{\prime} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $\prob.\quad T_s^{\prime} = g^{t_s^{\prime}}$ \\
+ $\prob.\quad \plaintext = T_{s}^{\prime} \| \STK \| k_{MAC} \| \SCID$\\
+ $\prob.\quad H = (\cid, \sqn)$ \\
+ $\prob.\quad c = \SE.\Enc(\ik_c, \iv_c \| \sqn, H, \plaintext)$ \\
+ $\prob.\quad \return\ (\pInfo, \cid, \SCFG_{pub}, H, c)$ \\
 \\
 \underline{$\makeSTK()$:} \\
- $1.\ \ \iv_{\STK} \xleftarrow{\$} \{0,1\}^{96}$ \\
- $2.\ \ k_{MAC} \xleftarrow{\$} \{0,1\}^{\mu}$ \\
- $3.\ \ \plaintext = IP_c \| currentTime \| k_{\MAC}$ \\
- $4.\ \ \STK \leftarrow \iv_{\STK} \| \SE.\Enc(k_{\STK}, len, \iv_{\STK}, \plaintext)$ \\
- $5.\ \ \return\ \STK$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad \iv_{\STK} \xleftarrow{\$} \{0,1\}^{96}$ \\
+ $\prob.\quad k_{MAC} \xleftarrow{\$} \{0,1\}^{\mu}$ \\
+ $\prob.\quad \plaintext = IP_c \| currentTime \| k_{\MAC}$ \\
+ $\prob.\quad \STK \leftarrow \iv_{\STK} \| \SE.\Enc(k_{\STK}, len, \iv_{\STK}, \plaintext)$ \\
+ $\prob.\quad \return\ \STK$ \\
 %
-After the client receives
+After the client receives a server hello, the client
+checks server config and calculate a forward secure key.
 \\
 \noindent
 \underline{$\receiveSHLO(m, \ik)$:} \\
- $1.\ \ (\pInfo, \cid, \SCFG_{pub}, H, c) = m$ \\
- $2.\ \ (\ik_c, \ik_s, \iv_c, \iv_s) = \ik$ \\
- $3.\ \ (\cid, \sqn) = H$ \\
- $4.\ \ \plaintext = \SE.\Dec(\ik_c, \iv_c \| \sqn, H, c)$ \\
- $5.\ \ \text{If }\plaintext = \perp$ \\
- $6.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
- $7.\ \ T_{s}^{\prime} \| \STK \| k_{MAC} \| \SCID^{\prime} = \plaintext $ \\
- $8.\ \ \text{If }\SCID^{\prime} \neq \SCID$ \\
- $9.\ \ \quad \Lambda = \text{'reject' and abort}$ \\
- $10.\  \return\ T_s^{\prime}$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\pInfo, \cid, \SCFG_{pub}, H, c) = m$ \\
+ $\prob.\quad (\ik_c, \ik_s, \iv_c, \iv_s) = \ik$ \\
+ $\prob.\quad (\cid, \sqn) = H$ \\
+ $\prob.\quad \plaintext = \SE.\Dec(\ik_c, \iv_c \| \sqn, H, c)$ \\
+ $\prob.\quad \text{If }\plaintext = \perp$ \\
+ $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
+ $\prob.\quad T_{s}^{\prime} \| \STK \| k_{MAC} \| \SCID^{\prime} = \plaintext $ \\
+ $\prob.\quad \text{If }\SCID^{\prime} \neq \SCID$ \\
+ $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
+ $\prob.\quad \return\ T_s^{\prime}$ \\
 \\
+\underline{$\checkSCFG(\SCFG_{pub})$:} \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\SCID, T_s, \expy, \sigma_s, \cert_s) = \SCFG_{pub}$ \\
+ $\prob.\quad \text{If } \expy \leq currentTime$ \\
+ $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
+ $\prob.\quad pk_s = \getPK(cert_s)$ \\
+ $\prob.\quad str = \text{ QUIC server config signature }$ \\
+ $\prob.\quad \doc = str \| 0x00 \| \SCID \| T_s \| \expy$ \\
+ $\prob.\quad \text{If } \SIG.\Vfy(pk_s, \sigma_s, \doc) = \perp$ \\
+ $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
+%

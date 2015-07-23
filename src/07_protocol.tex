@@ -1,3 +1,5 @@
+\ORIGINALtrue
+
 \begin{figure*}[htb]
 \begin{center}
 
@@ -8,18 +10,23 @@
 \begin{tabular}[c]{l}
  $\quad Client$ \\
  $ $ \\
- $1.\ \ \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
- $2.\ \ m_1 = \cid$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
+ $\prob.\quad m_1 = \cid$ \\
  $ $\\
- $1.\ \ \checkSCFG(\SCFG_{pub})$ \\
- $2.\ \ t_c \xleftarrow{\$} \Zset_{q}^{\ast} $ \\
- $3.\ \ T_c = g^{t_c} $ \\
- $4.\ \ \NONC \xleftarrow{\$} \{0,1\}^{160} $ \\
- $5.\ \ m_3 = (T_c, \NONC, \STK, \SCFG.\SCID)$ \\
- $ $ \\
- $1.\ \ \shareInfo = (\NONC, \cid, \SCFG.T_s, t_c)$ \\
- $2.\ \ m = m_1 \| m_2 \| m_3$ \\
- $3.\ \ \ik = \getKey_c(\shareInfo, m, 1)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\SCID, T_s, \sigma_s) = \SCFG_{pub}$ \\
+ $\prob.\quad \doc = \SCID \| T_s$ \\
+ $\prob.\quad \text{If } \SIG.\Vfy(pk_s, \sigma_s, \doc)$ \\
+ $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
+ $\prob.\quad t_c \xleftarrow{\$} \Zset_{q}^{\ast} $ \\
+ $\prob.\quad T_c = g^{t_c} $ \\
+ $\prob.\quad \NONC \xleftarrow{\$} \{0,1\}^{160} $ \\
+ $\prob.\quad m_3 = (T_c, \NONC, \STK, \SCID, \cid)$ \\
+ $\prob.\quad pms = T_s^{t_c}$ \\
+ $\prob.\quad ms = \PRF(pms, NONC)$ \\
+ $\prob.\quad \ik = \PRF(ms, m_1 \| m_2 \| m_3)$ \\
+ $\prob.\quad \Lambda = \preaccept$ \\
 \end{tabular}
 \end{minipage}%
 }
@@ -49,18 +56,20 @@
  $\quad Server$ \\
  $ $ \\
  $ $ \\
- $1.\ \ \text{choose } \SCFG $\\
- $2.\ \ \STK = \SE.\Enc(\key_{\STK}, time\|IP_c)$ \\
- $3.\ \ m_2 = (\SCFG_{pub}, \STK)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad \text{choose } \SCFG = (\SCFG_{pub}, t_s) $\\
+ $\prob.\quad (\SCID, T_s, \sigma_s) = \SCFG_{pub}$ \\
+ $\prob.\quad \makeSTKQUIC$ \\
+ $\prob.\quad m_2 = (\SCFG_{pub}, \STK, \cid)$ \\
  $ $ \\
  $ $ \\
  $ $ \\
- $1.\ \ \checkQuery(\STK, k_{\STK}, \NONC, IP_c)$ \\
- $ $ \\
- $ $ \\
- $1.\ \ \shareInfo = (\NONC, \cid, T_c, \SCFG.t_s)$ \\
- $2.\ \ m = m_1 \| m_2 \| m_3$ \\
- $3.\ \ \ik = \getKey_s(\shareInfo, m, 1)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad \text{search $\SCFG$ with $\SCID$}$ \\
+ $\prob.\quad pms = T_c^{t_s}$ \\
+ $\prob.\quad ms = \PRF(pms, \NONC)$ \\
+ $\prob.\quad \ik = \PRF(ms, m_1 \| m_2 \| m_3)$ \\
+ $\prob.\quad \Lambda = \preaccept$ \\
 \end{tabular}
 \end{minipage}%
 } \vspace{10pt}
@@ -68,67 +77,25 @@
 1-RTT connection establishment for forward secure key
 \vspace{10pt}\\
 
-\fbox{
-\begin{minipage}[t]{0.39\textwidth}
-\begin{tabular}[c]{l}
- $ $ \\
- $ $ \\
- $ $ \\
- $ $ \\
- $1.\ \ T_s^{\prime} \| \STK = \SE.\Dec(\ik, m_4)$ \\
- $ $ \\
- $ $ \\
- $1.\ \ \shareInfo = (\NONC, \cid, T_s^{\prime}, t_c)$ \\
- $2.\ \ m = m_1 \| m_2 \| m_3 \| m_4 $ \\
- $3.\ \ \key = \getKey_c(\shareInfo, m, 0)$
-\end{tabular}
-\end{minipage}%
-}
-\begin{minipage}[t]{0.13\textwidth}
-\centering
-\begin{tabular}[c]{l}
- $ $\\
- $ $\\
- $ $\\
- $\xleftarrow{m_4}$\\
- $ $\\
- $ $\\
- $ $\\
- $ $\\
- $ $\\
-\end{tabular}
-\end{minipage}%
-\fbox{
-\begin{minipage}[t]{0.39\textwidth}
-\begin{tabular}[c]{l}
- $1.\ \ t_s^{\prime} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
- $2.\ \ T_s^{\prime} = g^{t_s^{\prime}}$ \\
- $3.\ \ \STK = \SE.\Enc(\key_{\STK}, time\|IP_c)$ \\
- $4.\ \ \plaintext = T_s^{\prime} \| \STK$ \\
- $5.\ \ m_4 = \SE.\Enc(\ik, \plaintext)$ \\
- $ $ \\
- $1.\ \ \shareInfo = (\NONC, \cid, T_c, t_s^{\prime})$ \\
- $2.\ \ m = m_1 \| m_2 \| m_3 \| m_4 $ \\
- $3.\ \ \key = \getKey_s(\shareInfo, m, 0)$
-\end{tabular}
-\end{minipage}%
-} \vspace{10pt}
+\input{09_forward_secure_key}
 
-0-RTT connection establishment
+0-RTT connection establishment for initial key
 \vspace{10pt}\\
 
 \fbox{
 \begin{minipage}[t]{0.39\textwidth}
 \begin{tabular}[c]{l}
- $1.\ \ \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
- $2.\ \ t_c \xleftarrow{\$} \Zset_{q}^{\ast} $ \\
- $3.\ \ T_c = g^{t_c} $ \\
- $4.\ \ \NONC \xleftarrow{\$} \{0,1\}^{160} $ \\
- $5.\ \ m_5 = (T_c, \NONC, \cid, \STK, \SCFG.\SCID)$ \\
- $ $ \\
- $1.\ \ \shareInfo = (\NONC, \cid, \SCFG.T_s, t_c)$ \\
- $2.\ \ m = m_5$ \\
- $3.\ \ \ik = \getKey_c(\shareInfo, m, 1)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad \theta = (\SCFG_{pub}, \STK)$ \\
+ $\prob.\quad \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
+ $\prob.\quad t_c \xleftarrow{\$} \Zset_{q}^{\ast} $ \\
+ $\prob.\quad T_c = g^{t_c} $ \\
+ $\prob.\quad \NONC \xleftarrow{\$} \{0,1\}^{160} $ \\
+ $\prob.\quad m_5 = (T_c, \NONC, \cid, \STK, \SCID)$ \\
+ $\prob.\quad pms = T_s^{t_c}$ \\
+ $\prob.\quad ms = \PRF(pms, \NONC)$ \\
+ $\prob.\quad \ik = \PRF(ms, m_5)$ \\
+ $\prob.\quad \Lambda = \preaccept$ \\
 \end{tabular}
 \end{minipage}%
 }
@@ -156,14 +123,20 @@
  $ $\\
  $ $\\
  $ $\\
- $1.\ \ \checkQuery(\STK, \key_{\STK}, \NONC, IP_c) $\\
- $ $\\
- $1.\ \ \shareInfo = (\NONC, \cid, T_c, \SCFG.t_s)$ \\
- $2.\ \ m = m_1 \| m_2 \| m_3$ \\
- $3.\ \ \ik = \getKey_s(\shareInfo, m, 1)$ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad \text{search $\SCFG$ with $\SCID$}$ \\
+ $\prob.\quad pms = T_c^{t_s}$ \\
+ $\prob.\quad ms = \PRF(pms, \NONC)$ \\
+ $\prob.\quad \ik = \PRF(ms, m_5)$ \\
+ $\prob.\quad \Lambda = \preaccept$ \\
 \end{tabular}
 \end{minipage}%
-}
+} \vspace{10pt}
+
+0-RTT connection establishment for forward secure key
+\vspace{10pt}\\
+
+\input{09_forward_secure_key}
 
 \caption{Abstract model of QUIC}\label{fig:quic_tls}
 \end{center}

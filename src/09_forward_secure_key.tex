@@ -1,0 +1,48 @@
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ $ $ \\
+ $ $ \\
+ $ $ \\
+ $ $ \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad T_s^{\prime} \| \STK = \SE.\Dec(\ik, c)$ \\
+ $\prob.\quad pms^{\prime} = T_s^{\prime t_c} $ \\
+ $\prob.\quad ms^{\prime} = \PRF(pms^{\prime}, \NONC) $ \\
+ $\prob.\quad \key = \PRF(ms, m_1 \| m_2 \| m_3 \| m_4)$ \\
+ $\prob.\quad \Lambda = \accept$ \\
+ $\prob.\quad \theta = (\SCFG_{pub}, \STK)$ \\
+\end{tabular}
+\end{minipage}%
+}
+\begin{minipage}[t]{0.13\textwidth}
+\centering
+\begin{tabular}[c]{l}
+ $ $\\
+ $ $\\
+ $ $\\
+ $\xleftarrow{m_4}$\\
+ $ $\\
+ $ $\\
+ $ $\\
+ $ $\\
+ $ $\\
+\end{tabular}
+\end{minipage}%
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ \setcounter{nombre}{0}%
+ $\prob.\quad t_s^{\prime} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
+ $\prob.\quad T_s^{\prime} = g^{t_s^{\prime}}$ \\
+ $\prob.\quad \makeSTKQUIC$ \\
+ $\prob.\quad \plaintext = T_s^{\prime} \| \STK$ \\
+ $\prob.\quad c = (\SE.\Enc(\ik, \plaintext)$ \\
+ $\prob.\quad m_4 = (c, \cid)$ \\
+ $\prob.\quad pms^{\prime} = T_c{t_s^{\prime}} $ \\
+ $\prob.\quad ms^{\prime} = \PRF(pms^{\prime}, \NONC) $ \\
+ $\prob.\quad \key = \PRF(ms, m_1 \| m_2 \| m_3 \| m_4)$ \\
+ $\prob.\quad \Lambda = \accept$ \\
+\end{tabular}
+\end{minipage}%
+} \vspace{10pt}

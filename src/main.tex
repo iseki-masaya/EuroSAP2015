@@ -12,6 +12,10 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{proof}{Proof}
 
+\newcounter{nombre}
+\renewcommand{\thenombre}{\arabic{nombre}}
+\newcommand{\prob}[1][]{\refstepcounter{nombre}\thenombre}
+
 % \input{macros_lncs}
 \input{mynotation}
 \input{addnotation}
@@ -38,12 +42,13 @@ Email: fujisaki.eiichiro@lab.ntt.co.jp}}
  \input{02_preliminaries}
  \input{03_rsacce}
  \input{04_quic}
- \input{05_secproposedscheme}
+ \input{05_prop}
  \input{06_conclusion}
 
- \input{07_protocol}
- \input{08_proposed_protocol}
- \input{09_proposed_protocol}
+% \newif\ifORIGINAL
+%  \input{07_protocol}
+%  \input{08_proposed_protocol}
+ % \input{09_proposed_protocol}
 
 \bibliographystyle{abbrv}
 \bibliography{mybib,confCryp,confComp}

@@ -8,10 +8,10 @@
   \begin{minipage}[t]{0.38\textwidth}
   \centering
    \begin{tabular}{c}
-    $m_5 = \CHLO(\STK, \SCFG_{pub}, k_{MAC})$ \\
+    $m_1 = \CHLO(\STK, \SCFG_{pub}, k_{MAC})$ \\
     $\shareInfo_c = (\NONC, \cid, T_s, t_c^{\ast})$ \\
+    $\ik = \getKey_c(\shareInfo_c, m_1, 1)$ \\
     $\Lambda = \preaccept$ \\
-    $\ik = \getKey_c(\shareInfo_c, m_5, 1)$ \\
    \end{tabular}
   \end{minipage}%
  }
@@ -19,7 +19,7 @@
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
-   $\xrightarrow{m_5}$ \\
+   $\xrightarrow{m_1}$ \\
    $ $ \\
   \end{tabular}
  \end{minipage}%
@@ -28,10 +28,10 @@
   \begin{minipage}[t]{0.38\textwidth}
    \centering
    \begin{tabular}{c}
-    $\checkQuery(m_5, k_{\STK}, IP_c)$ \\
+    $\checkQuery(m_1, k_{\STK}, IP_c)$ \\
     $\shareInfo_s = (\NONC, \cid, T_c^{\ast}, t_s)$ \\
+    $\ik = \getKey_s(\shareInfo_s, m_1, 1)$ \\
     $\Lambda = \preaccept$ \\
-    $\ik = \getKey_s(\shareInfo_s, m_5, 1)$ \\
    \end{tabular}
   \end{minipage}%
  }
@@ -43,10 +43,10 @@
    \begin{tabular}{c}
     $\text{for each } \alpha \in {\MsgCntC{0}+1,...,\MsgCntC{1}}$ \\
     $\sqn_c = \alpha + 2$ \\
-    $m_{6}^{\alpha} = \pak(ik, sqn_c, M_c^{\alpha})$ \\
+    $m_{2}^{\alpha} = \pak(ik, sqn_c, M_c^{\alpha})$ \\
     $ $ \\
-    $m_{6} = (m_{6}^{\MsgCntC{0}+1},...,m_{6}^{\MsgCntC{1}})$ \\
-    $\processPacket(ik, m_{7})$ \\
+    $m_{2} = (m_{2}^{\MsgCntC{0}+1},...,m_{2}^{\MsgCntC{1}})$ \\
+    $\processPacket(ik, m_{3})$ \\
    \end{tabular}
   \end{minipage}%
  }
@@ -58,8 +58,8 @@
    $ $ \\
    $ $ \\
    $ $ \\
-   $\xrightarrow{m_{6}}$ \\
-   $\xleftarrow{m_{7}}$ \\
+   $\xrightarrow{m_{2}}$ \\
+   $\xleftarrow{m_{3}}$ \\
   \end{tabular}
  \end{minipage}%
 % server side
@@ -69,10 +69,10 @@
    \begin{tabular}{c}
     $\text{for each } \beta \in {\MsgCntS{0}+1,...,\MsgCntS{1}}$ \\
     $\sqn_s = \beta + 2$ \\
-    $m_{7}^{\beta} = \pak(ik, \sqn_s, M_s^{\beta})$ \\
+    $m_{3}^{\beta} = \pak(ik, \sqn_s, M_s^{\beta})$ \\
     $ $ \\
-    $m_{7} = (m_{7}^{\MsgCntS{0}+1},...,m_{7}^{\MsgCntS{1}})$ \\
-    $\processPacket(ik, m_{6})$ \\
+    $m_{3} = (m_{3}^{\MsgCntS{0}+1},...,m_{3}^{\MsgCntS{1}})$ \\
+    $\processPacket(ik, m_{2})$ \\
    \end{tabular}
   \end{minipage}%
  }
@@ -83,11 +83,11 @@
   \centering
    \begin{tabular}{c}
     $ $ \\
-    $T_s^{\prime} = \receiveSHLO(m_8)$ \\
+    $T_s^{\prime} = \receiveSHLO(m_4)$ \\
     $\shareInfo_c = (\NONC, \cid, T_s^{\prime}, t_c^{\ast})$ \\
-    $m = m_5 \| m_8$ \\
-    $\Lambda = \accept$ \\
+    $m = m_1 \| m_4$ \\
     $k = \getKey_c(\shareInfo_c, m, 0)$ \\
+    $\Lambda = \accept$ \\
    \end{tabular}
   \end{minipage}%
  }
@@ -96,7 +96,7 @@
   \centering
   \begin{tabular}{c}
    $ $ \\
-   $\xleftarrow{m_{8}}$ \\
+   $\xleftarrow{m_{4}}$ \\
    $ $ \\
   \end{tabular}
  \end{minipage}%
@@ -106,11 +106,11 @@
    \centering
    \begin{tabular}{c}
     $ \sqn_s = \MsgCntS{1} + 3$ \\
-    $m_{8} = \SHLO(m_5, \ik, \sqn_s)$ \\
+    $m_{4} = \SHLO(m_1, \ik, \sqn_s)$ \\
     $\shareInfo_s = (\NONC, \cid, T_c^{\ast}, t_s^{\prime})$ \\
-    $m = m_5 \| m_8$ \\
-    $\Lambda = \accept$ \\
+    $m = m_1 \| m_4$ \\
     $k = \getKey_s(\shareInfo_s, m, 0)$ \\
+    $\Lambda = \accept$ \\
    \end{tabular}
   \end{minipage}%
  }
@@ -122,10 +122,10 @@
    \begin{tabular}{c}
     $\text{for each } \alpha \in {\MsgCntC{1}+1,...,\MsgCntC{2}}$ \\
     $\sqn_c = \alpha + 3$ \\
-    $m_{9}^{\alpha} = \pak(k, sqn_c, M_c^{\alpha})$ \\
+    $m_{5}^{\alpha} = \pak(k, sqn_c, M_c^{\alpha})$ \\
     $ $ \\
-    $m_{9} = (m_{9}^{\MsgCntC{1}+1},...,m_{9}^{\MsgCntC{2}})$ \\
-    $\processPacket(k, m_{10})$ \\
+    $m_{5} = (m_{5}^{\MsgCntC{1}+1},...,m_{5}^{\MsgCntC{2}})$ \\
+    $\processPacket(k, m_{6})$ \\
    \end{tabular}
   \end{minipage}%
  }
@@ -137,8 +137,8 @@
    $ $ \\
    $ $ \\
    $ $ \\
-   $\xrightarrow{m_{9}}$ \\
-   $\xleftarrow{m_{10}}$ \\
+   $\xrightarrow{m_{5}}$ \\
+   $\xleftarrow{m_{6}}$ \\
   \end{tabular}
  \end{minipage}%
 % server side
@@ -148,10 +148,10 @@
    \begin{tabular}{c}
     $\text{for each } \beta \in {\MsgCntS{1}+1,...,\MsgCntS{2}}$ \\
     $\sqn_s = \beta + 3$ \\
-    $m_{10}^{\beta} = \pak(k, \sqn_s, M_s^{\beta})$ \\
+    $m_{6}^{\beta} = \pak(k, \sqn_s, M_s^{\beta})$ \\
     $ $ \\
-    $m_{10} = (m_{10}^{\MsgCntS{1}+1},...,m_{10}^{\MsgCntS{2}})$ \\
-    $\processPacket(ik, m_{9})$ \\
+    $m_{6} = (m_{6}^{\MsgCntS{1}+1},...,m_{6}^{\MsgCntS{2}})$ \\
+    $\processPacket(ik, m_{5})$ \\
    \end{tabular}
   \end{minipage}%
  }
