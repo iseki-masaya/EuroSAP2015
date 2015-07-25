@@ -91,10 +91,13 @@ state the following variables:
  the identity of intended partner $\peer \in \Client$.}
 
  \item{$b$, the challenge bit chosen uniformly.}
+
+ \item{$\theta$, the cache data. The client and server
+ cache the information for the future sessions.}
 \end{itemize}
 The inner state of each oracle is initialized to
-($\Lambda$, $\ik$, $\key$, $\peer$) = ($\emptyset$,
-$\emptyset$, $\emptyset$, $\emptyset$), where
+($\Lambda$, $\ik$, $\key$, $\peer$, $\theta$) = ($\emptyset$,
+$\emptyset$, $\emptyset$, $\emptyset$, $\emptyset$), where
 variable $V=\emptyset$ denotes that variable $V$
 is undefined.
 On one hand, and $b$ is chosen uniformly and fixed.
@@ -121,7 +124,7 @@ oracles:
  ``initiate client session'' symbol $\top$.
  If so, it responds with the first protocol message.
  If $\ell \geq 1$ and $\pi^p_{i,\ell-1}$ accepts,
- then $\pi^p_{i,\ell}$ \textit{inherits} $\peer$ from
+ then $\pi^p_{i,\ell}$ \textit{inherits} variables $(\theta,\peer)$ from
  $\pi^p_{i, \ell-1}$ (modeling an abbreviate handshake
  session).
  The adversary can send this returned message to any
@@ -130,8 +133,11 @@ oracles:
 
  \item {$\Reveal(\pi^p_{i,\ell})$:
  The oracle $\pi^p_{i,\ell}$ returns session keys
- $\ik$, $\key$, and other secrets such as a master
- secret or source-address token to respond this query.}
+ $\ik$, $\key$, and cache data $\theta$ to respond this query.
+ If $\Reveal(\pi^p_{i,\ell})$ is $\tau$-th query issued by the adversary,
+ $\pi^p_{i,\ell}$ is said $\tau$-\textit{revealed}.
+ For oracles that are not revealed we define
+ $\tau = \infty$.}
 
  \item {$\Corrupt(P_p)$:
  If $P_p$ is $\Client_c$, then returns $\bot$.
@@ -143,6 +149,16 @@ oracles:
  $\tau$-th query issued by the adversary, $P_p$ is said
  $\tau$-\textit{corrupted}.
  For parties that are not corrupted we define
+ $\tau = \infty$.}
+
+\item {$\Corrupt(\pi^p_{i,\ell})$:
+ If $\pi^p_{i,\ell}$ is a client oracle, then returns $\bot$.
+ Otherwise, $\pi^p_{i,\ell}$ is a server oracle and returns
+ Diffie-Hellman secret value $t_s$ in $\SCFG$.
+ If $\pi^p_{i,\ell}$ is a server oracle and $\Corrupt(\pi^p_{i,\ell})$ is the
+ $\tau$-th query issued by the adversary, $\pi^p_{i,\ell}$ is said
+ $\tau$-\textit{corrupted}.
+ For oracles that are not corrupted we define
  $\tau = \infty$.}
 
  \item {$\Encrypt(\pi^p_{i,\ell}, m_0, m_1, \iv, H)$:
@@ -303,26 +319,33 @@ We now define the following advantage measures.
  $A$ terminates, there is a client oracle $\pi^c_{i, \ell}$
  such that the following conditions hold:
  \begin{itemize}
-  \item{If $\ell = 0$, then $\pi^c_{i, 0}$ accepts
-  ($\Lambda \in \{\accept, \preaccept\}$), else $\pi^c_{i, \ell}$
+  \item{If $\ell = 0$, $\pi^c_{i, 0}$ pre-accepts
+  ($\Lambda = \preaccept$) or $\pi^c_{i, \ell}$
   accepts ($\Lambda = \accept$) when $A$ issues its
   $\tau_0$-th query with intended partner $\peer=s$, }
-
-  \item{$\Server_s$ is $\tau_{s}$-corrupted with
-  $\tau_0 < \tau_{s}$ and}
 
   \item{If $\ell = 0$, there is no server oracle
   $\pi^s_{j, 0}$ such
   that $\pi^c_{i,0}$ has a matching conversation for initial
   key with
   $\pi^s_{j,0}$ or there exist plural oracles that have
-  a matching conversation for initial key with $\pi^c_{i,0}$.}
+  a matching conversation for initial key with $\pi^c_{i,0}$,}
+
+  \item{If $\ell \neq 0$, $\pi^c_{i, \ell}$
+  accepts ($\Lambda = \accept$) when $A$ issues its
+  $\tau_0$-th query with intended partner $\peer=s$, }
 
   \item{If $\ell \neq 0$, there is no server oracle
   $\pi^s_{j, \ell}$ such
-  that $\pi^c_{i,\ell}$ has a matching conversation with
+  that $\pi^c_{i,\ell}$ has a matching conversation for forward
+  secure key with
   $\pi^s_{j,\ell}$ or there exist plural oracles that have
-  a matching conversation with $\pi^c_{i,\ell}$.}
+  a matching conversation with $\pi^c_{i,\ell}$, and}
+
+  \item{$\Server_s$ is $\tau_{s}$-corrupted with
+  $\tau_0 < \tau_{s}$ and the server oracle $\pi^s_{j, \ell}$ is
+  $\tau_{so}$-corrupted with $\tau_0 < \tau_{so}$. }
+
  \end{itemize}
  We say that protocol $\Pi$ has \textit{server authentication},
  if $\Adv^{\rsaccesa}_{\Pi}(A)$ is negligible in $\kappa$.
@@ -336,13 +359,13 @@ We now define the following advantage measures.
  parter (server). In contrast to the original
  definition~\cite{KPW13:SACCE}, we allow an adversary to
  submit $\Corrupt$ queries.
- In our definition, the second condition ensure the
+ In our definition, the fifth conditions ensure the
  consistency of the server handshake sessions.
  If the adversary can issue $\Corrupt$ query to the server
- $\Server_s$ before $\pi^s_{j, \ell}$ reaches accept, she can
+ $\Server_s$ or oracle before $\pi^s_{j, \ell}$ reaches accept, she can
  impersonate the server because she can make valid response
- (SHLO) using secret values such as static server's
- Diffie-Hellman secret value or master secret.
+ (SHLO) using long-term secret key $sk_s$ or server's
+ Diffie-Hellman secret value $t_s$.
  \textcolor{red}{
  0-RTTと1-RTTでmatching conversationの種類が異なる理由を説明する。
  }
@@ -357,15 +380,16 @@ We now define the following advantage measures.
  $\Encrypt(\pi^p_{i,\ell},\dots)$ query and we define
  $b=\bot$ unless the following conditions hold:
  \begin{itemize}
-  \item{$\pi^p_{i,\ell}$ accepts
-  ($\Lambda \in \{\accept, \preaccept\}$) when $A$
+  \item{$\pi^p_{i,\ell}$ pre-accepts
+  ($\Lambda = \preaccept$) when $A$
   issues its $\tau_0$-th query. (It implies by
   definition that for all $0\leq k < \ell$,
   $\pi^p_{i,k}$ has already accepted.)}
 
   \item{If $\pi^p_{i,\ell}$ is a client oracle, the
   intended pater $\Server_s$ is $\tau_s$-corrupted
-  with $\tau_0 < \tau_s$. }
+  with $\tau_0 < \tau_s$ and the server oracle $\pi^s_{j,\ell}$ is
+  $\tau_{so}$-corrupted with $\tau_0 < \tau_{so}$.}
 
   \item{If $P_p$ is a server $\Server_s$, then there
   is a client $\Client_c$ maintaining oracle
@@ -376,7 +400,8 @@ We now define the following advantage measures.
   to either $\pi^p_{i,\ell}$, nor to
   $\pi^{p^{\prime}}_{j,\ell}$ such that $\pi^p_{i,\ell}$
   has a matching conversation with
-  $\pi^{p^{\prime}}_{j,\ell}$.}
+  $\pi^{p^{\prime}}_{j,\ell}$, and client oracles $\pi^c_{i,k}$
+  ($k < \ell$) is $\tau_{c0}$-revealed with $\tau_0 < \tau_{co}$.}
  \end{itemize}
  We say that protocol $\Pi$ has
  \textit{channel confidentiality} if
@@ -406,6 +431,10 @@ The second condition specifies forward-secrecy in the
 sense that message confidentiality of $\pi^p_{i,\ell}$
 is preserved, as long as the $\Server_s$ does not
 corrupt their long-term secret.
+ \textcolor{red}{
+ 2個目の制限と4個目の制限について詳しく説明する。通常のFSとは
+ 違う定義になっているので、どこに注意しているかを詳細に説明する。
+ }
 \end{remark}
 
 \subsubsection{RSACCE security}
