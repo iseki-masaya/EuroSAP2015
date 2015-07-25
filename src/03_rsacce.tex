@@ -366,9 +366,11 @@ We now define the following advantage measures.
  impersonate the server because she can make valid response
  (SHLO) using long-term secret key $sk_s$ or server's
  Diffie-Hellman secret value $t_s$.
- \textcolor{red}{
- 0-RTTと1-RTTでmatching conversationの種類が異なる理由を説明する。
- }
+ In 0-RTT connection, the client immediately reaches pre-accept state
+ after sending the first message. If the adversary drop this message, the adversary
+ easily break our server authentication since there is no server oracle
+ such that the client oracle has a matching conversation for initial key.
+
  \end{remark}
 
 \begin{definition}[Channel Confidentiality] \label{def:rsacce-cc}
@@ -427,14 +429,16 @@ $\Client_c$ (not the adversary). Later, if the
 adversary can hijack some abbreviate handshake session
 and share a new session key with server $\Server_s$,
 then it can break our channel confidentiality.
-The second condition specifies forward-secrecy in the
+The second condition specifies forward-secrecy among
+the other sessions in the
 sense that message confidentiality of $\pi^p_{i,\ell}$
-is preserved, as long as the $\Server_s$ does not
-corrupt their long-term secret.
- \textcolor{red}{
- 2個目の制限と4個目の制限について詳しく説明する。通常のFSとは
- 違う定義になっているので、どこに注意しているかを詳細に説明する。
- }
+is preserved, as long as the adversary does not
+corrupt the server's long-term secret key $sk_s$ and Diffie-Hellman
+secret value $t_s$ in $\SCFG$.
+The fourth condition specifies forward-secrecy among
+a full handshake and abbreviate handshakes in the sense
+that message confidentiality of $\pi^p_{i,\ell}$ is preserved,
+as long as the adversary does not reveal the oracles.
 \end{remark}
 
 \subsubsection{RSACCE security}
