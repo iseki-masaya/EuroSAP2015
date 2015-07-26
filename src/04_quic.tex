@@ -95,7 +95,14 @@ Fig.~\ref{fig:quic_abst_0rtt}.
 %
 \input{04_z2_protocol_0rtt_overview}
 %
-Firstly, the client sends a client hello
+Firstly, the client sends a client hello using cache data.
+The server searches $\SCFG$ with $\SCID$ and validate a
+client hello.
+After the client sends a client hello or the server validate
+a client hello, they calculate initial key $\ik$.
+The flow for forward secure key $\key$ is the same as
+1-RTT case.
+
 
 %=====================================================
 \subsection{Security of QUIC} \label{sec:quic_detail}
