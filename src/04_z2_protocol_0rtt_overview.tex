@@ -1,156 +1,72 @@
-\begin{figure*}[!htp]
- \begin{center}
+\begin{figure*}[htb]
+\begin{center}
 
-\begin{enumerate}
- \item{Initial Key Agreement} \\
-% client side
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-  \centering
-   \begin{tabular}{c}
-    $(\SCFG_{pub}, \STK) = \theta$ \\
-    $m_1 = \CHLO(\STK, \SCFG_{pub})$ \\
-    $\shareInfo_c = (\NONC, \cid, T_s, t_c^{\ast})$ \\
-    $\ik = \getKey_c(\shareInfo_c, m_1, 1)$ \\
-    $\Lambda = \preaccept$ \\
-   \end{tabular}
-  \end{minipage}%
- }
+0-RTT connection establishment for initial key
+\vspace{10pt}\\
+
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ \setcounter{nombre}{0}%
+ $\quad Client$ \\
+ $ $ \\
+ $\prob.\quad \theta = (\SCFG_{pub}, \STK)$ \\
+ $\prob.\quad \cid \xleftarrow{\$} \{0,1\}^{64} $ \\
+ $\prob.\quad t_c \xleftarrow{\$} \Zset_{q}^{\ast} $ \\
+ $\prob.\quad T_c = g^{t_c} $ \\
+ $\prob.\quad \NONC \xleftarrow{\$} \{0,1\}^{160} $ \\
+ $\prob.\quad m_1 = (T_c, \NONC, \cid, \STK, \SCID)$ \\
+ $\prob.\quad pms = T_s^{t_c}$ \\
+ $\prob.\quad ms = \PRF(pms, \NONC)$ \\
+ $\prob.\quad \ik = \PRF(ms, m_1)$ \\
+ $\prob.\quad \Lambda = \preaccept$ \\
+\end{tabular}
+\end{minipage}%
+}
 % middle
  \begin{minipage}[t]{0.13\textwidth}
   \centering
   \begin{tabular}{c}
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
+   $ $ \\
    $\xrightarrow{m_1}$ \\
    $ $ \\
-  \end{tabular}
- \end{minipage}%
-% server side
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-   \centering
-   \begin{tabular}{c}
-    $ $ \\
-    $\checkQuery(\STK, k_{\STK}, \NONC, IP_c)$ \\
-    $\shareInfo_s = (\NONC, \cid, T_c^{\ast}, t_s) $ \\
-    $\ik=\getKey_s(\shareInfo_s, m_1, 1)$ \\
-    $\Lambda = \preaccept$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \item{Initial Data Exchange} \\
-% client side
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-  \centering
-   \begin{tabular}{c}
-    $\text{for each } \alpha \in {\MsgCntC{1}+1,...,\MsgCntC{2}}$ \\
-    $\sqn_c = \alpha + 3$ \\
-    $m_{2}^{\alpha} = \pak(\ik, sqn_c, M_c^{\alpha})$ \\
-    $m_{2} = (m_{2}^{\MsgCntC{1}+1},...,m_{2}^{\MsgCntC{2}})$ \\
-    $\processPacket(\ik, m_{3})$ \\
-   \end{tabular}
-  \end{minipage}%
- }
-% middle
- \begin{minipage}[t]{0.13\textwidth}
-  \centering
-  \begin{tabular}{c}
    $ $ \\
    $ $ \\
-   $\xrightarrow{m_{2}}$ \\
-   $\xleftarrow{m_{3}}$ \\
-  \end{tabular}
- \end{minipage}%
-% server side
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-   \centering
-   \begin{tabular}{c}
-    $\text{for each } \beta \in {\MsgCntS{1}+1,...,\MsgCntS{2}}$ \\
-    $\sqn_s = \beta + 2$ \\
-    $m_{3}^{\beta} = \pak(\ik, \sqn_s, M_s^{\beta})$ \\
-    $m_{3} = (m_{3}^{\MsgCntS{1}+1},...,m_{3}^{\MsgCntS{2}})$ \\
-    $\processPacket(\ik, m_{2})$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \item{Key Agreement} \\
-% client side
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-  \centering
-   \begin{tabular}{c}
-    $ $ \\
-    $(T_s^{\prime}, \STK) = \receiveSHLO(m_{4}, \ik)$ \\
-    $\shareInfo_c = (\NONC, \cid ,T_s^{\prime}, t_c^{\ast}) $ \\
-    $m = m_1 \| m_{4}$ \\
-    $k = \getKey_c(\shareInfo_c, m_1, 0)$ \\
-    $\theta = (\SCFG_{pub}, \STK)$ \\
-    $\Lambda = \accept$ \\
-   \end{tabular}
-  \end{minipage}%
- }
-% middle
- \begin{minipage}[t]{0.13\textwidth}
-  \centering
-  \begin{tabular}{c}
-   $ $ \\
-   $\xleftarrow{m_{4}}$ \\
    $ $ \\
   \end{tabular}
  \end{minipage}%
-% server side
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-   \centering
-   \begin{tabular}{c}
-    $ \sqn_s = \MsgCntS{2} + 3$ \\
-    $m_{4} = \SHLO(m_1, \ik, \sqn)$ \\
-    $\shareInfo_s = (\NONC, \cid, T_c^{\ast}, t_s^{\prime})$ \\
-    $m = m_1 \| m_{4}$ \\
-    $k = \getKey_s(\shareInfo_s, m, 0)$ \\
-    $\Lambda = \accept$ \\
-   \end{tabular}
-  \end{minipage}%
- }
- \item{Data Exchange} \\
-% client side
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-  \centering
-   \begin{tabular}{c}
-    $\text{for each } \alpha \in {\MsgCntC{2}+1,...,\MsgCntC{3}}$ \\
-    $\sqn_c = \alpha + 3$ \\
-    $m_{5}^{\alpha} = \pak(k, sqn_c, M_c^{\alpha})$ \\
-    $m_{5} = (m_{5}^{\MsgCntC{2}+1},...,m_{5}^{\MsgCntC{3}})$ \\
-    $\processPacket(k, m_{6})$ \\
-   \end{tabular}
-  \end{minipage}%
- }
-% middle
- \begin{minipage}[t]{0.13\textwidth}
-  \centering
-  \begin{tabular}{c}
-   $ $ \\
-   $ $ \\
-   $\xrightarrow{m_{5}}$ \\
-   $\xleftarrow{m_{6}}$ \\
-  \end{tabular}
- \end{minipage}%
-% server side
- \fbox{
-  \begin{minipage}[t]{0.38\textwidth}
-   \centering
-   \begin{tabular}{c}
-    $\text{for each } \beta \in {\MsgCntS{2}+1,...,\MsgCntS{3}}$ \\
-    $\sqn_s = \beta + 3$ \\
-    $m_{6}^{\beta} = \pak(k, \sqn_s, M_s^{\beta})$ \\
-    $m_{6} = (m_{6}^{\MsgCntS{2}+1},...,m_{6}^{\MsgCntS{3}})$ \\
-    $\processPacket(\ik, m_{5})$ \\
-   \end{tabular}
-  \end{minipage}%
- }
-\end{enumerate}
- \caption{Abstract model of the 0-RTT QUIC handshake}\label{fig:quic_abst_0rtt}
- \end{center}
+\fbox{
+\begin{minipage}[t]{0.39\textwidth}
+\begin{tabular}[c]{l}
+ $\quad Server$ \\
+ $ $ \\
+ $ $\\
+ $ $\\
+ $ $\\
+ $ $\\
+ $ $\\
+ $ $\\
+ \setcounter{nombre}{0}%
+ $\prob.\quad \text{search $\SCFG$ with $\SCID$}$ \\
+ $\prob.\quad pms = T_c^{t_s}$ \\
+ $\prob.\quad ms = \PRF(pms, \NONC)$ \\
+ $\prob.\quad \ik = \PRF(ms, m_1)$ \\
+ $\prob.\quad \Lambda = \preaccept$ \\
+\end{tabular}
+\end{minipage}%
+} \vspace{10pt}
+
+0-RTT connection establishment for forward secure key
+\vspace{10pt}\\
+
+\ONERTTfalse
+\ORIGINALtrue
+\input{04_z3_forward_secure_key}
+
+\caption{Abstract model of 0-RTT QUIC handshake}\label{fig:quic_abst_0rtt}
+\end{center}
 \end{figure*}

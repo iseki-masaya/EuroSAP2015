@@ -16,7 +16,6 @@ address token $\STK$.
  $\prob.\quad \doc = T_c^{\ast} \| \NONC \| \cid \| \STK \| \SCID$ \\
  $\prob.\quad \mac = \PRF(k_{MAC}, \doc) $ \\
  $\prob.\quad \return\ (\pInfo, \cid, \STK, \SCID, \NONC, T_c^{\ast}, \mac)$ \\
-\\
 \underline{$\checkQuery(m, k_{\STK}, IP_c)$:} \\
  \setcounter{nombre}{0}%
  $\prob.\quad (\pInfo, \cid, \STK, \SCID, \NONC, T_c^{\ast}, \mac) = m$ \\
@@ -30,4 +29,6 @@ address token $\STK$.
  $\prob.\quad \quad IP_c^{\prime} \neq IP_c$, or $time_{\STK} \leq time_{allowed}$\\
  $\prob.\quad \quad r \in \strike$, or $time_{\NONC} \not\in \strike_{rng}$ \\
  $\prob.\quad \quad \quad \Lambda = \text{'reject' and abort}$ \\
-\\
+%
+After the client sends a client hello or the
+server validates a client hello, they calculate initial key $\ik$.

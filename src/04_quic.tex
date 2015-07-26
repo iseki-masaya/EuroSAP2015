@@ -35,18 +35,56 @@ Fig.~\ref{fig:quic_abst_1rtt}.
 %
 \input{04_z1_protocol_1rtt_overview}
 %
-We define five phases of QUIC handshake in 1-RTT:
-(1) \textbf{Initiate},
-(2) \textbf{Initial Key Agreement},
-(3) \textbf{Initial Data Exchange},
-(4) \textbf{Key Agreement}, and
-(5) \textbf{Data Exchange}.
+A server generate server config $\SCFG$ before a request from a client.
+We describe the detail of generation of $\SCFG$ in \label{sec:proposed_scheme}.
+SCFG is composed of seven parameters AEAD, SCID, PDMD,
+PUBS, KEXS, and OBIT, and EXPY. The important parameters
+are SCID which is an opaque 16 byte identifier for
+this server config, PUBS which is server's
+Diffie-Hellman public value, and EXPY which is expiry time
+for this server config. The details of other parameters
+are described in~\cite{QUIC:Crypto}.
+Our definition consider only important parameters.
 
-\input{04_quic_01_01_initiate}
-\input{04_quic_01_02_init_key_agr}
-\input{04_quic_01_03_init_data_exchange}
-\input{04_quic_01_04_key_agr}
-\input{04_quic_01_05_data_exchange}
+Firstly, the client sends an inchoate client
+hello ($m_1$) which contains connection id
+and some information such as server name, protocol
+version, and user agent id. In our definition,
+the some informations are omitted.
+
+After the server receives inchoate client hello, it
+sends a rejection ($m_2$). The rejection ($m_2$) contains
+source address token (STK), server config ($\SCFG$) which
+include a signature $\sigma_s$ of the server config generated
+by the server long term secret key $sk_s$. The client use
+STK in future queries to demonstrate ownership of their
+source IP address.
+
+After the client receives a rejection ($m_2$), the client
+checks the server config $\SCFG$ and generate $\NONC$ which consists
+of a random value, and ephemeral
+Diffie-Hellman values $t_c$.
+The client sends a client hello ($m_3$) to the server.
+
+After the server receives a client hello ($m_3$), the
+server check this query. $\STK$ is an opaque byte string
+from the client's point of view. From the server's point
+of view it's an authenticated-encryption block that
+contains, at least, the client's IP address and a time
+stamp by the server. The server decrypt $\STK$ and
+validate time and source IP address.
+
+After sharing initial key $\ik$, the client and server
+exchange data encrypted and authenticated using Length-Hiding
+Authenticated Encryption $\SE$ with initial key $\ik$.
+
+The server send a server hello ($m_4$) which contains
+a ciphertext which consists of a new $\STK$ and ephemeral server's
+Diffie-Hellman public value after exchanging data and
+calculate forward secure key $\key$.
+
+The client validate a server hello ($m_4$) and calculate
+forward secure key $\key$ and cache the data.
 
 %=====================================================
 \subsection{0-RTT Connection Establishment} \label{sec:quic_0rtt}
@@ -57,15 +95,7 @@ Fig.~\ref{fig:quic_abst_0rtt}.
 %
 \input{04_z2_protocol_0rtt_overview}
 %
-We define four phases of QUIC handshake in 0-RTT:
-(1) \textbf{Initial Key Agreement},
-(2) \textbf{Initial Data Exchange},
-(3) \textbf{Key Agreement}, and
-(4) \textbf{Data Exchange}.
-The flow of (2), (3), (4) are the same as the 1-RTT
-handshake.
-
-\input{04_quic_02_01_init_key_agr}
+Firstly, the client sends a client hello
 
 %=====================================================
 \subsection{Security of QUIC} \label{sec:quic_detail}

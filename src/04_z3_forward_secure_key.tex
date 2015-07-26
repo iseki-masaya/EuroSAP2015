@@ -9,7 +9,11 @@
  $\prob.\quad T_s^{\prime} \| \STK = \SE.\Dec(\ik, c)$ \\
  $\prob.\quad pms^{\prime} = T_s^{\prime t_c} $ \\
  $\prob.\quad ms^{\prime} = \PRF(pms^{\prime}, \NONC) $ \\
- $\prob.\quad \key = \PRF(ms, m_1 \| m_2 \| m_3 \| m_4)$ \\
+\ifONERTT
+ $\prob.\quad \key = \PRF(ms^{\prime}, m_1 \| m_2 \| m_3 \| m_4)$ \\
+\else
+ $\prob.\quad \key = \PRF(ms^{\prime}, m_1 \| m_2)$ \\
+\fi
  $\prob.\quad \Lambda = \accept$ \\
  $\prob.\quad \theta = (\SCFG_{pub}, \STK)$ \\
 \end{tabular}
@@ -21,7 +25,11 @@
  $ $\\
  $ $\\
  $ $\\
+\ifONERTT
  $\xleftarrow{m_4}$\\
+\else
+ $\xleftarrow{m_2}$\\
+\fi
  $ $\\
  $ $\\
  $ $\\
@@ -38,10 +46,18 @@
  $\prob.\quad \makeSTKQUIC$ \\
  $\prob.\quad \plaintext = T_s^{\prime} \| \STK$ \\
  $\prob.\quad c = (\SE.\Enc(\ik, \plaintext)$ \\
+\ifONERTT
  $\prob.\quad m_4 = (c, \cid)$ \\
+\else
+ $\prob.\quad m_2 = (c, \cid)$ \\
+\fi
  $\prob.\quad pms^{\prime} = T_c{t_s^{\prime}} $ \\
  $\prob.\quad ms^{\prime} = \PRF(pms^{\prime}, \NONC) $ \\
- $\prob.\quad \key = \PRF(ms, m_1 \| m_2 \| m_3 \| m_4)$ \\
+\ifONERTT
+ $\prob.\quad \key = \PRF(ms^{\prime}, m_1 \| m_2 \| m_3 \| m_4)$ \\
+\else
+ $\prob.\quad \key = \PRF(ms^{\prime}, m_1 \| m_2)$ \\
+\fi
  $\prob.\quad \Lambda = \accept$ \\
 \end{tabular}
 \end{minipage}%

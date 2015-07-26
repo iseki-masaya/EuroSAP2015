@@ -78,3 +78,28 @@ checks server config and calculate a forward secure key.
  $\prob.\quad \text{If } \SIG.\Vfy(pk_s, \sigma_s, \doc) = \perp$ \\
  $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
 %
+After the server sends a server hello or the
+client validates a server hello, they calculate forward secure
+key $\key$.
+\noindent
+\underline{$\getKey_c(\shareInfo, m, \init)$:} \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\NONC, \cid ,T_s, t_c) = \shareInfo$ \\
+ $\prob.\quad pms = T_s^{t_c}$ \\
+ $\prob.\quad \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
+\underline{$\getKey_s(\shareInfo, m, \init)$:} \\
+ \setcounter{nombre}{0}%
+ $\prob.\quad (\NONC, \cid ,T_c, t_s) = \shareInfo$ \\
+ $\prob.\quad pms = T_c^{t_s}$ \\
+ $\prob.\quad \return\ \extractKey(pms, \NONC, \cid, m, 40, \init)$ \\
+\underline{$\extractKey(pms, \NONC, \cid, m, \ell, \init)$:}\\
+ \setcounter{nombre}{0}%
+ $\prob.\quad ms = \PRF(pms, \NONC)$ \\
+ $\prob.\quad \text{If } \init = 1$ \\
+ $\prob.\quad \quad str = \text{ QUIC key expansion }$ \\
+ $\prob.\quad \text{Else }$ \\
+ $\prob.\quad \quad str = \text{ QUIC forward secure expansion }$ \\
+ $\prob.\quad \info = str \| 0x00 \| \cid \| m \| \SCFG_{pub}$ \\
+ $\prob.\quad \return\ \text{the first $\ell$ octets (i.e. bytes) of T = }$ \\
+ $\quad \quad \text{(T(1),T(2), ...), where for all $i \in \Nset$, $T(i) = $} $\\
+ $\quad \quad \text{$\PRF(ms, T(i-1) \| \info \| 0x0i)$ and $T(0) = \epsilon$} $\\
