@@ -35,7 +35,7 @@ Fig.~\ref{fig:quic_abst_1rtt}.
 %
 \input{04_z1_protocol_1rtt_overview}
 %
-We define five phases of QUIC handshake in 1-RTT.
+We define five phases of QUIC handshake in 1-RTT:
 (1) \textbf{Initiate},
 (2) \textbf{Initial Key Agreement},
 (3) \textbf{Initial Data Exchange},
@@ -57,7 +57,7 @@ Fig.~\ref{fig:quic_abst_0rtt}.
 %
 \input{04_z2_protocol_0rtt_overview}
 %
-We define four phases of QUIC handshake in 0-RTT.
+We define four phases of QUIC handshake in 0-RTT:
 (1) \textbf{Initial Key Agreement},
 (2) \textbf{Initial Data Exchange},
 (3) \textbf{Key Agreement}, and
@@ -71,25 +71,55 @@ handshake.
 \subsection{Security of QUIC} \label{sec:quic_detail}
 %=====================================================
 
-We note that QUIC is not RSACCE secure.
-Although QUIC has a mechanism to prevent forgery,
+In~\cite{LJBN15:QUIC}, they found five attacks:
+(1) Server Config Replay Attack,
+(2) Source-Address Token Replay Attack,
+(3) Connection ID Manipulation Attack,
+(4) Source-Address Token Manipulation Attack,
+(5) Crypto Stream Offset Attack.
+
+These attacks assist the adversary do Distributed Denial of Service
+(DDoS) attack.
+
+The adversary make a client and server share a different
+initial key $\ik$ using (1), (3), and (4).
+These attacks break server authentication because the client
+reaches accept state and there are no server oracle which has
+matching conversation for initial key with the client oracle in 1-RTT connection.
+The adversary make a server accept in 0-RTT connection
+using (2).
+This attack breaks channel confidentiality because the adversary
+can share the session key with the target server.
+We do not consider the attack (5) because this attack is not
+about handshakes.
+
+For more details about (1), (3) and (4), the adversary can forge
+$\STK$ and $\cid$ because there are no authentication mechanism
+for these parameters.
+The server generate signature for $\SCFG$, however, the generation
+of $\SCFG$ is independent from client's first query and these parameters
+which generated at client's first query
+are not certificated and even authenticated.
+If the adversary forge these parameters, the client and server cannot
+detect it.
+
+For more details about (2), although QUIC has a mechanism to prevent forgery,
 whose mechanisms is called \textit{source-address token}
 (see below), the adversary can forge an abbreviate handshake
-query as follows: An adversary can obtain SCID from $\REJ$
+query as follows: An adversary can obtain $\SCID$ and $\STK$ from $\REJ$
 response, which is the first response from a server oracle.
 Then, the adversary make $(\overline{T}_c^{\prime},
-\overline{\NONC}^{\prime})$ and send $(\overline{T}_c^{\prime},
-\SCID, \overline{\NONC}^{\prime})$ to the server after a
+\overline{\NONC}^{\prime}, \overline{\cid})$ and send $(\overline{T}_c^{\prime},
+\SCID, \overline{\NONC}^{\prime}, \STK, \overline{\cid})$ to the server after a
 full handshake between the server and its intended partner
 is established.
-The server cannot distinguish whether the query in resumption
+The server cannot distinguish whether the query in an abbreviate handshake
 comes from the intended partner or not. Because there is no
-authentication mechanism in this query. The server accepts
-this query and calculates the session key with the value
-of adversary.
-The adversary does not know the session key because
-$T_s^{\ast}$ is encrypted however a session key between the
-client and the server does not match.
+authentication mechanism for this query. The server accepts
+this query and calculates the session keys with the value
+of the adversary.
+
+If the protocol meets RSACCE secure, the protocol prevents these attacks (1)~(4).
 
 \subsubsection{Source Address Token} \label{sec:source_address_token}
 Source-address token ($\STK$) is introduced to QUIC in order to

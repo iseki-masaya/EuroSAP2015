@@ -3,11 +3,11 @@
 %=====================================================
 Quick UDP Internet Connections (QUIC for short) is a
 new transport layer network protocol recently proposed
-by Google \cite{QUIC}, which is experimentally
+by Google \cite{QUIC,QUICDraft}, which is experimentally
 implemented in Google Chrome.
 The main purpose of developing QUIC is to provide an
 alternative equivalence of TLS wrapping TCP, with much
-reduced latency and better SPDY support.
+reduced latency and better SPDY and HTTP/2 support.
 Transport Layer Security (TLS) starts with a three-move
 TCP handshake before initiating the TLS Handshake
 Protocol.
@@ -38,6 +38,9 @@ encrypted data to a server, concurrently with a new session.
 We provide the abstract model of the full handshake and
 abbreviate handshake protocols of QUIC in
 Fig.~\ref{fig:quic_abst_1rtt}, ~\ref{fig:quic_abst_0rtt}.
+By this property, an abbreviate handshake connection is also called
+0-RTT connection and a full handshake connection is also called
+1-RTT connection.
 
 %=====================================================
 \subsection{Prior Security Analyses and Some Security Concern} \label{sec:concern}
@@ -70,7 +73,7 @@ Apparently, the restriction is appropriate, because
 an adversary can establish a session with a honest
 server (due to the lack of client's certificate) to
 share a session key.
-However, if abbreviate handshake is provided, we should consider
+However, if an abbreviate handshake is provided, we should consider
 the attack that, after a honest client and a honest
 server establish a full handshake session, an adversary
 might hijack an abbreviate handshake session -- it might
@@ -105,7 +108,7 @@ On the other hand, in their security model QACCE, an adversary
 is allowed to send a ``test" query to a server oracle.
 However, they add a restriction that an adversary is allowed
 to send it only the server oracle which has a matching
-conversation with some client oracle.
+conversation with some client oracles.
 An adversary needs to forge the query to make a server accept
 and the server does not have a matching conversation with any
 client oracle.
@@ -130,7 +133,7 @@ In QUIC, the client and server share two keys which are initial
 key $\ik$ and forward secure key $\key$.
 Other attacks~\cite{LJBN15:QUIC} make a client and server share
 a different initial key $\ik$.
-However, the server impersonation advantage in QACCE does not
+The server impersonation advantage in QACCE does not
 cover this case because this advantage consider only forward
 secure key $\key$.
 Our security model also consider the security of an initial
@@ -161,7 +164,7 @@ Authenticated and Confidential Channel Establishment
 There are two reasons. First, the abstract model of
 handshake between QUIC and TLS is different. In QUIC,
 the client and server share two keys which are initial
-key $ik$ and forward secure key $k$ and secrets are not
+key $\ik$ and forward secure key $\key$ and secrets are not
 reused in an abbreviate handshake. On the other hand,
 in TLS, the client and server share one key and reuse
 the secrets in an abbreviate handshake. Second, the
@@ -195,7 +198,7 @@ server's message confidentiality) both in the full
 handshake session and the abbreviate handshake sessions,
 as far as the server establishes the initial full
 handshake session with a \textit{honest} client.
-We also consider the consistency of the client between
+Our security model also consider the consistency of the client between
 0-RTT connections and 1-RTT connections, although a
 server does not ensure the consistency in QUIC.
 The consistency of the client between 0-RTT connections

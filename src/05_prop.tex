@@ -2,9 +2,10 @@
 \section{Our proposed scheme} \label{sec:proposed_scheme}
 %=====================================================
 
-We note that QUIC is not RSACCE secure.
-We propose a new scheme which satisfy RSACCE secure and
-reduce interactions.
+We note that QUIC does not meet RSACCE secure.
+We propose a new scheme which is more secure and efficient
+than original QUIC and it satisfy RSACCE secure.
+
 
 %=====================================================
 \subsection{1-RTT Connection Establishment} \label{sec:quic_prop_1rtt}
@@ -15,7 +16,7 @@ Fig.~\ref{fig:quic_prop_1rtt}.
 
 \input{05_z1_proposed_1rtt_overview}
 
-We define three phases of our proposed scheme handshake in 1-RTT.
+We define three phases of our proposed scheme handshake in 1-RTT:
 (1) \textbf{Initiate},
 (2) \textbf{Key Agreement},
 (3) \textbf{Data Exchange}.
@@ -33,7 +34,7 @@ Fig.~\ref{fig:quic_prop_0rtt}.
 
 \input{05_z2_proposed_0rtt_overview}
 
-We define four phases of our proposed scheme handshake in 0-RTT.
+We define four phases of our proposed scheme handshake in 0-RTT:
 (1) \textbf{Initial Key Agreement},
 (2) \textbf{Initial Data Exchange},
 (3) \textbf{Key Agreement}, and
@@ -47,6 +48,8 @@ handshake.
 %=====================================================
 \subsection{Security of our proposed scheme} \label{sec:quic_proof}
 %=====================================================
+
+
 
 \begin{theorem} \label{theorem:proposed_scheme}
  Let $\mu$ be the output length of $\PRF$, let $\lambda$ be

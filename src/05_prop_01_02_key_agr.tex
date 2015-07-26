@@ -62,10 +62,10 @@ checks server config and calculate a forward secure key.
  $\prob.\quad \plaintext = \SE.\Dec(\ik_c, \iv_c \| \sqn, H, c)$ \\
  $\prob.\quad \text{If }\plaintext = \perp$ \\
  $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
- $\prob.\quad T_{s}^{\prime} \| \STK \| k_{MAC} \| \SCID^{\prime} = \plaintext $ \\
+ $\prob.\quad T_{s}^{\prime} \| \STK \| \key_{MAC} \| \SCID^{\prime} = \plaintext $ \\
  $\prob.\quad \text{If }\SCID^{\prime} \neq \SCID$ \\
  $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
- $\prob.\quad \return\ T_s^{\prime}$ \\
+ $\prob.\quad \return\ (T_s^{\prime}, \STK, \key_{MAC})$ \\
 \\
 \underline{$\checkSCFG(\SCFG_{pub})$:} \\
  \setcounter{nombre}{0}%

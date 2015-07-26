@@ -23,7 +23,7 @@ address token $\STK$.
  $\prob.\quad (\iv_{\STK}, c) = \STK$ \\
  $\prob.\quad IP_c^{\prime} \| currentTime \| k_{\MAC} = \SE.\Dec(k_{\STK}, \iv_{\STK}, c)$ \\
  $\prob.\quad \doc = T_c^{\ast} \| \NONC \| \cid \| \STK \| \SCID$ \\
- $\prob.\quad \text{If } \PRF(k_{MAC}, \doc) \neq \mac$ \\
+ $\prob.\quad \text{If } \PRF(\key_{MAC}, \doc) \neq \mac$ \\
  $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
  $\prob.\quad (time_{\NONC}, r) = \NONC$ \\
  $\prob.\quad \text{If } (IP_c^{\prime}, currentTime) = \perp$, or \\

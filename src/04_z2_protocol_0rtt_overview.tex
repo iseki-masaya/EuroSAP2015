@@ -8,6 +8,7 @@
   \begin{minipage}[t]{0.38\textwidth}
   \centering
    \begin{tabular}{c}
+    $(\SCFG_{pub}, \STK) = \theta$ \\
     $m_1 = \CHLO(\STK, \SCFG_{pub})$ \\
     $\shareInfo_c = (\NONC, \cid, T_s, t_c^{\ast})$ \\
     $\ik = \getKey_c(\shareInfo_c, m_1, 1)$ \\
@@ -28,6 +29,7 @@
   \begin{minipage}[t]{0.38\textwidth}
    \centering
    \begin{tabular}{c}
+    $ $ \\
     $\checkQuery(\STK, k_{\STK}, \NONC, IP_c)$ \\
     $\shareInfo_s = (\NONC, \cid, T_c^{\ast}, t_s) $ \\
     $\ik=\getKey_s(\shareInfo_s, m_1, 1)$ \\
@@ -79,10 +81,11 @@
   \centering
    \begin{tabular}{c}
     $ $ \\
-    $T_s^{\prime} = \receiveSHLO(m_{4}, \ik)$ \\
+    $(T_s^{\prime}, \STK) = \receiveSHLO(m_{4}, \ik)$ \\
     $\shareInfo_c = (\NONC, \cid ,T_s^{\prime}, t_c^{\ast}) $ \\
     $m = m_1 \| m_{4}$ \\
     $k = \getKey_c(\shareInfo_c, m_1, 0)$ \\
+    $\theta = (\SCFG_{pub}, \STK)$ \\
     $\Lambda = \accept$ \\
    \end{tabular}
   \end{minipage}%

@@ -99,7 +99,7 @@ distributed over the set of the functions from $X_n$ to
 $Y_n$).
 
 %=====================================================
-\subsection{DDH and PRF-ODH Assumptions} \label{sec:assumption}
+\subsection{Decisional Diffie-Hellman} \label{sec:assumption}
 %=====================================================
 Let $g$ be a generator of a finite cyclic group $G$ of
 prime order $q$, i.e.,
@@ -119,54 +119,6 @@ $g \in G^{\times}(\sets G\backslash \{1\})$.
  polynomial (in $\spar$) $t(\spar)$, there exists
  $\epsilon_{\ddh}(\spar)=\negl(\spar)$ such that the
  DDH problem is $(t,\epsilon_{\ddh})$-hard in $G$.
-\end{definition}
-
-Let $f:G \times \bits^n \to \bits^{\mu}$ be a pseudo-random
-function (PRF) with key-space $G$ that maps $\bits^n$ to
-$\bits^{\mu}$ for some appropriate polynomials (in $\spar$)
-$n(\spar)$ and $\mu(\spar)$.
-
-\begin{definition}[PRF-ODH Assumption]
- We say that the PRF-ODH problem on $f$ is
- $(t, \epsilon_{\sf prfodh})$-hard, if for all PPT
- adversaries $A=(A_1,A_2)$ that run in time $t$,
- the experiment $\Expt^{\sf PRF-ODH}_{A}$ in
- Fig.~\ref{fig:PRF-ODH} returns $1$ with probability at
- most $\epsilon_{\sf prfodh}$.
- We say that the PRF-ODH assumption on $f$ holds if for
- all polynomial (in $\spar$) $t(\spar)$, there exists
- $\epsilon_{\sf prfodh}(\spar)=\negl(\spar)$ such that
- the PRF-ODH problem on $f$ is
- $(t,\epsilon_{\sf prfodh})$-hard.
-\begin{figure*}[!htb]
-\begin{center}
-\fbox{
-\begin{minipage}[t]{0.4\textwidth}
-\begin{tabular}[t]{l}
- $\Expt^{\sf PRF-ODH}_{A}\ \equiv$ \\
- $\quad g \getsd G^{\star};$
- $\quad (st,\overline{m}) \gets A_1(g);$
- $\quad \overline{u},v \getsd \mathbb{Z}_q$ \\
- $\quad z_0 = f_{g^{\overline{u}v}}(m);$
- $\quad z_1 \xleftarrow{\$} \{0,1\}^{\mu}$ \\
- $\quad b \xleftarrow{\$} \{0,1\};$
- $\quad b^{\prime} \leftarrow A_2^{\sf ODH(\cdot,\cdot)}(st,g^{\overline{u}},z_b)$ \\
- \quad return $b^{\prime}$
-\end{tabular}
-\end{minipage}
-\vline \quad
-\begin{minipage}[t]{0.3\textwidth}
-\begin{tabular}[t]{l}
- ${\sf Oracle\ ODH(h, m)\ }\equiv$ \\
- $\quad \text{If } (h, m) = (g^{\overline{u}}, \overline{m}) \vee h \not\in G$ \\
- $\quad \quad \text{return } \perp$ \\
- $\quad \text{return }f_{h^v}(m)$ \\
-\end{tabular}
-\end{minipage}
-}
-\caption{PRF-ODH security experiment}\label{fig:PRF-ODH}
-\end{center}
-\end{figure*}
 \end{definition}
 
 %=====================================================

@@ -45,11 +45,12 @@
     $\checkSCFG(\SCFG_{pub}) $ \\
     $\shareInfo_c = (\NONC, \cid, T_s, t_c) $ \\
     $\ik = \getKey_c(\shareInfo_c, m_1, 1) $ \\
-    $T_s^{\prime} = \receiveSHLO(m_2, \ik)$ \\
+    $(T_s^{\prime}, \STK, \key_{MAC}) = \receiveSHLO(m_2, \ik)$ \\
     $\shareInfo_c^{\prime} = (\NONC, \cid, T_s^{\prime}, t_c)$ \\
     $m = m_1 \| m_2$ \\
     $\peer = S$ \\
     $k = \getKey_c(\shareInfo_c^{\prime}, m, 0)$ \\
+    $\theta = (\SCFG_{pub}, \STK, k_{MAC})$ \\
     $\Lambda = \accept$ \\
    \end{tabular}
   \end{minipage}%
@@ -72,6 +73,7 @@
   \begin{minipage}[t]{0.38\textwidth}
    \centering
    \begin{tabular}{c}
+    $ $ \\
     $ $ \\
     $ $ \\
     $\shareInfo_s = (\NONC, \cid, T_c, t_s)$ \\

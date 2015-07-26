@@ -13,7 +13,7 @@ message of the instance.
 We then extend the security notion of
 SACCE~\cite{KPW13:SACCE} to the notion of
 \textit{resumable} SACCE (RSACCE).
-The main difference is that this model treats
+The main difference between SACCE and RSACCE is that this model treats
 abbreviate handshakes.
 As mentioned above, an abbreviate handshake takes
 advantage of a prior established full handshake session
@@ -37,6 +37,20 @@ We note that if an adversary can make a handshake with
 a server with the same session key in some abbreviate
 handshake session, then it can indeed break message
 confidentiality of a ciphertext sent by the server.
+QACCE also treats abbreviate handshakes.
+However, QACCE does not cover the attack because the
+adversary is allowed to send encryption query only to
+oracles which has matching conversation with intended
+partner.
+The main differences between QACCE and RSACCE are that
+this model (1) ensure the consistency of a client between
+1-RTT connections and 0-RTT connections and (2) cover the
+security of initial key.
+For more details about (2), in this model, the adversary
+cannot make a client and server share a different key.
+However, in QACCE, the adversary can make a client and
+server share a different key because QACCE only consider
+the security of forward secure key.
 
 %=====================================================
 \subsection{Execution Environment} \label{sec:exec_env_party}
@@ -55,19 +69,18 @@ For the case we don't need to specify clients or
 servers, we also assume that each party
 $P \in \Server \cup \Client$ has a \textit{unique}
 identity number $p \in \Nset$.
-We denoted by $P_p$ a party with identity number $p$.
-In particular, $\Server_s$ has a unique key pair
+In particular, $\Server$ with identity number $s$ has a unique key pair
 $(\pk_s, \sk_s)$, along with a certificate
 $\cert_s=(s,\pk_s)_{\text{CA}}$ signed by a certificate
 authority CA.
-A party $P_p$ maintains a collection of oracles
+A party $P$ with identity number $p$ maintains a collection of oracles
 $\{\pi^p_{i,\ell }\}_{i,\ell}$ where oracle
-$\pi^p_{i, \ell}$ models party $P_p$ executing a single
+$\pi^p_{i, \ell}$ models party $P$ executing a single
 instance of a protocol in the $\ell$-th abbreviate
-handshake session derived from  the $i$-th full
+handshake session derived from the $i$-th full
 handshake session.
 When $\ell=0$, $\pi^p_{i,\ell}$ refers to the $i$-th
-full handshake session of $P_p$.
+full handshake session of $P$ with identity number $p$.
 The oracle $\pi^p_{i, \ell}$ maintains as internal
 state the following variables:
 
@@ -84,10 +97,10 @@ state the following variables:
  client's Diffie-Hellman value and ephemeral server's
  Diffie-Hellman value.}
 
- \item{$\peer$, the intended partner. If $P_p$ is
- $\Client_c$, then $\pi^c_{i,\ell}$ maintains the
+ \item{$\peer$, the intended partner. If $P$ is
+ $\Client$ with identity number $c$, then $\pi^c_{i,\ell}$ maintains the
  identity of intended partner $\peer \in \Server$.
- Otherwise (if $P_p$ is $\Server_s$), it maintains
+ Otherwise (if $P$ is $\Server$), it maintains
  the identity of intended partner $\peer \in \Client$.}
 
  \item{$b$, the challenge bit chosen uniformly.}
@@ -113,8 +126,7 @@ oracles:
  internal state.
  The oracle $\pi^p_{i, \ell}$ replies with $\bot$,
  either (a) if $\ell \geq 1$ and
- $\pi^p_{i, {\ell-1}}$ has state
- $\Lambda\not\in \{\accept, \preaccept\}$, or (b)
+ $(\theta,\peer) = (\emptyset, \emptyset)$, or (b)
  if $\pi^p_{i,\ell}$ has reached state
  $\Lambda = \accept$.
  Otherwise, it does the following: If the adversary
@@ -123,10 +135,10 @@ oracles:
  $m = \top$ consists of a special
  ``initiate client session'' symbol $\top$.
  If so, it responds with the first protocol message.
- If $\ell \geq 1$ and $\pi^p_{i,\ell-1}$ accepts,
+ If $\ell \geq 1$,
  then $\pi^p_{i,\ell}$ \textit{inherits} variables $(\theta,\peer)$ from
- $\pi^p_{i, \ell-1}$ (modeling an abbreviate handshake
- session).
+ $\pi^p_{i, k}$ ($k < \ell$) which reaches accept state latest
+ (modeling an abbreviate handshake session).
  The adversary can send this returned message to any
  oracle even if this oracle is not intended partner of
  the oracle $\pi^p_{i, \ell}$.}
@@ -139,14 +151,14 @@ oracles:
  For oracles that are not revealed we define
  $\tau = \infty$.}
 
- \item {$\Corrupt(P_p)$:
- If $P_p$ is $\Client_c$, then returns $\bot$.
- Otherwise, $P_p$ is $\Server_s$ and returns long-term
+ \item {$\Corrupt(P)$:
+ If $P$ is $\Client$, then returns $\bot$.
+ Otherwise, $P$ is $\Server$ with identity number $s$ and returns long-term
  secret key $\sk_s$ and other secrets which are kept
  for a long time such as static Diffie-Hellman secret
  value.
- If $P_p$ is $\Server_s$ and $\Corrupt(P_p)$ is the
- $\tau$-th query issued by the adversary, $P_p$ is said
+ If $P$ is $\Server$ and $\Corrupt(P)$ is the
+ $\tau$-th query issued by the adversary, $P$ is said
  $\tau$-\textit{corrupted}.
  For parties that are not corrupted we define
  $\tau = \infty$.}
@@ -226,7 +238,7 @@ $T^p_{i,\ell}$ is identical to
 $T^{p^{\prime}}_{j,\ell'}$ except the last message sent
 by $\pi^{p^{\prime}}_{j,\ell'}$.
 In QUIC, there are two type keys initial key $\ik$ and
-forward secure key $key$.
+forward secure key $\key$.
 We define two type Matching conversations according to
 a state of the instance.
 
@@ -236,13 +248,13 @@ a state of the instance.
  in addition to $\ell=\ell'$,
  \begin{itemize}
   \item{Both oracles, $\pi^c_{i, \ell}$ and
-  $\pi^s_{j,\ell'}$, accept ($\Lambda \in \preaccept$) and
+  $\pi^s_{j,\ell'}$, pre-accept ($\Lambda = \preaccept$) and
   $T^c_{i,\ell} = T^s_{j,\ell'}$}
  \end{itemize}
 \end{definition}
 \begin{remark}
- The client reach a state $\preaccept$ before sending the
- message to a server. However, the client can know whether
+ The client reach a state $\preaccept$ before the
+ server receives the message. However, the client can know whether
  a server indeed receives it since the server will send the
  last message to a client.
 \end{remark}
@@ -299,7 +311,8 @@ $(p, i, \ell, b^{\prime})$ and terminates.
  \begin{itemize}
   \item{Both oracles, $\pi^c_{i, \ell}$ and
   $\pi^s_{j, \ell^{\prime}}$, have
-  \textit{a matching conversation} with each other; and}
+  \textit{a matching conversation} for initial key
+  and forward secure key with each other; and}
 
   \item{Both initial keys, $\ik^c_{i, \ell}$ and
   $\ik^s_{j, \ell^{\prime}}$, are the same
@@ -320,8 +333,7 @@ We now define the following advantage measures.
  such that the following conditions hold:
  \begin{itemize}
   \item{If $\ell = 0$, $\pi^c_{i, 0}$ pre-accepts
-  ($\Lambda = \preaccept$) or $\pi^c_{i, \ell}$
-  accepts ($\Lambda = \accept$) when $A$ issues its
+  ($\Lambda = \preaccept$) when $A$ issues its
   $\tau_0$-th query with intended partner $\peer=s$, }
 
   \item{If $\ell = 0$, there is no server oracle
@@ -342,7 +354,7 @@ We now define the following advantage measures.
   $\pi^s_{j,\ell}$ or there exist plural oracles that have
   a matching conversation with $\pi^c_{i,\ell}$, and}
 
-  \item{$\Server_s$ is $\tau_{s}$-corrupted with
+  \item{$\Server$ with identity number $s$ is $\tau_{s}$-corrupted with
   $\tau_0 < \tau_{s}$ and the server oracle $\pi^s_{j, \ell}$ is
   $\tau_{so}$-corrupted with $\tau_0 < \tau_{so}$. }
 
@@ -362,7 +374,8 @@ We now define the following advantage measures.
  In our definition, the fifth conditions ensure the
  consistency of the server handshake sessions.
  If the adversary can issue $\Corrupt$ query to the server
- $\Server_s$ or oracle before $\pi^s_{j, \ell}$ reaches accept, she can
+ $\Server$ with identity number $s$ or the server oracle $\pi^s_{j, \ell}$
+ before $\pi^s_{j, \ell}$ reaches accept, she can
  impersonate the server because she can make valid response
  (SHLO) using long-term secret key $sk_s$ or server's
  Diffie-Hellman secret value $t_s$.
@@ -384,26 +397,24 @@ We now define the following advantage measures.
  \begin{itemize}
   \item{$\pi^p_{i,\ell}$ pre-accepts
   ($\Lambda = \preaccept$) when $A$
-  issues its $\tau_0$-th query. (It implies by
-  definition that for all $0\leq k < \ell$,
-  $\pi^p_{i,k}$ has already accepted.)}
+  issues its $\tau_0$-th query.}
 
   \item{If $\pi^p_{i,\ell}$ is a client oracle, the
-  intended pater $\Server_s$ is $\tau_s$-corrupted
+  intended pater $\Server$ with identity number $s$ is $\tau_s$-corrupted
   with $\tau_0 < \tau_s$ and the server oracle $\pi^s_{j,\ell}$ is
   $\tau_{so}$-corrupted with $\tau_0 < \tau_{so}$.}
 
-  \item{If $P_p$ is a server $\Server_s$, then there
-  is a client $\Client_c$ maintaining oracle
-  $\pi^c_{j,0}$ that has a matching conversation with
-  $\pi^s_{i,0}$.}
+  \item{If $P$ is a server $\Server$ with identity number $s$, then there
+  is a client $\Client$ with identity number $c$ maintaining oracle
+  $\pi^c_{j,0}$ that has a matching conversation for initial key and
+  forward secure key with $\pi^s_{i,0}$.}
 
   \item{The adversary does not issue a $\Reveal$ query
   to either $\pi^p_{i,\ell}$, nor to
   $\pi^{p^{\prime}}_{j,\ell}$ such that $\pi^p_{i,\ell}$
   has a matching conversation with
   $\pi^{p^{\prime}}_{j,\ell}$, and client oracles $\pi^c_{i,k}$
-  ($k < \ell$) is $\tau_{c0}$-revealed with $\tau_0 < \tau_{co}$.}
+  ($k < \ell$) is $\tau_{co}$-revealed with $\tau_0 < \tau_{co}$.}
  \end{itemize}
  We say that protocol $\Pi$ has
  \textit{channel confidentiality} if
@@ -420,14 +431,14 @@ play a role of an honest client and have a matching
 conversation with a (honest) server with the same
 session key. In our definition, the third condition
 indicates that an adversary may send the $\Encrypt$
-query to even \textit{server} $\Server_s$ (to break
+query to even \textit{server} $\Server$ (to break
 message confidentiality of the challenge ciphertext
 sent by \textit{server oracle} $\pi^s_{i,\ell}$) as
 long as the initial full handshake is established
-between $\Server_s$ and an \textit{honest} client
-$\Client_c$ (not the adversary). Later, if the
+between $\Server$ with identity number $s$ and an \textit{honest} client
+$\Client$ with identity number $c$ (not the adversary). Later, if the
 adversary can hijack some abbreviate handshake session
-and share a new session key with server $\Server_s$,
+and share a new session key with server $\Server$,
 then it can break our channel confidentiality.
 The second condition specifies forward-secrecy among
 the other sessions in the

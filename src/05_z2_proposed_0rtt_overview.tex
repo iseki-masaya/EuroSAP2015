@@ -8,7 +8,8 @@
   \begin{minipage}[t]{0.38\textwidth}
   \centering
    \begin{tabular}{c}
-    $m_1 = \CHLO(\STK, \SCFG_{pub}, k_{MAC})$ \\
+    $(\SCFG_{pub}, \STK, \key_{MAC}) = \theta$ \\
+    $m_1 = \CHLO(\STK, \SCFG_{pub}, \key_{MAC})$ \\
     $\shareInfo_c = (\NONC, \cid, T_s, t_c^{\ast})$ \\
     $\ik = \getKey_c(\shareInfo_c, m_1, 1)$ \\
     $\Lambda = \preaccept$ \\
@@ -28,6 +29,7 @@
   \begin{minipage}[t]{0.38\textwidth}
    \centering
    \begin{tabular}{c}
+    $ $ \\
     $\checkQuery(m_1, k_{\STK}, IP_c)$ \\
     $\shareInfo_s = (\NONC, \cid, T_c^{\ast}, t_s)$ \\
     $\ik = \getKey_s(\shareInfo_s, m_1, 1)$ \\
@@ -82,11 +84,11 @@
   \begin{minipage}[t]{0.38\textwidth}
   \centering
    \begin{tabular}{c}
-    $ $ \\
-    $T_s^{\prime} = \receiveSHLO(m_4)$ \\
+    $(T_s^{\prime}, \STK, \key_{MAC}) = \receiveSHLO(m_4)$ \\
     $\shareInfo_c = (\NONC, \cid, T_s^{\prime}, t_c^{\ast})$ \\
     $m = m_1 \| m_4$ \\
     $k = \getKey_c(\shareInfo_c, m, 0)$ \\
+    $\theta = (\SCFG_{pub}, \STK, \key_{MAC})$ \\
     $\Lambda = \accept$ \\
    \end{tabular}
   \end{minipage}%
