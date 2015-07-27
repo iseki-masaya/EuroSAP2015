@@ -26,8 +26,8 @@ server and impersonates the initial client in an
 abbreviate handshake session.}
 Depending on the extent of the attack, we define two
 security requirements, denoted
-\textit{server authentications} and
-\textit{channel confidentiality}.
+\textit{server authentications},
+\textit{channel confidentiality}, \textit{channel binding}.
 The channel confidentiality implies that, in contrast
 to SACCE, an adversary is allowed to submit an
 encryption query
@@ -248,12 +248,12 @@ a state of the instance.
  in addition to $\ell=\ell'$,
  \begin{itemize}
   \item{Both oracles, $\pi^c_{i, \ell}$ and
-  $\pi^s_{j,\ell'}$, pre-accept ($\Lambda = \preaccept$) and
+  $\pi^s_{j,\ell'}$, pre-accept ($\Lambda \in \{\preaccept, \accept \}$) and
   $T^c_{i,\ell} = T^s_{j,\ell'}$}
  \end{itemize}
 \end{definition}
 \begin{remark}
- The client reach a state $\preaccept$ before the
+ The client pre-accept ($\Lambda \in \{\preaccept, \accept \}$) before the
  server receives the message. However, the client can know whether
  a server indeed receives it since the server will send the
  last message to a client.
@@ -333,7 +333,7 @@ We now define the following advantage measures.
  such that the following conditions hold:
  \begin{itemize}
   \item{If $\ell = 0$, $\pi^c_{i, 0}$ pre-accepts
-  ($\Lambda = \preaccept$) when $A$ issues its
+  ($\Lambda \in \{\preaccept, \accept \}$) when $A$ issues its
   $\tau_0$-th query with intended partner $\peer=s$, }
 
   \item{If $\ell = 0$, there is no server oracle
@@ -379,7 +379,7 @@ We now define the following advantage measures.
  impersonate the server because she can make valid response
  (SHLO) using long-term secret key $sk_s$ or server's
  Diffie-Hellman secret value $t_s$.
- In 0-RTT connection, the client immediately reaches pre-accept state
+ In 0-RTT connection, the client immediately pre-accepts ($\Lambda \in \{\preaccept, \accept \}$)
  after sending the first message. If the adversary drop this message, the adversary
  easily break our server authentication since there is no server oracle
  such that the client oracle has a matching conversation for initial key.
@@ -396,7 +396,7 @@ We now define the following advantage measures.
  $b=\bot$ unless the following conditions hold:
  \begin{itemize}
   \item{$\pi^p_{i,\ell}$ pre-accepts
-  ($\Lambda = \preaccept$) when $A$
+  ($\Lambda \in \{\preaccept, \accept \}$) when $A$
   issues its $\tau_0$-th query.}
 
   \item{If $\pi^p_{i,\ell}$ is a client oracle, the
@@ -452,6 +452,41 @@ that message confidentiality of $\pi^p_{i,\ell}$ is preserved,
 as long as the adversary does not reveal the oracles.
 \end{remark}
 
+\begin{definition}[Channel Binding] \label{def:rsacce-cb}
+ $\Adv^{\rsaccecb}_{\Pi}$ (A) is the probability that when $A$
+ terminates, there exists a server oracle $\pi^s_{j, \ell}$
+ which pre-accepts ($\Lambda \in \{\preaccept, \accept \}$), with
+ $0< \ell$, such that the following conditions hold:
+
+ \begin{itemize}
+  \item{$\pi^s_{j,\ell}$ reaches state $\Lambda=\accept$ when $A$ issues
+  its $\tau_0$-th query.}
+
+  \item{There is a client $\Client$ maintaining an oracle $\pi^c_{i,0}$ with $\peer=s$
+  that has a matching conversation for forward secure key with $\pi^s_{j,0}$.}
+
+  \item{For all $0\leq k \leq \ell$, the adversary does not issue a $\Reveal$ query
+  to $\pi^c_{i,k}$ such that $\pi^c_{i,k}$ has a matching conversation with $\pi^s_{j,k}$.}
+
+  \item{Client oracle $\pi^c_{i, \ell}$ does not have a matching conversation
+  with $\pi^s_{j,\ell}$.}
+
+ \end{itemize}
+ We say that protocol $\Pi$ has \textit{channel confidentiality}
+ if $\Adv^{\rsaccecc}_{\Pi}$ (A) is negligible in $\kappa$.
+\end{definition}
+
+\begin{remark}
+Channel binding is a security property to protect something like client authentication.
+While clients do not have certificates, one would need a guarantee that if a server
+pre-accepts ($\Lambda \in \{\preaccept, \accept \}$)
+in an abbreviate session, the server should have a matching conversation for initial and
+forward secure key only with the client
+in the initially established full handshake session.
+We note that to break channel binding, it is unnecessary for an adversary to share a session key with a server
+(if so, it breaks channel confidentiality).
+\end{remark}
+
 \subsubsection{RSACCE security}
 We define the RSACCE security.
 
@@ -459,5 +494,5 @@ We define the RSACCE security.
  We say that the protocol $\Pi$ is RSACCE secure
  if $\Pi$ satisfies \textbf{correctness},
  \textbf{server authentication},
- \textbf{channel confidentiality}.
+ \textbf{channel confidentiality}, \textbf{channel binding}.
 \end{definition}

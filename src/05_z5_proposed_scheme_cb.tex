@@ -6,71 +6,60 @@
  \end{equation}%
 %
 %
- \textbf{Game 1.} The challenger in this game proceeds as before, however it aborts and chooses $b^{\prime}$ uniformly random, if there exists any oracle that breaks server authentication. Thus we have
- \begin{equation}
-  |\Adv_1 - \Adv_0| = \Adv^{\rsaccesa}_{P}(A).
- \end{equation}%
- Note that if there exists the oracle which breaks \textit{server authentication}, the adversary easily breaks \textit{channel confidentiality}. If the target oracle breaks \textit{server authentication}, the adversary or unrelated oracle (i.e. it is not intended partner of the oracle) can establish the session with the oracle. The adversary can issue $\Reveal$-query to unrelated oracle which is out of the restriction of \textit{channel confidentiality}. Then the adversary can know the session key of the target oracle.
-\vspace{10pt}\\%
-%
-%
- \textbf{Game 2.} We try to guess which server oracle will be the first oracle to break \textit{channel binding}. If our guess is wrong, i.e. if there is another server oracle that breaks \textit{channel binding} before, then we abort the game.
+ \textbf{Game 1.} We try to guess which server oracle will be the first oracle to break \textit{channel binding}. If our guess is wrong, i.e. if there is another server oracle that breaks \textit{channel binding} before, then we abort the game.
 
  Technically, the game is identical to Game 1, except for the following. The challenger guesses three random indices $(s^{\ast}, j^{\ast}, \ell^{\ast}) \xleftarrow{\$} [\nserver] \times [\noracle] \times [n_{\ell}]$. If there exists a server oracle $\pi^s_{j,\ell}$ that breaks channel binding, and $(s, j, \ell) \neq s^{\ast}, j^{\ast}, \ell^{\ast})$, then the challenger aborts the game. Note that if the first oracle $\pi^s_{j,\ell}$ that breaks channel binding, then with probability $1/(\nserver \noracle n_{\ell})$ we have $(s,j,\ell) = (s^{\ast}, j^{\ast}, \ell^{\ast})$, and thus
  \begin{equation}
-  \Adv_1 \leq \nserver \noracle n_{\ell} \Adv_2.
+  \Adv_0 \leq \nserver \noracle n_{\ell} \Adv_1.
  \end{equation}%
- Note that in this game the attacker can only break the security of the protocol, if oracle $\pi^{s^{\ast}}_{j^{\ast},\ell^{\ast}}$ is the first oracle that breaks server authentication, as otherwise the game is aborted.
+ Note that in this game the attacker can only break the security of the protocol, if oracle $\pi^{s^{\ast}}_{j^{\ast},\ell^{\ast}}$ is the first oracle that breaks channel binding, as otherwise the game is aborted.
 \vspace{10pt}\\%
 %
 %
- \textbf{Game 3 + 4$\ell$.} We repeat the game until randomizing the session between $\sOracleAstRes$ and $\cOracleAstRes$. Initially $\ell = 0$. The reason of repeating is that if the adversary can obtain the Diffie-Hellman value $k_{mac}$, then the adversary always can let the server accept and break channel binding.
- Let $T_{\pindexell} = g^u$ denote the Diffie-Hellman share chosen by $\pOracleAstEll$, let $T_{\qindexell} = g^v$ denote the share chosen by its partner $\qOracleAstEll$, and let $\ik_{\pindexell}$ and $k_{\pindexell}$ are the key computed by $\pOracleAstEll$, let $pms_{\ik}$ and $ms_{\ik}$ denote a premaster secret and master secret for initial key, let $pms_{k}$ and $ms_{k}$ denote a premaster secret and master secret for session key. Thus, both oracles compute the premaster secret as $pms = g^{uv}$.
+ \textbf{Game 2 + $4\ell$.} We repeat the game until randomizing the session between $\pOracleAstRes$ and $\qOracleAstRes$. Initially $\ell = 0$. The reason of repeating is that the adversary always make the server accepts $\Lambda = \accept$ if the adversary can obtain $\key_{mac}$ of $\pOracleAstEll$ or $\qOracleAstEll$. We need to prevent the adversary obtaining all $\key_{mac}$ in $ 0 \leq \ell \leq \ell^{\ast}$.
+ Let $T_{\pindexell} = g^u$ denote the Diffie-Hellman share chosen by $\pOracleAstEll$, let $T_{\qindexell} = g^v$ denote the share chosen by its partner $\qOracleAstEll$, and let $\ik_{\pindexell}$ and $k_{\pindexell}$ are the key computed by $\pOracleAstEll$, let $pms_{\ik}$ and $ms_{\ik}$ denote a premaster secret and master secret for initial key, let $pms_{\key}$ and $ms_{\key}$ denote a premaster secret and master secret for session key. Thus, both oracles compute the premaster secret as $pms = g^{uv}$.
 
- The challenger in this game proceeds as before, however replaces the premaster secret $pms^{\prime}$ or $pms$ of $\pOracleAstFull$ and $\qOracleAstFull$ with a random group element $\widetilde{pms^{\prime}} = g^w$, $w \xleftarrow{\$} \Zset_p$. Note that both $g^u$ and $g^v$ are chosen by oracles $\pOracleAstFull$ and $\qOracleAstFull$, respectively, as otherwise $\pOracleAstFull$ would not have a matching conversation to $\qOracleAstFull$ and the game would be aborted.
+ The challenger in this game proceeds as before, however replaces the premaster secret $pms_{\ik}$ of $\pOracleAstEll$ and $\qOracleAstEll$ with a random group element $\widetilde{pms_{\ik}} = g^w$, $w \xleftarrow{\$} \Zset_p$. Note that both $g^u$ and $g^v$ are chosen by oracles $\pOracleAstEll$ and $\qOracleAstEll$, respectively, as otherwise $\pOracleAstEll$ would not have a matching conversation to $\qOracleAstEll$ and the game would be aborted.
 
- Suppose that there exists an algorithm $\mathcal{A}$ distinguishes Game 3 from Game 2. Then we can construct an algorithm $\mathcal{B}$ solving the DDH problem as follows. $\mathcal{B}$ receives as input $(g,g^u,g^v,g^w)$. The challenger defines $T_{\pindexzero} := g^u$ and $T_{\qindexzero} := g^v$, and the premaster secret of $\pOracleAstFull$ and $\qOracleAstFull$ equal to $pms^{\prime} := g^w$. Note that $\mathcal{B}$ can simulate all messages exchanged between $\pOracleAstFull$ and $\qOracleAstFull$ properly. Since all other oracles are not modified, $\mathcal{B}$ can simulate these oracles properly as well.
+ Suppose that there exists an algorithm $\mathcal{A}$ distinguishes Game 2 + $4\ell$ from Game 1 + $4\ell$. Then we can construct an algorithm $\mathcal{B}$ solving the DDH problem as follows. $\mathcal{B}$ receives as input $(g,g^u,g^v,g^w)$. The challenger defines $T_{\pindexell} := g^u$ and $T_{\qindexell} := g^v$, and the premaster secret of $\pOracleAstEll$ and $\qOracleAstEll$ equal to $pms_{\ik} := g^w$. Note that $\mathcal{B}$ can simulate all messages exchanged between $\pOracleAstEll$ and $\qOracleAstEll$ properly. Since all other oracles are not modified, $\mathcal{B}$ can simulate these oracles properly as well.
 
- If $w=uv$, then the view of $\mathcal{A}$ when interacting with $\mathcal{B}$ is identical to Game 2, while if $w \xleftarrow{\$}\Zset_p$ then it is identical to Game 3. Thus, the DDH assumption implies that
+ If $w=uv$, then the view of $\mathcal{A}$ when interacting with $\mathcal{B}$ is identical to Game 2 + $4\ell$, while if $w \xleftarrow{\$}\Zset_p$ then it is identical to Game 3 + $4\ell$. Thus, the DDH assumption implies that
  \begin{equation}
-  |\Adv_{3 + 3\ell} - \Adv_{2 + 3\ell}| \leq \epsilon_{\ddh}
+  |\Adv_{2 + 4\ell} - \Adv_{1 + 4\ell}| \leq \epsilon_{\ddh}
  \end{equation}%
 %
 %
- \textbf{Game 4 + $3\ell$.} In Game 4 + 3$\ell$ we make use of the fact that the premaster secret $\widetilde{pms^{\prime}}$ of $\cOracleAstEll$ and $\sOracleAstEll$ is chosen uniformly random. We thus replace the value $ms^{\prime} = \PRF(\widetilde{pms^{\prime}}, \NONC)$ with a random value $\widetilde{ms^{\prime}}$.
+ \textbf{Game 3 + $4\ell$.} In Game 3 + 4$\ell$ we make use of the fact that the premaster secret $\widetilde{pms_{\ik}}$ of $\pOracleAstEll$ and $\qOracleAstEll$ is chosen uniformly random. We thus replace the value $ms_{\ik} = \PRF(\widetilde{pms_{\ik}}, \NONC)$ with a random value $\widetilde{ms_{\ik}}$.
 
- Distinguish Game 4 + 3$\ell$ from Game 3 + 3$\ell$ implies an algorithm breaking the security of the pseudo random function $\PRF$, thus
+ Distinguish Game 3 + 4$\ell$ from Game 2 + 4$\ell$ implies an algorithm breaking the security of the pseudo random function $\PRF$, thus
  \begin{equation}
-  |\Adv_{4 + 3\ell} - \Adv_{3 + 3\ell}| \leq \epsilon_{\prf}
+  |\Adv_{3 + 4\ell} - \Adv_{2 + 4\ell}| \leq \epsilon_{\prf}
  \end{equation}%
 %
 %
- \textbf{Game 5 + $3\ell$.} In this game we replace the function $\PRF(\widetilde{ms^{\prime}}, \cdot)$ used by $\cOracleAstEll$ and $\sOracleAstEll$ with a random function $F_{\widetilde{ms^{\prime}}}$. Of course the same random function is used for both oracles $\cOracleAstEll$ and $\sOracleAstEll$. Distinguishing Game 5 + 3$\ell$ from Game 4 + 3$\ell$ again implies an algorithm breaking the security of the pseudo random function $\PRF$.
+ \textbf{Game 4 + $4\ell$.} In this game we replace the function $\PRF(\widetilde{ms_{\ik}}, \cdot)$ used by $\pOracleAstEll$ and $\qOracleAstEll$ with a random function $F_{\widetilde{ms_{\ik}}}$. Of course the same random function is used for both oracles $\pOracleAstEll$ and $\qOracleAstEll$. Distinguishing Game 4 + $4\ell$ from Game 3 + $4\ell$ again implies an algorithm breaking the security of the pseudo random function $\PRF$.
  \begin{equation}
-  |\Adv_{5 + 3\ell} - \Adv_{4 + 3\ell}| \leq \epsilon_{\prf}
+  |\Adv_{4 + 4\ell} - \Adv_{3 + 4\ell}| \leq \epsilon_{\prf}
  \end{equation}%
 
- Note that the adversary cannot obtain the Diffie-Hellman value $T_s^{\ast}$ because the adversary obtain nothing from the transcription due to randomization of the session key $k$. These changes prevent trivially attack. If the adversary obtain the Diffie-Hellman value $T_s^{\ast}$, the adversary can hijack the session following way: the adversary generate $T_c^{\prime}$, $\NONC^{\prime}$ by himself and send these value with $\SCID$. The server cannot reject this query made by the adversary because there are no authentication mechanism. The adversary can share the secret key with the server and always return correct $b^{\prime}$.
+ Note that the adversary cannot obtain the Diffie-Hellman value $\key_{mac}$ because the adversary obtain nothing from the transcription due to randomization of the initial key $\ik$. These changes prevent trivially attack. If the adversary obtain the MAC key $\key_{mac}$, the adversary can hijack the session following way: the adversary generate $T_c$, $\NONC$ by himself and calculate MAC generated by MAC key $\key_{mac}$ and send these value with $\SCID$. The server cannot reject this query made by the adversary because MAC is valid. The adversary can share the secret key with the server and always return correct $b^{\prime}$.
 \vspace{10pt}\\%
 %
 %
- \textbf{Game 6 + $3\ell$.} Now we use that the key $k$ used by $\cOracleAstEll$ and $\sOracleAstEll$ in the stateful symmetric encryption scheme uniformly at random and independent of all QUIC handshake messages.
+ \textbf{Game 5 + $4\ell$.} Now we use that the key $\ik_{\pindexell}$ and $\ik_{\qindexell}$ in the symmetric encryption scheme uniformly at random and independent of all QUIC handshake messages. In this we replace the value $k_{mac}$ with another random value $\widetilde{k_{mac}}$.
 
- The adversary have to make ciphertext $c$ such that $\SE$.$\Dec$ ( k , c , H , $st_d$ ) $\neq \perp$ without knowing the key $k$. It implies an algorithm breaking the sLHAE security of the symmetric encryption scheme, we have
+ Suppose that there exists an algorithm $\mathcal{A}$ distinguishes Game 5 + 4 $\ell$ from Game 4 + 4 $\ell$. Then we can construct an algorithm $\mathcal{B}$ breaking $\LHAE$ secure. By assumption, the simulator $\mathcal{B}$ is given access to an encryption oracle $\Encrypt$ and a decryption oracle $\Decrypt$.
+
+ Since by assumption any attacker has advantage at most $\epsilon_{\LHAE}$ in breaking the $\LHAE$ security of the symmetric encryption scheme, we have
  \begin{equation}
-  |\Adv_{6 + 3\ell} - \Adv_{5 + 3\ell} | \leq \epsilon_{\sLHAE}.
+  |\Adv_{5 + 4\ell} - \Adv_{4 + 4\ell}| \leq \epsilon_{\LHAE}.
  \end{equation}%
-
- Note that the adversary cannot let the server accept because the adversary cannot make ciphertext $c$ such that $\SE$.$\Dec$ ( k , c , H , $st_d$ ) $\neq \perp$ without knowing the key $k$.
  After this game, we add $\ell = \ell + 1$. If $\ell \leq \ell^{\ast}$ we repeat the game.
 \vspace{10pt}\\%
 %
-%
- \textbf{Game 7 + 3$\ell^{\ast}$.} Now the adversary does not have the way to let $\sOracleAstRes$ because because the adversary cannot make ciphertext $c$ such that $\SE$.$\Dec$ ( k , c , H , $st_d$ ) $\neq \perp$ without knowing the key $k$.
-
- Observe that the values generated in this game are exactly distributed as in the previous game. We thus have
+ \textbf{Game 6 + 4$\ell^{\ast}$.} Now the adversary does not have the way to let $\sOracleAstRes$ because the adversary cannot make mac generated by $\key_{mac}$. We thus have
  \begin{equation}
-  \Adv_{7 + 3\ell^{\ast}} = \Adv_{6 + 3\ell^{\ast}} = \Adv_{5 + 3\ell^{\ast}}
+  |\Adv_{6 + 4\ell^{\ast}} - \Adv_{5 + 4\ell^{\ast}}| \leq \frac{1}{2^{\nu}}
  \end{equation}%
 %
 %
