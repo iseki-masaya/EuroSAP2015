@@ -81,10 +81,10 @@ Authenticated Encryption $\SE$ with initial key $\ik$.
 The server send a server hello ($m_4$) which contains
 a ciphertext which consists of a new $\STK$ and ephemeral server's
 Diffie-Hellman public value after exchanging data and
-calculate forward secure key $\key$.
+calculate last key $\key$.
 
 The client validate a server hello ($m_4$) and calculate
-forward secure key $\key$ and cache the data.
+last key $\key$ and cache the data.
 
 %=====================================================
 \subsection{0-RTT Connection Establishment} \label{sec:quic_0rtt}
@@ -100,7 +100,7 @@ The server searches $\SCFG$ with $\SCID$ and validate a
 client hello.
 After the client sends a client hello or the server validate
 a client hello, they calculate initial key $\ik$.
-The flow for forward secure key $\key$ is the same as
+The flow for last key $\key$ is the same as
 1-RTT case.
 
 
@@ -115,7 +115,7 @@ In~\cite{LJBN15:QUIC}, they found five attacks:
 (4) Source-Address Token Manipulation Attack,
 (5) Crypto Stream Offset Attack.
 
-These attacks assist the adversary do Distributed Denial of Service
+These attacks enable the adversary to do Distributed Denial of Service
 (DDoS) attack.
 
 The adversary make a client and server share a different

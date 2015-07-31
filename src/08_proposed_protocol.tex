@@ -1,6 +1,12 @@
 \ORIGINALfalse
 
 \newcommand{\calcFSkey}[1]{%
+\ifONERTT
+\else
+ $\prob.\quad receive\ m_{3}$ \\
+ $\prob.\quad \text{choose } \SCFG = (\SCFG_{pub}, t_s) $\\
+ $\prob.\quad (\SCID, T_s, \sigma_s) = \SCFG_{pub}$ \\
+\fi
  $\prob.\quad \key_{\mac} \xleftarrow{\$} \{0,1\}^{\lambda}$ \\
  $\prob.\quad \makeSTKQUIC$ \\
  $\prob.\quad t_s^{\prime} \xleftarrow{\$} \Zset_{q}^{\ast}$ \\
@@ -9,15 +15,17 @@
  $\prob.\quad c = \SE.\Enc(\ik, \plaintext)$ \\
 \ifONERTT
  $\prob.\quad m_{2} = (\SCFG_{pub}, c, \cid)$ \\
+ $\prob.\quad send\ m_{2}$ \\
 \else
  $\prob.\quad m_{4} = (\SCFG_{pub}, c, \cid)$ \\
+ $\prob.\quad send\ m_{4}$ \\
 \fi
  $\prob.\quad pms^{\prime} = T_s^{\prime t_c}$ \\
  $\prob.\quad ms^{\prime} = \PRF(pms^{\prime}, NONC)$ \\
 \ifONERTT
  $\prob.\quad \key = \PRF(ms^{\prime}, m_1 \| m_2)$ \\
 \else
- $\prob.\quad \key = \PRF(ms^{\prime}, m_1 \| m_2 \| m_3 \| m_4)$ \\
+ $\prob.\quad \key = \PRF(ms^{\prime}, m_3 \| m_4)$ \\
 \fi
  $\prob.\quad \Lambda = \accept$ \\
 }
@@ -38,8 +46,10 @@
  $\prob.\quad T_c = g^{t_c} $ \\
  $\prob.\quad \NONC \xleftarrow{\$} \{0,1\}^{160} $ \\
  $\prob.\quad m_1 = (\NONC, \cid, T_c)$ \\
+ $\prob.\quad send\ m_1$ \\
  $ $ \\
  \setcounter{nombre}{0}%%
+ $\prob.\quad receive\ m_2$ \\
  $\prob.\quad (\SCID, T_s, \sigma_s) = \SCFG_{pub}$ \\
  $\prob.\quad \doc = \SCID \| T_s$ \\
  $\prob.\quad \text{If } \SIG.\Vfy(pk_s, \sigma_s, \doc)$ \\
@@ -84,6 +94,7 @@
  \setcounter{nombre}{0}%
  $\quad Server$ \\
  $ $ \\
+ $\prob.\quad receive\ m_1$ \\
  $\prob.\quad \text{choose } \SCFG = (\SCFG_{pub}, t_s) $\\
  $\prob.\quad (\SCID, T_s, \sigma_s) = \SCFG_{pub}$ \\
  $\prob.\quad pms = T_c^{t_s}$ \\
@@ -110,6 +121,7 @@
  $\prob.\quad \doc = T_c \| \NONC \| \cid \| \STK \| \SCID$ \\
  $\prob.\quad \mac = \PRF(\key_{mac}, \doc)$ \\
  $\prob.\quad m_3 = (\doc, \mac)$ \\
+ $\prob.\quad send\ m_3$ \\
  $\prob.\quad pms = T_s^{t_c}$ \\
  $\prob.\quad ms = \PRF(pms, NONC)$ \\
  $\prob.\quad \key = \PRF(ms, m_1 \| m_2 \| m_3)$ \\
@@ -140,6 +152,8 @@
  \setcounter{nombre}{0}%
  $ $\\
  $ $\\
+ $\prob.\quad receive\ m_3$ \\
+ $\prob.\quad \text{check $\STK$ using $\key_{\STK}$}$ \\
  $\prob.\quad \text{search $\SCFG$ with $\SCID$}$ \\
  $\prob.\quad \key_{\mac} = \SE.\Dec(\key_{\STK}, \STK) $\\
  $\prob.\quad \doc = T_c \| \NONC \| \cid \| \STK \| \SCID$ \\
@@ -147,13 +161,13 @@
  $\prob.\quad \quad \Lambda = \text{'reject' and abort}$ \\
  $\prob.\quad pms = T_c^{t_s}$ \\
  $\prob.\quad ms = \PRF(pms, NONC)$ \\
- $\prob.\quad \key = \PRF(ms, m_1 \| m_2 \| m_3)$ \\
+ $\prob.\quad \key = \PRF(ms, m_3)$ \\
  $\prob.\quad \Lambda = \preaccept$ \\
 \end{tabular}
 \end{minipage}%
 } \vspace{10pt}
 
-0-RTT connection establishment for forward secure key
+0-RTT connection establishment for last key
 \vspace{10pt}\\
 
 \fbox{
@@ -163,11 +177,11 @@
  $ $ \\
  $ $ \\
  $ $ \\
- $ $ \\
+ $\prob.\quad receive\ m_4$ \\
  $\prob.\quad T_s^{\prime} \| \STK = \SE.\Dec(\ik, c)$ \\
  $\prob.\quad pms^{\prime} = T_s^{\prime t_c} $ \\
  $\prob.\quad ms^{\prime} = \PRF(pms^{\prime}, \NONC) $ \\
- $\prob.\quad \key = \PRF(ms, m_1 \| m_2 \| m_3 \| m_4)$ \\
+ $\prob.\quad \key = \PRF(ms, m_3 \| m_4)$ \\
  $\prob.\quad \Lambda = \accept$ \\
  $\prob.\quad \theta = (\key_{mac}, \STK, \SCFG_{pub})$ \\
 \end{tabular}

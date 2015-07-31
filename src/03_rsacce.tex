@@ -50,7 +50,7 @@ For more details about (2), in this model, the adversary
 cannot make a client and server share a different key.
 However, in QACCE, the adversary can make a client and
 server share a different key because QACCE only consider
-the security of forward secure key.
+the security of last key.
 
 %=====================================================
 \subsection{Execution Environment} \label{sec:exec_env_party}
@@ -154,9 +154,7 @@ oracles:
  \item {$\Corrupt(P)$:
  If $P$ is $\Client$, then returns $\bot$.
  Otherwise, $P$ is $\Server$ with identity number $s$ and returns long-term
- secret key $\sk_s$ and other secrets which are kept
- for a long time such as static Diffie-Hellman secret
- value.
+ secret key $\sk_s$.
  If $P$ is $\Server$ and $\Corrupt(P)$ is the
  $\tau$-th query issued by the adversary, $P$ is said
  $\tau$-\textit{corrupted}.
@@ -238,7 +236,7 @@ $T^p_{i,\ell}$ is identical to
 $T^{p^{\prime}}_{j,\ell'}$ except the last message sent
 by $\pi^{p^{\prime}}_{j,\ell'}$.
 In QUIC, there are two type keys initial key $\ik$ and
-forward secure key $\key$.
+last key $\key$.
 We define two type Matching conversations according to
 a state of the instance.
 
@@ -258,7 +256,7 @@ a state of the instance.
  a server indeed receives it since the server will send the
  last message to a client.
 \end{remark}
-\begin{definition}[Matching conversations for forward secure key]
+\begin{definition}[Matching conversations for last key]
  We say that $\pi^c_{i,\ell}$ and $\pi^s_{j,\ell'}$ have
  a matching conversation with each other if in addition
  to $\ell=\ell'$,
@@ -312,7 +310,7 @@ $(p, i, \ell, b^{\prime})$ and terminates.
   \item{Both oracles, $\pi^c_{i, \ell}$ and
   $\pi^s_{j, \ell^{\prime}}$, have
   \textit{a matching conversation} for initial key
-  and forward secure key with each other; and}
+  and last key with each other; and}
 
   \item{Both initial keys, $\ik^c_{i, \ell}$ and
   $\ik^s_{j, \ell^{\prime}}$, are the same
@@ -407,7 +405,7 @@ We now define the following advantage measures.
   \item{If $P$ is a server $\Server$ with identity number $s$, then there
   is a client $\Client$ with identity number $c$ maintaining oracle
   $\pi^c_{j,0}$ that has a matching conversation for initial key and
-  forward secure key with $\pi^s_{i,0}$.}
+  last key with $\pi^s_{i,0}$.}
 
   \item{The adversary does not issue a $\Reveal$ query
   to either $\pi^p_{i,\ell}$, nor to
@@ -463,7 +461,7 @@ as long as the adversary does not reveal the oracles.
   its $\tau_0$-th query.}
 
   \item{There is a client $\Client$ maintaining an oracle $\pi^c_{i,0}$ with $\peer=s$
-  that has a matching conversation for forward secure key with $\pi^s_{j,0}$.}
+  that has a matching conversation for last key with $\pi^s_{j,0}$.}
 
   \item{For all $0\leq k \leq \ell$, the adversary does not issue a $\Reveal$ query
   to $\pi^c_{i,k}$ such that $\pi^c_{i,k}$ has a matching conversation with $\pi^s_{j,k}$.}
@@ -481,7 +479,7 @@ Channel binding is a security property to protect something like client authenti
 While clients do not have certificates, one would need a guarantee that if a server
 pre-accepts ($\Lambda \in \{\preaccept, \accept \}$)
 in an abbreviate session, the server should have a matching conversation for initial and
-forward secure key only with the client
+last key only with the client
 in the initially established full handshake session.
 We note that to break channel binding, it is unnecessary for an adversary to share a session key with a server
 (if so, it breaks channel confidentiality).

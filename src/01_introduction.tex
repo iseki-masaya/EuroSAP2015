@@ -47,7 +47,7 @@ By this property, an abbreviate handshake connection is also called
 %=====================================================
 To the best of our knowledge, there are only two
 security analyses on QUIC~\cite{FG14:QUIC,LJBN15:QUIC}.
-Both papers define new security models and show that
+Both papers define the new security models and show that
 QUIC is secure in that model.
 In~\cite{FG14:QUIC}, they formalized a secure
 authenticated key-exchange as an extension of the
@@ -120,7 +120,7 @@ However, one of the attacks found in~\cite{LJBN15:QUIC} use this
 property that a server does not make sure consistencies of a client
 between 0-RTT connections and 1-RTT connections and the adversary
 can establish the connection spoofing IP address.
-This assist the adversary do Distributed Denial of Service
+This enable the adversary to do Distributed Denial of Service
 (DDoS) attack.
 Our security model guarantees that only parties
 that establish the initial full handshake session can
@@ -129,7 +129,7 @@ This property mitigate one of the attacks found in
 ~\cite{LJBN15:QUIC}.
 Our security model also prevent other attacks.
 In QUIC, the client and server share two keys which are initial
-key $\ik$ and forward secure key $\key$.
+key $\ik$ and last key $\key$.
 Other attacks~\cite{LJBN15:QUIC} make a client and server share
 a different initial key $\ik$.
 The server impersonation advantage in QACCE does not
@@ -151,7 +151,7 @@ Kraw01}.
 However, as mentioned above, the QUIC full handshake
 protocol does not satisfy key-indistinguishability as
 in the Bellare-Rogaway like model, because a server
-sends a ciphertext (using authenitcated encryption) in
+sends a ciphertext (using authenticated encryption) in
 the full handshake protocol, as does TLS.
 TLS Handshake Protocol is recently analysed in various
 security models, e.g., ~\cite{JKSS12:ACCE,KPW13:SACCE,
@@ -163,7 +163,7 @@ Authenticated and Confidential Channel Establishment
 There are two reasons. First, the abstract model of
 handshake between QUIC and TLS is different. In QUIC,
 the client and server share two keys which are initial
-key $\ik$ and forward secure key $\key$ and secrets are not
+key $\ik$ and last key $\key$ and secrets are not
 reused in an abbreviate handshake. On the other hand,
 in TLS, the client and server share one key and reuse
 the secrets in an abbreviate handshake. Second, the
@@ -198,13 +198,11 @@ handshake session and the abbreviate handshake sessions,
 as far as the server establishes the initial full
 handshake session with a \textit{honest} client.
 Our security model also consider the consistency of the client between
-0-RTT connections and 1-RTT connections, although a
-server does not ensure the consistency in QUIC.
+0-RTT connections and 1-RTT connections.
 The consistency of the client between 0-RTT connections
 and 1-RTT connections prevent one of the attacks.
 
-We propose a more efficient and secure protocol with
+We also propose a more secure and efficient protocol with
 the spirit of QUIC.
-In~\cite{LJBN15:QUIC}, they find the five attacks for
-QUIC.
-Our proposal scheme can prevent the four attacks.
+In~\cite{LJBN15:QUIC}, they found the five attacks for
+QUIC and our proposed scheme can prevent the four attacks.

@@ -16,6 +16,7 @@
  $\prob.\quad T_c = g^{t_c} $ \\
  $\prob.\quad \NONC \xleftarrow{\$} \{0,1\}^{160} $ \\
  $\prob.\quad m_1 = (T_c, \NONC, \cid, \STK, \SCID)$ \\
+ $\prob.\quad send\ m_1$ \\
  $\prob.\quad pms = T_s^{t_c}$ \\
  $\prob.\quad ms = \PRF(pms, \NONC)$ \\
  $\prob.\quad \ik = \PRF(ms, m_1)$ \\
@@ -51,6 +52,8 @@
  $ $\\
  $ $\\
  \setcounter{nombre}{0}%
+ $\prob.\quad receive\ m_1$ \\
+ $\prob.\quad \text{check $\STK$ using $\key_{\STK}$}$ \\
  $\prob.\quad \text{search $\SCFG$ with $\SCID$}$ \\
  $\prob.\quad pms = T_c^{t_s}$ \\
  $\prob.\quad ms = \PRF(pms, \NONC)$ \\
@@ -60,7 +63,7 @@
 \end{minipage}%
 } \vspace{10pt}
 
-0-RTT connection establishment for forward secure key
+0-RTT connection establishment for last key
 \vspace{10pt}\\
 
 \ONERTTfalse

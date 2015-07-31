@@ -6,6 +6,11 @@
  $ $ \\
  $ $ \\
  \setcounter{nombre}{0}%
+\ifONERTT
+ $\prob.\quad receive\ m_4$ \\
+\else
+ $\prob.\quad receive\ m_2$ \\
+\fi
  $\prob.\quad T_s^{\prime} \| \STK = \SE.\Dec(\ik, c)$ \\
  $\prob.\quad pms^{\prime} = T_s^{\prime t_c} $ \\
  $\prob.\quad ms^{\prime} = \PRF(pms^{\prime}, \NONC) $ \\
@@ -48,8 +53,10 @@
  $\prob.\quad c = (\SE.\Enc(\ik, \plaintext)$ \\
 \ifONERTT
  $\prob.\quad m_4 = (c, \cid)$ \\
+ $\prob.\quad send\ m_4$ \\
 \else
  $\prob.\quad m_2 = (c, \cid)$ \\
+ $\prob.\quad send\ m_2$ \\
 \fi
  $\prob.\quad pms^{\prime} = T_c{t_s^{\prime}} $ \\
  $\prob.\quad ms^{\prime} = \PRF(pms^{\prime}, \NONC) $ \\
