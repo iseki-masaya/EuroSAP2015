@@ -463,10 +463,10 @@ as long as the adversary does not reveal the oracles.
   \item{There is a client $\Client$ maintaining an oracle $\pi^c_{i,0}$ with $\peer=s$
   that has a matching conversation for last key with $\pi^s_{j,0}$.}
 
-  \item{For all $0\leq k \leq \ell$, the adversary does not issue a $\Reveal$ query
-  to $\pi^c_{i,k}$ such that $\pi^c_{i,k}$ has a matching conversation with $\pi^s_{j,k}$.}
+  \item{Client oracles $\pi^c_{i,k}$
+  ($k \leq \ell$) is $\tau_{co}$-revealed with $\tau_0 < \tau_{co}$.}
 
-  \item{Client oracle $\pi^c_{i, \ell}$ does not have a matching conversation
+  \item{The client oracle $\pi^c_{i, \ell}$ does not have a matching conversation
   with $\pi^s_{j,\ell}$.}
 
  \end{itemize}
