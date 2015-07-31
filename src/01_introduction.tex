@@ -46,14 +46,14 @@ By this property, an abbreviate handshake connection is also called
 \subsection{Prior Security Analyses and Some Security Concern} \label{sec:concern}
 %=====================================================
 To the best of our knowledge, there are only two
-security analyses on QUIC~\cite{FG14:QUIC,LJBN15:QUIC}.
+security analyzes on QUIC~\cite{FG14:QUIC,LJBN15:QUIC}.
 Both papers define the new security models and show that
 QUIC is secure in that model.
 In~\cite{FG14:QUIC}, they formalized a secure
 authenticated key-exchange as an extension of the
-Bellare-Rogaway model~\cite{BR93:AKE} and analysed the
+Bellare-Rogaway model~\cite{BR93:AKE} and analyzed the
 security of QUIC (with abbreviate handshakes).
-However, the QUIC protocol analysed in \cite{FG14:QUIC}
+However, the QUIC protocol analyzed in \cite{FG14:QUIC}
 is slightly different from the protocol given in the
 source codes.
 As described in Fig.~\ref{fig:quic_abst_1rtt},
@@ -63,7 +63,7 @@ encryption) in the full handshake protocol, which cannot
 preserve \textit{key-indistinguishability}.
 Therefore, the authenticated and channel confidentiality
 establishment (ACCE) model~\cite{JKSS12:ACCE} is more
-suitable to analyse QUIC.
+suitable to analyze QUIC.
 Another important security issue is that in~\cite{FG14:QUIC},
 an adversary is allowed to send a ``test" query only to
 a client oracle (to receive either a real session-key or
@@ -153,10 +153,10 @@ protocol does not satisfy key-indistinguishability as
 in the Bellare-Rogaway like model, because a server
 sends a ciphertext (using authenticated encryption) in
 the full handshake protocol, as does TLS.
-TLS Handshake Protocol is recently analysed in various
+TLS Handshake Protocol is recently analyzed in various
 security models, e.g., ~\cite{JKSS12:ACCE,KPW13:SACCE,
 FS13:ACCE,GKS13:RACCE,BDKSS14:SSH,BFKPSB14:TLS}.
-Still, the security model for analysing a server-only
+Still, the security model for analyzing a server-only
 authenticated connection of TLS, i.e., Server-Only
 Authenticated and Confidential Channel Establishment
 (SACCE)~\cite{KPW13:SACCE}, is not appropriate for QUIC.

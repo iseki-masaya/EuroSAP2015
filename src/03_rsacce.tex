@@ -124,11 +124,9 @@ oracles:
  The oracle will respond with an outgoing message
  according to the protocol specification and its
  internal state.
- The oracle $\pi^p_{i, \ell}$ replies with $\bot$,
- either (a) if $\ell \geq 1$ and
- $(\theta,\peer) = (\emptyset, \emptyset)$, or (b)
- if $\pi^p_{i,\ell}$ has reached state
- $\Lambda = \accept$.
+ The oracle $\pi^p_{i, \ell}$ replies with $\bot$
+ if $\ell \geq 1$ and
+ $(\theta,\peer) = (\emptyset, \emptyset)$.
  Otherwise, it does the following: If the adversary
  asks the first $\Send$-query to oracle
  $\pi^p_{i, \ell}$, then the oracle checks whether
@@ -179,7 +177,10 @@ oracles:
  the procedure in Fig.~\ref{fig:LHAE_rsacce}.}
 
  \item {$\Decrypt(\pi^p_{i, \ell}, c, \iv, H)$:
- The oracle $\pi^p_{i, \ell}$ replies according to the
+ If $\pi^p_{i,\ell}$ has state
+ $\Lambda$ $\not\in$ \\ $\{\preaccept, \accept\}$,
+ it returns $\bot$.
+ Otherwise, the oracle $\pi^p_{i, \ell}$ replies according to the
  procedure in Fig.~\ref{fig:LHAE_rsacce}.}
 \end{itemize}
 
@@ -233,7 +234,7 @@ $T^{p^{\prime}}_{j,\ell'}$ we say that $T^p_{i,\ell}$
 is a \textit{prefix} of $T^{p^{\prime}}_{j,\ell'}$ if
 $T^p_{i,\ell}$ contains at least one message, and
 $T^p_{i,\ell}$ is identical to
-$T^{p^{\prime}}_{j,\ell'}$ except the last message sent
+$T^{p^{\prime}}_{j,\ell'}$ except for the last message sent
 by $\pi^{p^{\prime}}_{j,\ell'}$.
 In QUIC, there are two type keys initial key $\ik$ and
 last key $\key$.
@@ -338,7 +339,7 @@ We now define the following advantage measures.
   $\pi^s_{j, 0}$ such
   that $\pi^c_{i,0}$ has a matching conversation for initial
   key with
-  $\pi^s_{j,0}$ or there exist plural oracles that have
+  $\pi^s_{j,0}$ or there exist at least two oracles that have
   a matching conversation for initial key with $\pi^c_{i,0}$,}
 
   \item{If $\ell \neq 0$, $\pi^c_{i, \ell}$
@@ -349,7 +350,7 @@ We now define the following advantage measures.
   $\pi^s_{j, \ell}$ such
   that $\pi^c_{i,\ell}$ has a matching conversation for forward
   secure key with
-  $\pi^s_{j,\ell}$ or there exist plural oracles that have
+  $\pi^s_{j,\ell}$ or there exist at least two oracles that have
   a matching conversation with $\pi^c_{i,\ell}$, and}
 
   \item{$\Server$ with identity number $s$ is $\tau_{s}$-corrupted with
@@ -366,7 +367,7 @@ We now define the following advantage measures.
  of the counter part of~\cite{KPW13:SACCE}, which implies
  that if a client accepts, protocol $\Pi$ guarantees that
  the client has a matching conversation with the intended
- parter (server). In contrast to the original
+ partner (server). In contrast to the original
  definition~\cite{KPW13:SACCE}, we allow an adversary to
  submit $\Corrupt$ queries.
  In our definition, the fifth conditions ensure the
@@ -386,10 +387,10 @@ We now define the following advantage measures.
 
 \begin{definition}[Channel Confidentiality] \label{def:rsacce-cc}
  $\Adv^{\rsaccecc}_{\Pi}$ (A) is defined to be
- $x$ - $\frac{1}{2}$ where $x$ is the probability that
+ $|x - \frac{1}{2}|$ where $x$ is the probability that
  the adversary $A$ outputs $(p, i, \ell, b^{\prime})$,
  with $0\leq \ell$, such that $b = b^{\prime}$ where
- $b^{\prime} \in \bits$ is set during the
+ $b \in \bits$ is set during the
  $\Encrypt(\pi^p_{i,\ell},\dots)$ query and we define
  $b=\bot$ unless the following conditions hold:
  \begin{itemize}
@@ -425,7 +426,7 @@ We extend the security requirement of
 The original security notion takes care of message
 confidentiality of ciphertexts sent by a (honest)
 client, only. It is because an adversary can trivially
-play a role of an honest client and have a matching
+play a role of a honest client and have a matching
 conversation with a (honest) server with the same
 session key. In our definition, the third condition
 indicates that an adversary may send the $\Encrypt$
@@ -433,7 +434,7 @@ query to even \textit{server} $\Server$ (to break
 message confidentiality of the challenge ciphertext
 sent by \textit{server oracle} $\pi^s_{i,\ell}$) as
 long as the initial full handshake is established
-between $\Server$ with identity number $s$ and an \textit{honest} client
+between $\Server$ with identity number $s$ and a \textit{honest} client
 $\Client$ with identity number $c$ (not the adversary). Later, if the
 adversary can hijack some abbreviate handshake session
 and share a new session key with server $\Server$,
