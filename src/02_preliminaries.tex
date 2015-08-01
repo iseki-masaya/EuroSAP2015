@@ -122,10 +122,10 @@ known assumptions.
 % \end{definition}
 
 %=====================================================
-\subsection{Length-Hiding Authenticated Encryption} \label{sec:SE}
+\subsection{Authenticated Encryption} \label{sec:SE}
 %=====================================================
 
-A symmetric encryption scheme consists of three algorithm
+An authenticated symmetric encryption scheme consists of three algorithm
 $SE = (\Init, \Enc, \Dec)$.
 \begin{itemize}
  \item{$\Enc(k,\iv,H,m)$ takes as input a secret key
@@ -151,7 +151,7 @@ $SE = (\Init, \Enc, \Dec)$.
    b^{\prime} \xleftarrow{\$} A^{\Encrypt, \Decrypt} : b = b^{\prime}] \leq \epsilon_{\LHAE},
  \end{eqnarray}
  where Encrypt and Decrypt oracles are described in
- Fig.~\ref{fig:LHAE_Enc_Dec}.
+ Fig.\ref{fig:LHAE_Enc_Dec}.
  We say that $\SE$ is secure if for all polynomial
  (in $\spar$) $t(\spar)$, there exists
  $\epsilon_{\LHAE}(\spar)=\negl(\spar)$ such that $\SE$

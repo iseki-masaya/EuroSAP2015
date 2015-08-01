@@ -8,7 +8,7 @@ Lychev et al.~\cite{LJBN15:QUIC}, show that QUIC is secure
 in their security model which is called QACCE.
 However, QUIC has vulnerabilities against the attacks~\cite{LJBN15:QUIC}
 which increase server loads and their security model does not cover these attacks.
-QUIC should prevent these attacks because these attacks enable an adversary
+QUIC should prevent these attacks because these attacks assist an adversary
 to do Distributed Denial of Service (DDoS) attacks.
 To cover these security concerns, we propose a new security model,
 extending server-only authenticated and channel
@@ -20,12 +20,11 @@ We then show that the original QUIC does not satisfy our security
 model.
 We also propose a new scheme to solve the security concerns
 and enhance the performance.
-There are three advantages in our proposed scheme.
-First, our proposed scheme solve the security concerns which
-the original QUIC has.
-Second, our proposed scheme does not require Strong Computational Diffie-Hellman~\cite{ABR01}
+There are three advantages in the our proposed scheme.
+First, it prevents the attacks.
+Second, it does not require Strong Computational Diffie-Hellman~\cite{ABR01}
 assumption to satisfy the security model. On the other hand, the original QUIC require
 Strong Computational Diffie-Hellman to satisfy QACCE secure.
-Third, our proposed scheme reduce a number of interactions from four
-to two.
+Third, it reduces a number of interactions from four times
+to two times.
 \end{abstract}

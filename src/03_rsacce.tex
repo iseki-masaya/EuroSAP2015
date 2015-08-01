@@ -13,8 +13,8 @@ message of the instance.
 We then extend the security notion of
 SACCE~\cite{KPW13:SACCE} to the notion of
 \textit{resumable} SACCE (RSACCE).
-The main difference between SACCE and RSACCE is that this model treats
-abbreviate handshakes.
+% The main difference between SACCE and RSACCE is that this model treats
+% abbreviate handshakes.
 As mentioned above, an abbreviate handshake takes
 advantage of a prior established full handshake session
 between the same client and server.
@@ -24,10 +24,10 @@ attack
 \textbf{where an adversarial client fools a
 server and impersonates the initial client in an
 abbreviate handshake session.}
-Depending on the extent of the attack, we define two
+Depending on the extent of the attack, we define three
 security requirements, denoted
 \textit{server authentications},
-\textit{channel confidentiality}, \textit{channel binding}.
+\textit{channel confidentiality}, and \textit{channel binding}.
 The channel confidentiality implies that, in contrast
 to SACCE, an adversary is allowed to submit an
 encryption query
@@ -38,19 +38,19 @@ a server with the same session key in some abbreviate
 handshake session, then it can indeed break message
 confidentiality of a ciphertext sent by the server.
 QACCE also treats abbreviate handshakes.
-However, QACCE does not cover the attack because the
+However, QACCE does not cover the attacks because the
 adversary is allowed to send encryption query only to
-oracles which has matching conversation with intended
+oracles which has matching conversations with an intended
 partner.
 The main differences between QACCE and RSACCE are that
 this model (1) ensure the consistency of a client between
 1-RTT connections and 0-RTT connections and (2) cover the
-security of initial key.
+security of an initial key.
 For more details about (2), in this model, the adversary
-cannot make a client and server share a different key.
+cannot make a client and a server share a different key.
 However, in QACCE, the adversary can make a client and
 server share a different key because QACCE only consider
-the security of last key.
+the security of a final key.
 
 %=====================================================
 \subsection{Execution Environment} \label{sec:exec_env_party}
@@ -67,20 +67,20 @@ the numbering is just conceptual.}
 and $s \in \Nset$.
 For the case we don't need to specify clients or
 servers, we also assume that each party
-$P \in \Server \cup \Client$ has a \textit{unique}
+$P \in \Server \cup \Client$ has a \textit{unique} an
 identity number $p \in \Nset$.
-In particular, $\Server$ with identity number $s$ has a unique key pair
+In particular, $\Server$ with an identity number $s$ has a unique key pair
 $(\pk_s, \sk_s)$, along with a certificate
 $\cert_s=(s,\pk_s)_{\text{CA}}$ signed by a certificate
 authority CA.
-A party $P$ with identity number $p$ maintains a collection of oracles
+A party $P$ with an identity number $p$ maintains a collection of oracles
 $\{\pi^p_{i,\ell }\}_{i,\ell}$ where oracle
 $\pi^p_{i, \ell}$ models party $P$ executing a single
 instance of a protocol in the $\ell$-th abbreviate
 handshake session derived from the $i$-th full
 handshake session.
 When $\ell=0$, $\pi^p_{i,\ell}$ refers to the $i$-th
-full handshake session of $P$ with identity number $p$.
+full handshake session of $P$ with an identity number $p$.
 The oracle $\pi^p_{i, \ell}$ maintains as internal
 state the following variables:
 
@@ -90,18 +90,18 @@ state the following variables:
 
  \item{$\ik, \key \in \mathcal{K}$, the session key
  where $\mathcal{K}$ is the key space of the protocol.
- $\ik$ is called initial key which calculated with
- ephemeral client's Diffie-Hellman value and static
+ $\ik$ is called \textit{initial key} which calculated with
+ an ephemeral client's Diffie-Hellman value and a static
  server's Diffie-Hellman value, and $\key$ is called
- forward-secure key which calculated with ephemeral
+ final key which calculated with ephemeral
  client's Diffie-Hellman value and ephemeral server's
  Diffie-Hellman value.}
 
- \item{$\peer$, the intended partner. If $P$ is
- $\Client$ with identity number $c$, then $\pi^c_{i,\ell}$ maintains the
- identity of intended partner $\peer \in \Server$.
+ \item{$\peer$, an intended partner. If $P$ is
+ $\Client$ with an identity number $c$, then $\pi^c_{i,\ell}$ maintains the
+ identity of the intended partner $\peer \in \Server$.
  Otherwise (if $P$ is $\Server$), it maintains
- the identity of intended partner $\peer \in \Client$.}
+ the identity of the intended partner $\peer \in \Client$.}
 
  \item{$b$, the challenge bit chosen uniformly.}
 
@@ -138,7 +138,7 @@ oracles:
  $\pi^p_{i, k}$ ($k < \ell$) which reaches accept state latest
  (modeling an abbreviate handshake session).
  The adversary can send this returned message to any
- oracle even if this oracle is not intended partner of
+ oracle even if this oracle is not an intended partner of
  the oracle $\pi^p_{i, \ell}$.}
 
  \item {$\Reveal(\pi^p_{i,\ell})$:
@@ -151,7 +151,7 @@ oracles:
 
  \item {$\Corrupt(P)$:
  If $P$ is $\Client$, then returns $\bot$.
- Otherwise, $P$ is $\Server$ with identity number $s$ and returns long-term
+ Otherwise, $P$ is $\Server$ with an identity number $s$ and returns long-term
  secret key $\sk_s$.
  If $P$ is $\Server$ and $\Corrupt(P)$ is the
  $\tau$-th query issued by the adversary, $P$ is said
@@ -174,14 +174,17 @@ oracles:
  $\Lambda$ $\not\in$ \\ $\{\preaccept, \accept\}$,
  it returns $\bot$.
  Otherwise, it makes a challenge ciphertext according to
- the procedure in Fig.~\ref{fig:LHAE_rsacce}.}
+ the procedure in Fig.\ref{fig:LHAE_rsacce}. If $\pi^p_{i,\ell}$ pre-accepts,
+ $\key$ in Fig.\ref{fig:LHAE_rsacce} is $\ik$. If $\pi^p_{i,\ell}$ accepts, it is $\key$.}
 
  \item {$\Decrypt(\pi^p_{i, \ell}, c, \iv, H)$:
  If $\pi^p_{i,\ell}$ has state
  $\Lambda$ $\not\in$ \\ $\{\preaccept, \accept\}$,
  it returns $\bot$.
  Otherwise, the oracle $\pi^p_{i, \ell}$ replies according to the
- procedure in Fig.~\ref{fig:LHAE_rsacce}.}
+ procedure in Fig.\ref{fig:LHAE_rsacce}.
+ If $\pi^p_{i,\ell}$ pre-accepts,
+ $\key$ in Fig.\ref{fig:LHAE_rsacce} is $\ik$. If $\pi^p_{i,\ell}$ accepts, it is $\key$.}
 \end{itemize}
 
 \begin{figure*}[!htb]
@@ -236,14 +239,14 @@ $T^p_{i,\ell}$ contains at least one message, and
 $T^p_{i,\ell}$ is identical to
 $T^{p^{\prime}}_{j,\ell'}$ except for the last message sent
 by $\pi^{p^{\prime}}_{j,\ell'}$.
-In QUIC, there are two type keys initial key $\ik$ and
-last key $\key$.
+In QUIC, there are two type keys which are an initial key $\ik$ and
+a final key $\key$.
 We define two type Matching conversations according to
 a state of the instance.
 
-\begin{definition}[Matching conversations for initial key]
+\begin{definition}[Matching conversations for an initial key]
  We say that $\pi^c_{i,\ell}$ and $\pi^s_{j,\ell'}$ have
- a matching conversation for initial key with each other if
+ a matching conversations for an initial key with each other if
  in addition to $\ell=\ell'$,
  \begin{itemize}
   \item{Both oracles, $\pi^c_{i, \ell}$ and
@@ -252,14 +255,14 @@ a state of the instance.
  \end{itemize}
 \end{definition}
 \begin{remark}
- The client pre-accept ($\Lambda \in \{\preaccept, \accept \}$) before the
+ The client pre-accepts ($\Lambda \in \{\preaccept, \accept \}$) before the
  server receives the message. However, the client can know whether
  a server indeed receives it since the server will send the
  last message to a client.
 \end{remark}
-\begin{definition}[Matching conversations for last key]
+\begin{definition}[Matching conversations]
  We say that $\pi^c_{i,\ell}$ and $\pi^s_{j,\ell'}$ have
- a matching conversation with each other if in addition
+ a matching conversations with each other if in addition
  to $\ell=\ell'$,
  \begin{itemize}
   \item{Both oracles, $\pi^c_{i, \ell}$ and
@@ -310,14 +313,13 @@ $(p, i, \ell, b^{\prime})$ and terminates.
  \begin{itemize}
   \item{Both oracles, $\pi^c_{i, \ell}$ and
   $\pi^s_{j, \ell^{\prime}}$, have
-  \textit{a matching conversation} for initial key
-  and last key with each other; and}
+  \textit{a matching conversations} with each other; and}
 
   \item{Both initial keys, $\ik^c_{i, \ell}$ and
   $\ik^s_{j, \ell^{\prime}}$, are the same
   ($\ik^c_{i, \ell} = \ik^s_{j, \ell^{\prime}}$).}
 
-  \item{Both forward-secure keys, $\key^c_{i, \ell}$ and
+  \item{Both final keys, $\key^c_{i, \ell}$ and
   $\key^s_{j, \ell^{\prime}}$, are the same
   ($\key^c_{i, \ell} = \key^s_{j, \ell^{\prime}}$).}
  \end{itemize}
@@ -333,27 +335,27 @@ We now define the following advantage measures.
  \begin{itemize}
   \item{If $\ell = 0$, $\pi^c_{i, 0}$ pre-accepts
   ($\Lambda \in \{\preaccept, \accept \}$) when $A$ issues its
-  $\tau_0$-th query with intended partner $\peer=s$, }
+  $\tau_0$-th query with the intended partner $\peer=s$, }
 
   \item{If $\ell = 0$, there is no server oracle
   $\pi^s_{j, 0}$ such
-  that $\pi^c_{i,0}$ has a matching conversation for initial
+  that $\pi^c_{i,0}$ has a matching conversations for an initial
   key with
-  $\pi^s_{j,0}$ or there exist at least two oracles that have
-  a matching conversation for initial key with $\pi^c_{i,0}$,}
+  $\pi^s_{j,0}$ or there exists at least two oracles that have
+  a matching conversations for an initial key with $\pi^c_{i,0}$,}
 
   \item{If $\ell \neq 0$, $\pi^c_{i, \ell}$
   accepts ($\Lambda = \accept$) when $A$ issues its
-  $\tau_0$-th query with intended partner $\peer=s$, }
+  $\tau_0$-th query with the intended partner $\peer=s$, }
 
   \item{If $\ell \neq 0$, there is no server oracle
   $\pi^s_{j, \ell}$ such
-  that $\pi^c_{i,\ell}$ has a matching conversation for forward
-  secure key with
-  $\pi^s_{j,\ell}$ or there exist at least two oracles that have
-  a matching conversation with $\pi^c_{i,\ell}$, and}
+  that $\pi^c_{i,\ell}$ has a matching conversations for a final
+  key with
+  $\pi^s_{j,\ell}$ or there exists at least two oracles that have
+  a matching conversations for a final key with $\pi^c_{i,\ell}$, and}
 
-  \item{$\Server$ with identity number $s$ is $\tau_{s}$-corrupted with
+  \item{$\Server$ with an identity number $s$ is $\tau_{s}$-corrupted with
   $\tau_0 < \tau_{s}$ and the server oracle $\pi^s_{j, \ell}$ is
   $\tau_{so}$-corrupted with $\tau_0 < \tau_{so}$. }
 
@@ -365,23 +367,25 @@ We now define the following advantage measures.
 \begin{remark}
  The \textit{server authentication} is a natural extension
  of the counter part of~\cite{KPW13:SACCE}, which implies
- that if a client accepts, protocol $\Pi$ guarantees that
- the client has a matching conversation with the intended
+ that if a client accepts or pre-accepts, protocol $\Pi$ guarantees that
+ the client has a matching conversations or matching conversation for an initial key
+ with the intended
  partner (server). In contrast to the original
  definition~\cite{KPW13:SACCE}, we allow an adversary to
  submit $\Corrupt$ queries.
  In our definition, the fifth conditions ensure the
  consistency of the server handshake sessions.
  If the adversary can issue $\Corrupt$ query to the server
- $\Server$ with identity number $s$ or the server oracle $\pi^s_{j, \ell}$
- before $\pi^s_{j, \ell}$ reaches accept, she can
+ $\Server$ with an identity number $s$ or the server oracle $\pi^s_{j, \ell}$
+ before $\pi^s_{j, \ell}$ accepts or pre-accepts, she can
  impersonate the server because she can make valid response
  (SHLO) using long-term secret key $sk_s$ or server's
  Diffie-Hellman secret value $t_s$.
- In 0-RTT connection, the client immediately pre-accepts ($\Lambda \in \{\preaccept, \accept \}$)
+ We need to divide the conditions into 1-RTT connections and 0-RTT connections
+ because in 0-RTT connections the client immediately pre-accepts ($\Lambda \in \{\preaccept, \accept \}$)
  after sending the first message. If the adversary drop this message, the adversary
- easily break our server authentication since there is no server oracle
- such that the client oracle has a matching conversation for initial key.
+ easily make a client oracle which does not have a matching conversation for an initial key with
+ any server oracles.
 
  \end{remark}
 
@@ -399,21 +403,21 @@ We now define the following advantage measures.
   issues its $\tau_0$-th query.}
 
   \item{If $\pi^p_{i,\ell}$ is a client oracle, the
-  intended pater $\Server$ with identity number $s$ is $\tau_s$-corrupted
-  with $\tau_0 < \tau_s$ and the server oracle $\pi^s_{j,\ell}$ is
-  $\tau_{so}$-corrupted with $\tau_0 < \tau_{so}$.}
+  intended pater $\Server$ with an identity number $s$ is $\tau_s$-corrupted
+  with $\tau_0 < \tau_s$, the server oracle $\pi^s_{j,\ell}$ is
+  $\tau_{so}$-corrupted with $\tau_0 < \tau_{so}$, and
+  client oracles $\pi^c_{i,k}$
+  ($k < \ell$) is $\tau_{co}$-revealed with $\tau_0 < \tau_{co}$.}
 
-  \item{If $P$ is a server $\Server$ with identity number $s$, then there
-  is a client $\Client$ with identity number $c$ maintaining oracle
-  $\pi^c_{j,0}$ that has a matching conversation for initial key and
-  last key with $\pi^s_{i,0}$.}
+  \item{If $P$ is a server $\Server$ with an identity number $s$, then there
+  is a client $\Client$ with an identity number $c$ maintaining oracle
+  $\pi^c_{j,0}$ that has a matching conversations with $\pi^s_{i,0}$.}
 
   \item{The adversary does not issue a $\Reveal$ query
   to either $\pi^p_{i,\ell}$, nor to
   $\pi^{p^{\prime}}_{j,\ell}$ such that $\pi^p_{i,\ell}$
-  has a matching conversation with
-  $\pi^{p^{\prime}}_{j,\ell}$, and client oracles $\pi^c_{i,k}$
-  ($k < \ell$) is $\tau_{co}$-revealed with $\tau_0 < \tau_{co}$.}
+  has a matching conversations or matching conversations for an initial key with
+  $\pi^{p^{\prime}}_{j,\ell}$.}
  \end{itemize}
  We say that protocol $\Pi$ has
  \textit{channel confidentiality} if
@@ -434,9 +438,9 @@ query to even \textit{server} $\Server$ (to break
 message confidentiality of the challenge ciphertext
 sent by \textit{server oracle} $\pi^s_{i,\ell}$) as
 long as the initial full handshake is established
-between $\Server$ with identity number $s$ and a \textit{honest} client
-$\Client$ with identity number $c$ (not the adversary). Later, if the
-adversary can hijack some abbreviate handshake session
+between $\Server$ with an identity number $s$ and a \textit{honest} client
+$\Client$ with an identity number $c$ (not the adversary). Later, if the
+adversary can hijack an abbreviate handshake session
 and share a new session key with server $\Server$,
 then it can break our channel confidentiality.
 The second condition specifies forward-secrecy among
@@ -445,10 +449,10 @@ sense that message confidentiality of $\pi^p_{i,\ell}$
 is preserved, as long as the adversary does not
 corrupt the server's long-term secret key $sk_s$ and Diffie-Hellman
 secret value $t_s$ in $\SCFG$.
-The fourth condition specifies forward-secrecy among
+This condition also specifies forward-secrecy among
 a full handshake and abbreviate handshakes in the sense
 that message confidentiality of $\pi^p_{i,\ell}$ is preserved,
-as long as the adversary does not reveal the oracles.
+as long as the adversary does not reveal the client oracles.
 \end{remark}
 
 \begin{definition}[Channel Binding] \label{def:rsacce-cb}
@@ -458,17 +462,17 @@ as long as the adversary does not reveal the oracles.
  $0< \ell$, such that the following conditions hold:
 
  \begin{itemize}
-  \item{$\pi^s_{j,\ell}$ reaches state $\Lambda=\accept$ when $A$ issues
+  \item{$\pi^s_{j,\ell}$ accepts ($\Lambda=\accept$) when $A$ issues
   its $\tau_0$-th query.}
 
   \item{There is a client $\Client$ maintaining an oracle $\pi^c_{i,0}$ with $\peer=s$
-  that has a matching conversation for last key with $\pi^s_{j,0}$.}
+  that has a matching conversations with $\pi^s_{j,0}$.}
 
   \item{Client oracles $\pi^c_{i,k}$
   ($k \leq \ell$) is $\tau_{co}$-revealed with $\tau_0 < \tau_{co}$.}
 
-  \item{The client oracle $\pi^c_{i, \ell}$ does not have a matching conversation
-  with $\pi^s_{j,\ell}$.}
+  \item{The client oracle $\pi^c_{i, \ell}$ does not have a matching conversations
+  or matching conversation for an initial key with $\pi^s_{j,\ell}$.}
 
  \end{itemize}
  We say that protocol $\Pi$ has \textit{channel confidentiality}
@@ -479,8 +483,7 @@ as long as the adversary does not reveal the oracles.
 Channel binding is a security property to protect something like client authentication.
 While clients do not have certificates, one would need a guarantee that if a server
 pre-accepts ($\Lambda \in \{\preaccept, \accept \}$)
-in an abbreviate session, the server should have a matching conversation for initial and
-last key only with the client
+in an abbreviate session, the server should have a matching conversations with the client
 in the initially established full handshake session.
 We note that to break channel binding, it is unnecessary for an adversary to share a session key with a server
 (if so, it breaks channel confidentiality).

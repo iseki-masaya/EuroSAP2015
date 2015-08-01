@@ -35,15 +35,15 @@ establish an abbreviate session with $0$-RTT
 connectivity overhead.
 Namely, in the QUIC abbreviate handshake, a client can send
 encrypted data to a server, concurrently with a new session.
-We provide the abstract model of the full handshake and
-abbreviate handshake protocols of QUIC in
-Fig.~\ref{fig:quic_abst_1rtt}, ~\ref{fig:quic_abst_0rtt}.
-By this property, an abbreviate handshake connection is also called
-0-RTT connection and a full handshake connection is also called
+% We provide the abstract model of the full handshake and
+% abbreviate handshake protocols of QUIC in
+% Fig.~\ref{fig:quic_abst_1rtt_init},~\ref{fig:quic_abst_1rtt_last}, and ~\ref{fig:quic_abst_0rtt}.
+By this property, an abbreviate handshake connection is called
+0-RTT connection and a full handshake connection is called
 1-RTT connection.
 
 %=====================================================
-\subsection{Prior Security Analyses and Some Security Concern} \label{sec:concern}
+\subsection{Prior Security Analyzes and Security Concerns} \label{sec:concern}
 %=====================================================
 To the best of our knowledge, there are only two
 security analyzes on QUIC~\cite{FG14:QUIC,LJBN15:QUIC}.
@@ -56,10 +56,9 @@ security of QUIC (with abbreviate handshakes).
 However, the QUIC protocol analyzed in \cite{FG14:QUIC}
 is slightly different from the protocol given in the
 source codes.
-As described in Fig.~\ref{fig:quic_abst_1rtt},
-~\ref{fig:quic_abst_0rtt}, the QUIC protocol makes a
+The QUIC protocol makes a
 server send a ciphertext (using authenticated
-encryption) in the full handshake protocol, which cannot
+encryption) in the full handshake session, which cannot
 preserve \textit{key-indistinguishability}.
 Therefore, the authenticated and channel confidentiality
 establishment (ACCE) model~\cite{JKSS12:ACCE} is more
@@ -79,7 +78,7 @@ server establish a full handshake session, an adversary
 might hijack an abbreviate handshake session -- it might
 impersonate the initial client and share a session key
 with the server.
-To protect the attack, we should allow an adversary to
+To prevent the attack, we should allow an adversary to
 send test queries to \textit{server} oracles in abbreviate
 handshake sessions (including the full handshake session), as long
 as the initial full handshake session is established
@@ -92,51 +91,49 @@ an adversary can always do so.)
 In~\cite{LJBN15:QUIC}, they formalized QACCE model which
 is based on ACCE model and consider full handshakes and
 abbreviate handshakes.
-They also found that with replay attack on some
+They also found that with a replay attack on some
 public parameters exchanged during the handshake, an
 adversary could easily prevent QUIC from achieving
 minimal latency advantages either by having it fall back
-to TCP or by causing the client and server to have an
+to TCP or by causing the client and the server to have an
 inconsistent view of their handshake leading to a failure
 to complete the connection.
-The adversary also can apply loads on the server using
+The adversary can increase server loads using
 these attacks.
 Their security model QACCE does not consider these attacks
 to prove the security of QUIC as it is.
-These attacks are ruled out in the proposed security model.
-On the other hand, in their security model QACCE, an adversary
-is allowed to send a ``test" query to a server oracle.
+These attacks are ruled out in their proposed security model.
+In QACCE, an adversary
+is allowed to send a ``test" query to a server oracle in an
+abbreviate handshake.
 However, they add a restriction that an adversary is allowed
 to send it only the server oracle which has a matching
-conversation with some client oracles.
-An adversary needs to forge the query to make a server accept
-and the server does not have a matching conversation with any
-client oracle.
-For this restriction, QACCE does not prevent the attack that
+conversation with a client oracle.
+% An adversary needs to forge the query to make a server accept
+% and the server does not have a matching conversations with any
+% client oracle.
+By this restriction, QACCE does not prevent the attack that
 an adversary make a server accept.
 In QUIC, a server does not make sure consistencies of a client
-between 0-RTT connections and 1-RTT connections.
-However, one of the attacks found in~\cite{LJBN15:QUIC} use this
-property that a server does not make sure consistencies of a client
-between 0-RTT connections and 1-RTT connections and the adversary
-can establish the connection spoofing IP address.
-This enable the adversary to do Distributed Denial of Service
+between 0-RTT connections and 1-RTT connections and
+an adversary can establish a connection with the server in 0-RTT connections.
+This property allows one of the attacks found in~\cite{LJBN15:QUIC} that
+the adversary can establish the connection spoofing IP address.
+This assists the adversary to do Distributed Denial of Service
 (DDoS) attack.
 Our security model guarantees that only parties
 that establish the initial full handshake session can
 establish a new abbreviate handshake session.
-This property mitigate one of the attacks found in
-~\cite{LJBN15:QUIC}.
-Our security model also prevent other attacks.
-In QUIC, the client and server share two keys which are initial
-key $\ik$ and last key $\key$.
-Other attacks~\cite{LJBN15:QUIC} make a client and server share
+% Our security model also prevent other attacks.
+% In QUIC, the client and server share two keys which are an initial
+% key $\ik$ and a final key $\key$.
+Other attacks~\cite{LJBN15:QUIC} make a client and a server share
 a different initial key $\ik$.
 The server impersonation advantage in QACCE does not
 cover this case because this advantage consider only forward
 secure key $\key$.
 Our security model also consider the security of an initial
-key $\ik$ and this property protect the other attacks
+key $\ik$ and it prevents the other attacks
 ~\cite{LJBN15:QUIC}.
 
 %=====================================================
@@ -152,7 +149,7 @@ However, as mentioned above, the QUIC full handshake
 protocol does not satisfy key-indistinguishability as
 in the Bellare-Rogaway like model, because a server
 sends a ciphertext (using authenticated encryption) in
-the full handshake protocol, as does TLS.
+the full handshake session, as does TLS.
 TLS Handshake Protocol is recently analyzed in various
 security models, e.g., ~\cite{JKSS12:ACCE,KPW13:SACCE,
 FS13:ACCE,GKS13:RACCE,BDKSS14:SSH,BFKPSB14:TLS}.
@@ -162,8 +159,8 @@ Authenticated and Confidential Channel Establishment
 (SACCE)~\cite{KPW13:SACCE}, is not appropriate for QUIC.
 There are two reasons. First, the abstract model of
 handshake between QUIC and TLS is different. In QUIC,
-the client and server share two keys which are initial
-key $\ik$ and last key $\key$ and secrets are not
+the client and server share two keys which are an initial
+key $\ik$ and a final key $\key$ and secrets are not
 reused in an abbreviate handshake. On the other hand,
 in TLS, the client and server share one key and reuse
 the secrets in an abbreviate handshake. Second, the
@@ -171,8 +168,8 @@ security model proposed in the previous study
 ~\cite{FG14:QUIC,LJBN15:QUIC} does not
 consider the consistency of the client between a full
 handshake and abbreviate handshakes.
-The second reasons is important in order to prevent the
-attacks \cite{LJBN15:QUIC}.
+% The second reasons is important in order to prevent the
+% attacks \cite{LJBN15:QUIC}.
 
 %=====================================================
 \subsection{Our Results} \label{sec:proposal}
@@ -184,7 +181,7 @@ Our contributions are:
  and more secure than QACCE.}
 
  \item{A new scheme which is more secure and efficient
- than original one.}
+ than original QUIC.}
 \end{itemize}
 
 We introduce a new
@@ -192,7 +189,7 @@ security model, what we call \textit{Resumable} SACCE
 (RSACCE) security, where we consider a server's message
 confidentiality, as well as a client's message
 confidentiality, where an adversary is allowed to send
-an encryption query to a \textit{server} (to break a
+an encryption query which is similar to ``test" query to a \textit{server} (to break a
 server's message confidentiality) both in the full
 handshake session and the abbreviate handshake sessions,
 as far as the server establishes the initial full
@@ -202,7 +199,12 @@ Our security model also consider the consistency of the client between
 The consistency of the client between 0-RTT connections
 and 1-RTT connections prevent one of the attacks.
 
-We also propose a more secure and efficient protocol with
-the spirit of QUIC.
-In~\cite{LJBN15:QUIC}, they found the five attacks for
-QUIC and our proposed scheme can prevent the four attacks.
+We also propose a new scheme which is more secure and more efficient
+than the original QUIC and it satisfy RSACCE secure.
+In the our proposed scheme, a client sends its Diffie-Hellman public value in
+a first query while in original QUIC the client sends its Diffie-Hellman
+public value in a second query.
+For this scheme, the server can generate MAC for important parameters in the
+response and it prevents the attacks.
+% In~\cite{LJBN15:QUIC}, they found the five attacks for
+% QUIC and the our proposed scheme can prevent the four attacks.

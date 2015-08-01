@@ -18,25 +18,21 @@ To realize concept (2), QUIC supports only secure cipher
 suites. Especially, a support algorithm of key exchange
 is only ephemeral elliptic curve Diffie-Hellman.
 
-There are two type connections, 1 round trip time (RTT)
-connection and 0 round trip time connection, in QUIC.
-The former case is called 1-RTT connection, the latter
-case is called 0-RTT connection.
-The first time a client connects to a server, the client
-must perform 1-RTT handshake to acquire a necessary
-information
-
 %=====================================================
 \subsection{1-RTT Connection Establishment} \label{sec:quic_1rtt}
 %=====================================================
 
-We provide the abstract model of QUIC for 1-RTT in
-Fig.~\ref{fig:quic_abst_1rtt}.
+We provide the abstract model of 1-RTT connection establishment
+for the initial key in Fig.\ref{fig:quic_abst_1rtt_init} and
+the final key in Fig.\ref{fig:quic_abst_1rtt_last}.
 %
 \input{04_z1_protocol_1rtt_overview}
+\ONERTTtrue
+\ORIGINALtrue
+\input{04_z2_forward_secure_key}
 %
 A server generate server config $\SCFG$ before a request from a client.
-We describe the detail of generation of $\SCFG$ in \label{sec:proposed_scheme}.
+We describe the detail of generation of $\SCFG$ in section \ref{sec:proposed_scheme}.
 SCFG is composed of seven parameters AEAD, SCID, PDMD,
 PUBS, KEXS, and OBIT, and EXPY. The important parameters
 are SCID which is an opaque 16 byte identifier for
@@ -44,28 +40,25 @@ this server config, PUBS which is server's
 Diffie-Hellman public value, and EXPY which is expiry time
 for this server config. The details of other parameters
 are described in~\cite{QUIC:Crypto}.
-Our definition consider only important parameters.
-
+Our definition considers only important parameters.
 Firstly, the client sends an inchoate client
-hello ($m_1$) which contains connection id
-and some information such as server name, protocol
-version, and user agent id. In our definition,
-the some informations are omitted.
-
+hello ($m_1$) to start the connection.
+The client needs $\STK$ to make a server pre-accept and share
+a session key since the server require the $\STK$ to the client
+when the server calculates initial key $\ik$ or final key $\key$.
 After the server receives inchoate client hello, it
 sends a rejection ($m_2$). The rejection ($m_2$) contains
 source address token (STK), server config ($\SCFG$) which
 include a signature $\sigma_s$ of the server config generated
-by the server long term secret key $sk_s$. The client use
+by the server long term secret key $sk_s$. The client uses
 STK in future queries to demonstrate ownership of their
 source IP address.
-
-After the client receives a rejection ($m_2$), the client
+The client can calculates the initial key after receiving
+a rejection ($m_2$). Before this calculation, the client
 checks the server config $\SCFG$ and generate $\NONC$ which consists
 of a random value, and ephemeral
 Diffie-Hellman values $t_c$.
 The client sends a client hello ($m_3$) to the server.
-
 After the server receives a client hello ($m_3$), the
 server check this query. $\STK$ is an opaque byte string
 from the client's point of view. From the server's point
@@ -73,34 +66,33 @@ of view it's an authenticated-encryption block that
 contains, at least, the client's IP address and a time
 stamp by the server. The server decrypt $\STK$ and
 validate time and source IP address.
-
-After sharing initial key $\ik$, the client and server
-exchange data encrypted and authenticated using Length-Hiding
-Authenticated Encryption $\SE$ with initial key $\ik$.
-
+The client and server
+exchange data encrypted and authenticated using authenticated
+symmetric encryption $\SE$ with the initial key $\ik$ after
+sharing the initial key $\ik$.
 The server send a server hello ($m_4$) which contains
 a ciphertext which consists of a new $\STK$ and ephemeral server's
 Diffie-Hellman public value after exchanging data and
-calculate last key $\key$.
-
+calculate the final key $\key$.
 The client validate a server hello ($m_4$) and calculate
-last key $\key$ and cache the data.
+the final key $\key$ and cache the data.
 
 %=====================================================
 \subsection{0-RTT Connection Establishment} \label{sec:quic_0rtt}
 %=====================================================
 
 We provide the abstract model of QUIC for 0-RTT in
-Fig.~\ref{fig:quic_abst_0rtt}.
+Fig.\ref{fig:quic_abst_0rtt}.
+
 %
-\input{04_z2_protocol_0rtt_overview}
+\input{04_z3_protocol_0rtt_overview}
 %
 Firstly, the client sends a client hello using cache data.
 The server searches $\SCFG$ with $\SCID$ and validate a
 client hello.
 After the client sends a client hello or the server validate
-a client hello, they calculate initial key $\ik$.
-The flow for last key $\key$ is the same as
+a client hello, they calculate the initial key $\ik$.
+The flow for the final key $\key$ is the same as
 1-RTT case.
 
 
@@ -115,14 +107,14 @@ In~\cite{LJBN15:QUIC}, they found five attacks:
 (4) Source-Address Token Manipulation Attack,
 (5) Crypto Stream Offset Attack.
 
-These attacks enable the adversary to do Distributed Denial of Service
+These attacks assist the adversary to do Distributed Denial of Service
 (DDoS) attack.
 
 The adversary make a client and server share a different
 initial key $\ik$ using (1), (3), and (4).
 These attacks break server authentication because the client
 reaches accept state and there are no server oracle which has
-matching conversation for initial key with the client oracle in 1-RTT connection.
+matching conversations for an initial key with the client oracle in 1-RTT connection.
 The adversary make a server accept in 0-RTT connection
 using (2).
 This attack breaks channel confidentiality because the adversary
