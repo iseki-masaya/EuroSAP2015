@@ -19,7 +19,7 @@ suites. Especially, a support algorithm of key exchange
 is only ephemeral elliptic curve Diffie-Hellman.
 
 %=====================================================
-\subsection{1-RTT Connection Establishment} \label{sec:quic_1rtt}
+\subsection{$1$-RTT Connection Establishment} \label{sec:quic_1rtt}
 %=====================================================
 
 We provide the abstract model of 1-RTT connection establishment
@@ -78,7 +78,7 @@ The client validate a server hello ($m_4$) and calculate
 the final key $\key$ and cache the data.
 
 %=====================================================
-\subsection{0-RTT Connection Establishment} \label{sec:quic_0rtt}
+\subsection{$0$-RTT Connection Establishment} \label{sec:quic_0rtt}
 %=====================================================
 
 We provide the abstract model of QUIC for 0-RTT in
@@ -97,31 +97,65 @@ The flow for the final key $\key$ is the same as
 
 
 %=====================================================
-\subsection{Security of QUIC} \label{sec:quic_detail}
+\subsection{Security Concerns About QUIC} \label{sec:quic_detail}
 %=====================================================
+In \cite{LJBN15:QUIC}, Lychev et al.~showed that QUIC is secure in the QACCE security model.
+However, they also reported the following attacks:
+(1) the server config replay attack, 
+(2) the source-address token replay attack,
+(3) the connection ID manipulation attack,
+(4) the source-address token manipulation attack, and 
+(5) the crypto stream offset attack. 
 
-In~\cite{LJBN15:QUIC}, they found five attacks:
-(1) Server Config Replay Attack,
-(2) Source-Address Token Replay Attack,
-(3) Connection ID Manipulation Attack,
-(4) Source-Address Token Manipulation Attack,
-(5) Crypto Stream Offset Attack.
 
-These attacks assist the adversary to do Distributed Denial of Service
-(DDoS) attack.
+These attacks make it easy that an adversary executes the Distributed Denial of Service
+(DDoS) attacks. 
+In this paper, we do not consider the attack (5) because it is irrelevant to handshake connections.
 
-The adversary make a client and server share a different
-initial key $\ik$ using (1), (3), and (4).
-These attacks break server authentication because the client
-reaches accept state and there are no server oracle which has
-matching conversations for an initial key with the client oracle in 1-RTT connection.
-The adversary make a server accept in 0-RTT connection
-using (2).
-This attack breaks channel confidentiality because the adversary
-can share the session key with the target server.
-We do not consider the attack (5) because this attack is not
-about handshakes.
+The attacks, (1), (3), and (4), are a kind of the man-in-the-middle attacks, where  
+an adversary is positioned on the path between the client and the server and 
+makes inconsistent views to a client and a server. 
+In the current version of QUIC, the client cannot be aware of some kind of change of 
+$\SCFG_{pub}$, $\cid$, and $\STK$. 
+(Indeed, the adversary can freely modify
+$\STK$ and $\cid$ because there is no way that  the client can recognize it.
+On one hand, $\SCFG_{pub}$ has the server's signature, but 
+$\SCFG_{pub}$ is independent of the client's first query. So, the client cannot recognize it even if 
+$\SCFG_{pub}$ is collected by the adversary when it eavesdrop another connection with the same server.)
+After the adversary makes inconsistent views to the client and the server, 
+they cannot share the same key. 
+So, all encrypted data the (honest) client sends to the server cannot be decrypted correctly by the server.  
+However, since the client does not recognize it, he might send encrypted data again and again and 
+would increase the server's load. 
+  
+We remark that these attacks do not work in our RSACCE security model, because of 
+the server authentication. 
+When a party accepts or pre-accepts,  there exists a unique matching conversation with another side party 
+and the client and the server should share the same key. 
 
+The attack  (2) is a hijacking attack. First, an adversary sees a full handshake connection.
+Then, the adversary successfully establishes a $0$-RTT abbreviate connection with the server, 
+instead of the initial client. 
+In the current version of QUIC, this attack is unavoidable (if the adversary can be positioned on the path), 
+because the adversary can collect $T_s$, $\SCID$, and $\STK$ from the initial full handshake connection. 
+We note that \textit{source-address token} $\STK$ is an authenticated encryption block issued by the server, 
+which contains at lease the client's IP address and the server's time stamp. 
+when he receives it from the client, the sever decrypts it and checks the contents.
+Therefore, to succeed this attack, the adversary can be positioned on the path between the client and the server.  
+
+This attack does not work in our RSACCE security model, due to the channel binding.
+The channel binding guarantees that an adversary cannot convince the server if he is not the same client in 
+the initial full handshake connection.
+
+\if0
+An adversary first collect a copy of the target server's 
+$\SCFG_{pub}$. It is possible for the adversary either to actively start a full $1$-RTT QUIC handshake connection with the server or to passively see any full handshake connection with the server. 
+Once he has $\SCFG_{pub}$, he waits for the target client to start a connection. 
+Then, when he see the first message from the client, he respond with the collected $\SCFG_{pub}$ 
+as if it comes from the real server, before the server sends back with the proper one.
+\fi
+
+\if0
 For more details about (1), (3) and (4), the adversary can forge
 $\STK$ and $\cid$ because there are no authentication mechanism
 for these parameters.
@@ -149,19 +183,21 @@ this query and calculates the session keys with the value
 of the adversary.
 
 If the protocol satisfies RSACCE secure, the protocol prevents these attacks (1)~(4).
-
-\subsubsection{Source Address Token} \label{sec:source_address_token}
+\fi
+\subsubsection{More about Source Address Token} \label{sec:source_address_token}
 Source-address token ($\STK$) is introduced to QUIC in order to
 prevent IP address spoofing.
-A server generates and sends a new STK every time he sends a
+A server generates a new $\STK$ every time he sends a
 message to a client.
-The client updates STK when the client receives a new one from
+The client updates $\STK$ when the client receives a new one from
 the server and sends it back along with his message.
 $\STK$ is an opaque byte string from the client's point of view.
 From the server's point of view it's an authenticated-encryption
-block that contains, at least, the client's IP address and a time
-stamp by the server.
+block that contains, at least, the client's IP address and the time
+stamp issued by the server.
+\if0
 $\STK$ is encrypted except for the first server's query ($\REJ$).
 However, in our model the adversary has full control over the
 communication network and hence it can obtain $\STK$ and use it to
 forge a future query.
+\fi

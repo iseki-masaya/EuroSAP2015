@@ -2,29 +2,24 @@
 \begin{abstract}
 %=====================================================
 We study the security of Quick UDP Internet Connections
-(QUIC for short) -- an experimental transport layer
+(QUIC for short) -- an experimental transport layer 
 network protocol recently developed by Google.
-Lychev et al.~\cite{LJBN15:QUIC}, show that QUIC is secure
-in their security model which is called QACCE.
-However, QUIC has vulnerabilities against the attacks~\cite{LJBN15:QUIC}
-which increase server loads and their security model does not cover these attacks.
-QUIC should prevent these attacks because these attacks assist an adversary
-to do Distributed Denial of Service (DDoS) attacks.
-To cover these security concerns, we propose a new security model,
-extending server-only authenticated and channel
-confidentiality establishment (SACCE), so that
-authentication and channel confidentiality can be
-evaluated including abbreviated handshake sessions.
-Our security model is stronger than QACCE to cover the security concerns.
-We then show that the original QUIC does not satisfy our security
-model.
-We also propose a new scheme to solve the security concerns
-and enhance the performance.
-There are three advantages in the our proposed scheme.
-First, it prevents the attacks.
-Second, it does not require Strong Computational Diffie-Hellman~\cite{ABR01}
-assumption to satisfy the security model. On the other hand, the original QUIC require
-Strong Computational Diffie-Hellman to satisfy QACCE secure.
-Third, it reduces a number of interactions from four times
-to two times.
+Lychev et al.~\cite{LJBN15:QUIC} proposed a new security model, 
+called Quick ACCE (QACCE), an extention of  
+authenticated and channel confidentiality establishment (ACCE) model, and 
+showed that QUIC is secure in the model. 
+However, they also pointed out some vulnerability on QUIC, 
+which may increase server loads easily and would possibly cause serious Distributed Denial of Service (DDoS) 
+attacks. 
+In this paper, 
+we propose a new stronger security model, called  
+resumable server-only ACCE (RSACCE).
+Since the original QUIC does not meet our new security notion, 
+we propose an enhanced QUIC protocol, without changing the spirit of QUIC, such as 
+the two-key structure, server-only authentication, no server cash data, repeated usage of server-configuration (SCFG), 
+and $1$-RTT full and $0$-RTT abbreviate handshakes.
+The enhanced QUIC satisfies our strong security requirements under weaker assumptions  
+and also improves the round complexity. 
+Here the DDoS attacks mentioned above do not effectively work
+against the enhanced QUIC protocol. 
 \end{abstract}
