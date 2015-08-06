@@ -91,11 +91,11 @@ state the following variables:
  \item{$\ik, \key \in \mathcal{K}$, the session key
  where $\mathcal{K}$ is the key space of the protocol.
  $\ik$ is called \textit{initial key} which calculated with
- an ephemeral client's Diffie-Hellman value and a static
- server's Diffie-Hellman value, and $\key$ is called
+ an ephemeral client's DH key and a static
+ server's DH key, and $\key$ is called
  final key which calculated with ephemeral
- client's Diffie-Hellman value and ephemeral server's
- Diffie-Hellman value.}
+ client's DH key and ephemeral server's
+ DH key.}
 
  \item{$\peer$, an intended partner. If $P$ is
  $\Client$ with an identity number $c$, then $\pi^c_{i,\ell}$ maintains the
@@ -162,7 +162,7 @@ oracles:
 \item {$\Corrupt(\pi^p_{i,\ell})$:
  If $\pi^p_{i,\ell}$ is a client oracle, then returns $\bot$.
  Otherwise, $\pi^p_{i,\ell}$ is a server oracle and returns
- Diffie-Hellman secret value $t_s$ in $\SCFG$.
+ DH secret key $t_s$ in $\SCFG$.
  If $\pi^p_{i,\ell}$ is a server oracle and $\Corrupt(\pi^p_{i,\ell})$ is the
  $\tau$-th query issued by the adversary, $\pi^p_{i,\ell}$ is said
  $\tau$-\textit{corrupted}.
@@ -380,7 +380,7 @@ We now define the following advantage measures.
  before $\pi^s_{j, \ell}$ accepts or pre-accepts, she can
  impersonate the server because she can make valid response
  (SHLO) using long-term secret key $sk_s$ or server's
- Diffie-Hellman secret value $t_s$.
+ DH secret key $t_s$.
  We need to divide the conditions into 1-RTT connections and 0-RTT connections
  because in 0-RTT connections the client immediately pre-accepts ($\Lambda \in \{\preaccept, \accept \}$)
  after sending the first message. If the adversary drop this message, the adversary
@@ -447,8 +447,8 @@ The second condition specifies forward-secrecy among
 the other sessions in the
 sense that message confidentiality of $\pi^p_{i,\ell}$
 is preserved, as long as the adversary does not
-corrupt the server's long-term secret key $sk_s$ and Diffie-Hellman
-secret value $t_s$ in $\SCFG$.
+corrupt the server's long-term secret key $sk_s$ and DH
+secret key $t_s$ in $\SCFG$.
 This condition also specifies forward-secrecy among
 a full handshake and abbreviate handshakes in the sense
 that message confidentiality of $\pi^p_{i,\ell}$ is preserved,

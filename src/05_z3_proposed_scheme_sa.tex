@@ -16,7 +16,7 @@
 \vspace{10pt}\\%
 %
 %
- \textbf{Game 2.} Again the challenger proceeds as before, but we add an abort rule. We want to make sure that $\pi^{c^\ast}_{i^{\ast},0}$ receives as input exactly the Diffie-Hellman value $T_s$ in $\SCFG_{pub}$ that was selected by some other uncorrupted server oracle.
+ \textbf{Game 2.} Again the challenger proceeds as before, but we add an abort rule. We want to make sure that $\pi^{c^\ast}_{i^{\ast},0}$ receives as input exactly the server's DH public key $T_s$ in $\SCFG_{pub}$ that was selected by some other uncorrupted server oracle.
 
  Technically, we abort and raise event $\abort_\SIG$, if oracle $\pi^{c^{\ast}}_{i^{\ast},0}$ ever receives as input a message $\cert_s$ indicating the intended partner $\peer = s$ and server config $\SCFG_{pub} = (\SCID, T_s, \expy, \sigma_s, \cert_s)$ such taht $\sigma_s$ is a valid signature over $\SCID \| T_s \| \expy \| \cert_s$, however there exists no oracle $\pi^s_{j,0}$ which has previously output $\sigma_s$. Clearly we have
  \begin{equation}
@@ -30,7 +30,7 @@
   |\Adv_2 - \Adv_1| = \nserver \epsilon_{\SIG}.
  \end{equation}%
 
- Note that in Game 2 oracle $\pi^{c^{\ast}}_{i^{\ast},0}$ receives as input a Diffie-Hellman value $T_s$ such that $T_s$ was chosen by another oracle, but not by the attacker.
+ Note that in Game 2 oracle $\pi^{c^{\ast}}_{i^{\ast},0}$ receives as input a server's DH public key $T_s$ such that $T_s$ was chosen by another oracle, but not by the attacker.
 \vspace{10pt}\\%
 %
 %
@@ -40,11 +40,11 @@
  \begin{equation}
   \Adv_3 \leq \nserver \noracle \Adv_4
  \end{equation}%
- Note that in this game we know exactly that oracle $\sOracleAstFull$ chooses the Diffie-Hellman share $T_s$ that $\cOracleAstFull$ uses to compute its premaster secret.
+ Note that in this game we know exactly that oracle $\sOracleAstFull$ chooses the DH public key $T_s$ that $\cOracleAstFull$ uses to compute its premaster secret.
  \vspace{10pt}\\
 %
 %
- \textbf{Game 4.} Let $T_{\cIndexAstRes} = g^u$ denote the Diffie-Hellman share chosen by $\cOracleAstRes$, let $T_{\sIndexAstRes} = g^v$ denote the share chosen by its partner $\sOracleAstRes$, and let $ik_{\cIndexAstRes}$ and $k_{\cIndexAstRes}$ are the key computed by $\cOracleAstRes$, let $pms_{\ik}$ and $ms_{\ik}$ denote a premaster secret and master secret for an initial key, let $pms_{k}$ and $ms_{k}$ denote a premaster secret and master secret for session key. Thus, both oracles compute the premaster secret as $pms = g^{uv}$.
+ \textbf{Game 4.} Let $T_{\cIndexAstRes} = g^u$ denote the DH public key chosen by $\cOracleAstRes$, let $T_{\sIndexAstRes} = g^v$ denote the share chosen by its partner $\sOracleAstRes$, and let $ik_{\cIndexAstRes}$ and $k_{\cIndexAstRes}$ are the key computed by $\cOracleAstRes$, let $pms_{\ik}$ and $ms_{\ik}$ denote a premaster secret and master secret for an initial key, let $pms_{k}$ and $ms_{k}$ denote a premaster secret and master secret for session key. Thus, both oracles compute the premaster secret as $pms = g^{uv}$.
 
  The challenger in this game proceeds as before, however replaces the premaster secret $pms_{\ik}$ of $\cOracleAstRes$ and $\sOracleAstRes$ with a random group element $\widetilde{pms_{\ik}} = g^w$, $w \xleftarrow{\$} \Zset_p$. Note that both $g^u$ and $g^v$ are chosen by oracles $\cOracleAstRes$ and $\sOracleAstRes$, respectively, as otherwise $\cOracleAstRes$ would not have a matching conversations for an initial key with $\sOracleAstRes$ and the game would be aborted.
 

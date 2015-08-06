@@ -5,39 +5,39 @@
 There are security concerns and redundant procedures in the original
 QUIC.
 
-As for the security concerns, 
-Lychev~\cite{LJBN15:QUIC} pointed out five attacks, 
+As for the security concerns,
+Lychev~\cite{LJBN15:QUIC} pointed out five attacks,
 which may lead to the Distributed Denial of Service (DDoS) attacks.
-As described above, 
-the DDoS attacks take advantage of either incomplete server-authentication or 
-lack of channel binding. 
-In the RSACCE model, the attacks in \cite{LJBN15:QUIC} do not work. 
+As described above,
+the DDoS attacks take advantage of either incomplete server-authentication or
+lack of channel binding.
+In the RSACCE model, the attacks in \cite{LJBN15:QUIC} do not work.
 
-To improve efficiency of QUIC, we can learn from 
-the previous protocols such as SIGMA protocol~\cite{Kra03:SIGMA} and HMQV~\cite{Kra05:HQMV}, 
-where a client sends its DH public value in the very first query. 
-This technique improves not only the number of interactions 
+To improve efficiency of QUIC, we can learn from
+the previous protocols such as SIGMA protocol~\cite{Kra03:SIGMA} and HMQV~\cite{Kra05:HQMV},
+where a client sends its DH public value in the very first query.
+This technique improves not only the number of interactions
 but also makes assumptions weaker.
 
 \if0
-The main purpose of developing QUIC is to provide an 
+The main purpose of developing QUIC is to provide an
 alternative equivalence of TLS wrapping TCP, with much
-reduced latency and better SPDY and HTTP/2 support. 
-Considering the primary purpose, QUIC must be improved to stand against these DDoS attacks. 
+reduced latency and better SPDY and HTTP/2 support.
+Considering the primary purpose, QUIC must be improved to stand against these DDoS attacks.
 \fi
 
 \if0
 To solve above issues, we propose a new scheme which is more secure and more efficient
 than the original QUIC and it satisfy RSACCE secure.
-In the our proposed scheme, a client sends its Diffie-Hellman public value in
+In our proposed scheme, a client sends its DH public key in
 a first query.
 % This scheme is big difference from original one and it sounds difficult to apply
 % this modification even if QUIC is still under development.
 % The handshake of QUIC will be replaced TLS1.3.
 % However
 %  and the handshake scheme of
-% TLS1.3 is similar to the our proposed scheme in terms of that a client sends its
-% Diffie-Hellman public value in a first query.
+% TLS1.3 is similar to our proposed scheme in terms of that a client sends its
+% DH public key in a first query.
 \fi
 
 \if0
@@ -47,12 +47,12 @@ In~\cite{LJBN15:QUIC}, they found five attacks:
 (3) Connection ID Manipulation Attack,
 (4) Source-Address Token Manipulation Attack,
 (5) Crypto Stream Offset Attack.
-In the our proposed scheme, $\STK$ and $\cid$ are authenticated with the initial key
+In our proposed scheme, $\STK$ and $\cid$ are authenticated with the initial key
 $\ik$ and other parameters are also authenticated.
 This modification prevents (1)Server Config Replay Attack,
 (3) Connection ID Manipulation Attack, and
 (4) Source-Address Token Manipulation Attack.
-In the our proposed scheme, the server ensure the consistency of the client between
+In our proposed scheme, the server ensure the consistency of the client between
 a 1-RTT connection and 0-RTT connections, in other words, only the client which
 execute full handshake and has matching conversations for an initial key and forward
 secure key with the server in 1-RTT connection can establish 0-RTT connection with
@@ -64,12 +64,12 @@ This modification prevents (2) Source-Address Token Replay Attack.
 \subsection{1-RTT Connection Establishment} \label{sec:quic_prop_1rtt}
 %=====================================================
 
-The abstract model of the our proposed scheme is in
+The abstract model of our proposed scheme is in
 Fig.~\ref{fig:quic_prop_1rtt}.
 
 \input{05_z1_proposed_1rtt_overview}
 
-We define three phases of the our proposed scheme handshake in 1-RTT:
+We define three phases of our proposed scheme handshake in 1-RTT:
 (1) \textbf{Initiate},
 (2) \textbf{Key Agreement},
 (3) \textbf{Data Exchange}.
@@ -82,12 +82,12 @@ We define three phases of the our proposed scheme handshake in 1-RTT:
 \subsection{0-RTT Connection Establishment} \label{sec:quic_prop_0rtt}
 %=====================================================
 
-The abstract model of the our proposed scheme is in
+The abstract model of our proposed scheme is in
 Fig.~\ref{fig:quic_prop_0rtt}.
 
 \input{05_z2_proposed_0rtt_overview}
 
-We define four phases of the our proposed scheme handshake in 0-RTT:
+We define four phases of our proposed scheme handshake in 0-RTT:
 (1) \textbf{Initial Key Agreement},
 (2) \textbf{Initial Data Exchange},
 (3) \textbf{Key Agreement}, and
@@ -100,10 +100,10 @@ handshake.
 \input{05_prop_02_03_key_agr}
 
 %=====================================================
-\subsection{Security of the our proposed scheme} \label{sec:quic_proof}
+\subsection{Security of our proposed scheme} \label{sec:quic_proof}
 %=====================================================
 
-In this section we prove the security of the our proposed scheme.
+In this section we prove the security of our proposed scheme.
 
 \begin{theorem} \label{theorem:proposed_scheme}
  Let $\mu$ be the output length of $\PRF$, let $\lambda$ be
@@ -120,14 +120,14 @@ In this section we prove the security of the our proposed scheme.
  $(t,\epsilon_{H})$-collision-resistant (CR), the symmetric
  authenticated encryption scheme $\SE$ is
  $(t, \epsilon_{\LHAE})$-secure.
- Then for all PPT adversaries, the our proposed scheme is RSACCE secure.
+ Then for all PPT adversaries, our proposed scheme is RSACCE secure.
 \end{theorem}
 
 We prove Theorem~\ref{theorem:proposed_scheme} by proving three lemmas.
 Lemma~\ref{lemma:proposed_scheme_rsacce-sa} is about \textit{server authentication}.
 In this proof, finally we randomize $\ik$ in the target server oracle.
-$\ik$ is used to encrypt the server's ephemeral Diffie-Hellman public
-value. The adversary has to generate correct $\ik$ to make the client accept
+$\ik$ is used to encrypt the server's ephemeral DH public
+key. The adversary has to generate correct $\ik$ to make the client accept
 the forged query. If the client accepts with the forged query, the adversary
 break the server authentication.
 Lemma~\ref{lemma:proposed_scheme_rsacce-cc} is about \textit{channel confidentiality}.
@@ -172,11 +172,11 @@ Due to spaces, we omit the detailed proofs of the Lemmas.
 This proof is similar to the proof of channel confidentiality.
 
 %=====================================================
-\subsection{Security concerns of the our proposed scheme} \label{sec:prop_sec_concerns}
+\subsection{Security concerns of our proposed scheme} \label{sec:prop_sec_concerns}
 %=====================================================
 
-The our proposed scheme prevents the attacks which the original QUIC has.
-However, there are another security concerns in the our proposed scheme.
+Our proposed scheme prevents the attacks which the original QUIC has.
+However, there are another security concerns in our proposed scheme.
 This security concerns are the same as the problem DTLS\cite{DTLS12}
 has and these are: (1) an adversary can consume excessive resources
 on the server by transmitting a series of handshake initiation requests,
@@ -192,11 +192,11 @@ transcript and forge it can increase the server loads sending request
 with the spoofed IP address.
 The second issue is called Distributed Reflection Denial of Service
 (DRDoS) and Christian~\cite{Ross14} proposed some countermeasures against it.
-We can apply the countermeasure of DTLS to the our proposed scheme.
+We can apply the countermeasure of DTLS to our proposed scheme.
 However, this countermeasure needs additional interactions and eliminates
-the advantage of the our propose scheme which reduce interactions.
+the advantage of our propose scheme which reduce interactions.
 
-We suggest another solution for the first issue that add a restriction to the our
+We suggest another solution for the first issue that add a restriction to our
 proposed scheme.
 If the server has more specific number connections, the server
 responds to a first client's query with a rejection (REJ) which
@@ -205,11 +205,11 @@ fall back to a protocol similar to the original QUIC that we call
 modified QUIC.
 The handshake of the modified QUIC is mixed the original QUIC and our
 proposed scheme.
-The handshake of modified QUIC in 0-RTT is the same as the our proposed
+The handshake of modified QUIC in 0-RTT is the same as our proposed
 scheme.
 The difference in a 1-RTT connection between the original QUIC and modified one
 is that the way to make $\STK$. In modified QUIC, $\STK$ is generated
-by the same way as the our proposed scheme. The client needs to send
+by the same way as our proposed scheme. The client needs to send
 MAC generated by $\key_{MAC}$ in 0-RTT request.
 This modification prevents Source-Address Token Replay Attack
-in the same way as the our proposed scheme.
+in the same way as our proposed scheme.

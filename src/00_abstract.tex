@@ -2,24 +2,24 @@
 \begin{abstract}
 %=====================================================
 We study the security of Quick UDP Internet Connections
-(QUIC for short) -- an experimental transport layer 
+(QUIC for short) -- an experimental transport layer
 network protocol recently developed by Google.
-Lychev et al.~\cite{LJBN15:QUIC} proposed a new security model, 
-called Quick ACCE (QACCE), an extention of  
-authenticated and channel confidentiality establishment (ACCE) model, and 
-showed that QUIC is secure in the model. 
-However, they also pointed out some vulnerability on QUIC, 
-which may increase server loads easily and would possibly cause serious Distributed Denial of Service (DDoS) 
-attacks. 
-In this paper, 
-we propose a new stronger security model, called  
+Lychev et al.~\cite{LJBN15:QUIC} proposed a new security model,
+called Quick ACCE (QACCE), an extension of
+authenticated and channel confidentiality establishment (ACCE) model, and
+showed that QUIC is secure in the model.
+However, they also pointed out some vulnerability on QUIC,
+which may increase server loads easily and would possibly cause serious Distributed Denial of Service (DDoS)
+attacks.
+In this paper,
+we propose a new stronger security model, called
 resumable server-only ACCE (RSACCE).
-Since the original QUIC does not meet our new security notion, 
-we propose an enhanced QUIC protocol, without changing the spirit of QUIC, such as 
-the two-key structure, server-only authentication, no server cash data, repeated usage of server-configuration (SCFG), 
+Since the original QUIC does not meet our new security notion,
+we propose an enhanced QUIC protocol, without changing the spirit of QUIC, such as
+the two-key structure, server-only authentication, no server cash data, repeated usage of server-configuration (SCFG),
 and $1$-RTT full and $0$-RTT abbreviate handshakes.
-The enhanced QUIC satisfies our strong security requirements under weaker assumptions  
-and also improves the round complexity. 
+The enhanced QUIC satisfies our strong security requirements under weaker assumptions
+and also improves the round complexity.
 Here the DDoS attacks mentioned above do not effectively work
-against the enhanced QUIC protocol. 
+against the enhanced QUIC protocol.
 \end{abstract}

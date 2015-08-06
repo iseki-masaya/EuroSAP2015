@@ -37,7 +37,7 @@ SCFG is composed of seven parameters AEAD, SCID, PDMD,
 PUBS, KEXS, and OBIT, and EXPY. The important parameters
 are SCID which is an opaque 16 byte identifier for
 this server config, PUBS which is server's
-Diffie-Hellman public value, and EXPY which is expiry time
+DH public key, and EXPY which is expiry time
 for this server config. The details of other parameters
 are described in~\cite{QUIC:Crypto}.
 Our definition considers only important parameters.
@@ -57,7 +57,7 @@ The client can calculates the initial key after receiving
 a rejection ($m_2$). Before this calculation, the client
 checks the server config $\SCFG$ and generate $\NONC$ which consists
 of a random value, and ephemeral
-Diffie-Hellman values $t_c$.
+DH secret key $t_c$.
 The client sends a client hello ($m_3$) to the server.
 After the server receives a client hello ($m_3$), the
 server check this query. $\STK$ is an opaque byte string
@@ -72,7 +72,7 @@ symmetric encryption $\SE$ with the initial key $\ik$ after
 sharing the initial key $\ik$.
 The server send a server hello ($m_4$) which contains
 a ciphertext which consists of a new $\STK$ and ephemeral server's
-Diffie-Hellman public value after exchanging data and
+DH public key after exchanging data and
 calculate the final key $\key$.
 The client validate a server hello ($m_4$) and calculate
 the final key $\key$ and cache the data.
@@ -101,57 +101,57 @@ The flow for the final key $\key$ is the same as
 %=====================================================
 In \cite{LJBN15:QUIC}, Lychev et al.~showed that QUIC is secure in the QACCE security model.
 However, they also reported the following attacks:
-(1) the server config replay attack, 
+(1) the server config replay attack,
 (2) the source-address token replay attack,
 (3) the connection ID manipulation attack,
-(4) the source-address token manipulation attack, and 
-(5) the crypto stream offset attack. 
+(4) the source-address token manipulation attack, and
+(5) the crypto stream offset attack.
 
 
 These attacks make it easy that an adversary executes the Distributed Denial of Service
-(DDoS) attacks. 
+(DDoS) attacks.
 In this paper, we do not consider the attack (5) because it is irrelevant to handshake connections.
 
-The attacks, (1), (3), and (4), are a kind of the man-in-the-middle attacks, where  
-an adversary is positioned on the path between the client and the server and 
-makes inconsistent views to a client and a server. 
-In the current version of QUIC, the client cannot be aware of some kind of change of 
-$\SCFG_{pub}$, $\cid$, and $\STK$. 
+The attacks, (1), (3), and (4), are a kind of the man-in-the-middle attacks, where
+an adversary is positioned on the path between the client and the server and
+makes inconsistent views to a client and a server.
+In the current version of QUIC, the client cannot be aware of some kind of change of
+$\SCFG_{pub}$, $\cid$, and $\STK$.
 (Indeed, the adversary can freely modify
 $\STK$ and $\cid$ because there is no way that  the client can recognize it.
-On one hand, $\SCFG_{pub}$ has the server's signature, but 
-$\SCFG_{pub}$ is independent of the client's first query. So, the client cannot recognize it even if 
+On one hand, $\SCFG_{pub}$ has the server's signature, but
+$\SCFG_{pub}$ is independent of the client's first query. So, the client cannot recognize it even if
 $\SCFG_{pub}$ is collected by the adversary when it eavesdrop another connection with the same server.)
-After the adversary makes inconsistent views to the client and the server, 
-they cannot share the same key. 
-So, all encrypted data the (honest) client sends to the server cannot be decrypted correctly by the server.  
-However, since the client does not recognize it, he might send encrypted data again and again and 
-would increase the server's load. 
-  
-We remark that these attacks do not work in our RSACCE security model, because of 
-the server authentication. 
-When a party accepts or pre-accepts,  there exists a unique matching conversation with another side party 
-and the client and the server should share the same key. 
+After the adversary makes inconsistent views to the client and the server,
+they cannot share the same key.
+So, all encrypted data the (honest) client sends to the server cannot be decrypted correctly by the server.
+However, since the client does not recognize it, he might send encrypted data again and again and
+would increase the server's load.
+
+We remark that these attacks do not work in our RSACCE security model, because of
+the server authentication.
+When a party accepts or pre-accepts,  there exists a unique matching conversation with another side party
+and the client and the server should share the same key.
 
 The attack  (2) is a hijacking attack. First, an adversary sees a full handshake connection.
-Then, the adversary successfully establishes a $0$-RTT abbreviate connection with the server, 
-instead of the initial client. 
-In the current version of QUIC, this attack is unavoidable (if the adversary can be positioned on the path), 
-because the adversary can collect $T_s$, $\SCID$, and $\STK$ from the initial full handshake connection. 
-We note that \textit{source-address token} $\STK$ is an authenticated encryption block issued by the server, 
-which contains at lease the client's IP address and the server's time stamp. 
+Then, the adversary successfully establishes a $0$-RTT abbreviate connection with the server,
+instead of the initial client.
+In the current version of QUIC, this attack is unavoidable (if the adversary can be positioned on the path),
+because the adversary can collect $T_s$, $\SCID$, and $\STK$ from the initial full handshake connection.
+We note that \textit{source-address token} $\STK$ is an authenticated encryption block issued by the server,
+which contains at lease the client's IP address and the server's time stamp.
 when he receives it from the client, the sever decrypts it and checks the contents.
-Therefore, to succeed this attack, the adversary can be positioned on the path between the client and the server.  
+Therefore, to succeed this attack, the adversary can be positioned on the path between the client and the server.
 
 This attack does not work in our RSACCE security model, due to the channel binding.
-The channel binding guarantees that an adversary cannot convince the server if he is not the same client in 
+The channel binding guarantees that an adversary cannot convince the server if he is not the same client in
 the initial full handshake connection.
 
 \if0
-An adversary first collect a copy of the target server's 
-$\SCFG_{pub}$. It is possible for the adversary either to actively start a full $1$-RTT QUIC handshake connection with the server or to passively see any full handshake connection with the server. 
-Once he has $\SCFG_{pub}$, he waits for the target client to start a connection. 
-Then, when he see the first message from the client, he respond with the collected $\SCFG_{pub}$ 
+An adversary first collect a copy of the target server's
+$\SCFG_{pub}$. It is possible for the adversary either to actively start a full $1$-RTT QUIC handshake connection with the server or to passively see any full handshake connection with the server.
+Once he has $\SCFG_{pub}$, he waits for the target client to start a connection.
+Then, when he see the first message from the client, he respond with the collected $\SCFG_{pub}$
 as if it comes from the real server, before the server sends back with the proper one.
 \fi
 

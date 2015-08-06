@@ -2,57 +2,57 @@
 \section{Introduction} \label{sec:intro}
 %=====================================================
 Quick UDP Internet Connections (QUIC for short) is a
-new transport layer network protocol recently proposed by Google \cite{QUIC,QUICDraft}, 
-which is experimentally implemented in Google Chrome. 
-The main purpose of developing QUIC is to provide an alternative equivalence of TLS wrapping TCP, 
-with much reduced latency and better SPDY and HTTP/2 support. 
-Transport Layer Security (TLS) starts with a three-move TCP handshake 
+new transport layer network protocol recently proposed by Google \cite{QUIC,QUICDraft},
+which is experimentally implemented in Google Chrome.
+The main purpose of developing QUIC is to provide an alternative equivalence of TLS wrapping TCP,
+with much reduced latency and better SPDY and HTTP/2 support.
+Transport Layer Security (TLS) starts with a three-move TCP handshake
 before initiating the TLS Handshake Protocol.
-In contrast, QUIC uses UDP and starts with its own handshake, 
+In contrast, QUIC uses UDP and starts with its own handshake,
 which reduces the total number of interactions.
-The cryptographic core of QUIC is specified in the QUIC crypto protocol~\cite{QUIC:Crypto}, 
+The cryptographic core of QUIC is specified in the QUIC crypto protocol~\cite{QUIC:Crypto},
 which consists of a handshake protocol and a record layer protocol, as does TLS.
-Similarly to TLS, QUIC has two types of handshake connections: 
-One is called \textit{the full handshake} -- a handshake connection 
-``from scratch" between a client and a server. 
-The other is called \textit{the abbreviate handshake} -- a handshake connection 
-which takes place when a client who has already established a full handshake connection with a server, 
-wants to establish a new connection with the same server in an abbreviate way. 
-Unlike TLS, QUIC does not support mutual authentication, but server authentication only. 
-In addition, QUIC only supports the elliptic-curve version of Diffie-Hellman (DH) key-exchange cipher suite 
-in the handshake protocol,  which yields a unique \textit{two-key} structure in the handshake protocol   
-to achieve reduced latency:  
-The first round of the QUIC full handshake executes the \textit{static} DH key exchange of  
-a server's \textit{static} (in some time period) DH public-key $T_s$ 
-with a client's ephemeral DH public-key $T_c$. 
-Then, the second round executes the \textit{ephemeral} DH key exchange of 
-the client's ephemeral DH public-key $T_c$ (in the first round) with 
+Similarly to TLS, QUIC has two types of handshake connections:
+One is called \textit{the full handshake} -- a handshake connection
+``from scratch" between a client and a server.
+The other is called \textit{the abbreviate handshake} -- a handshake connection
+which takes place when a client who has already established a full handshake connection with a server,
+wants to establish a new connection with the same server in an abbreviate way.
+Unlike TLS, QUIC does not support mutual authentication, but server authentication only.
+In addition, QUIC only supports the elliptic-curve version of Diffie-Hellman (DH) key-exchange cipher suite
+in the handshake protocol,  which yields a unique \textit{two-key} structure in the handshake protocol
+to achieve reduced latency:
+The first round of the QUIC full handshake executes the \textit{static} DH key exchange of
+a server's \textit{static} (in some time period) DH public-key $T_s$
+with a client's ephemeral DH public-key $T_c$.
+Then, the second round executes the \textit{ephemeral} DH key exchange of
+the client's ephemeral DH public-key $T_c$ (in the first round) with
 the server's \textit{ephemeral} DH public-key $T'_s$.
-Here, the client may send a ciphertext encrypted by the first static DH key after the first round. 
-He may also send a ciphertext encrypted by the second ``strong'' ephemeral DH key 
-instead of the first ``weak" static DH key, after the full handshake is established. 
-The abbreviate handshake starts by client sending an ephemeral DH public-key $T'_c$. 
-The server sends back its ephemeral DH public-key $T''_s$ and the abbreviate handshake is established. 
-Here, we note that the client can send an encrypted data to the server, 
-concurrently with the first message with $T'_c$, where 
-the ciphertext is encrypted by the DH key derived from  
-the client's ephemeral $T'_c$ and the server's static $T_s$. 
-After the abbreviate handshake is established, 
-the client may send a ciphertext encrypted by the second ``strong'' ephemeral DH key 
+Here, the client may send a ciphertext encrypted by the first static DH key after the first round.
+He may also send a ciphertext encrypted by the second ``strong'' ephemeral DH key
+instead of the first ``weak" static DH key, after the full handshake is established.
+The abbreviate handshake starts by client sending an ephemeral DH public-key $T'_c$.
+The server sends back its ephemeral DH public-key $T''_s$ and the abbreviate handshake is established.
+Here, we note that the client can send an encrypted data to the server,
+concurrently with the first message with $T'_c$, where
+the ciphertext is encrypted by the DH key derived from
+the client's ephemeral $T'_c$ and the server's static $T_s$.
+After the abbreviate handshake is established,
+the client may send a ciphertext encrypted by the second ``strong'' ephemeral DH key
 derived from client's ephemeral $T'_c$ and server's ephemeral $T''_s$.
 
-This two-key structure is a remarkable feature of QUIC. 
-By this, QUIC requires only  $1$-RTT and $0$-RTT connectivity overhead in the full and 
+This two-key structure is a remarkable feature of QUIC.
+By this, QUIC requires only  $1$-RTT and $0$-RTT connectivity overhead in the full and
 abbreviate handshake connections, respectively.
 
 
 \if0
 %
 an abbreviate handshake session is called
-the 0-RTT session. On one hand, 
+the 0-RTT session. On one hand,
 a client can send encrypted data just after executing one round interaction with a server.
 Hence, a full handshake session is called the 1-RTT session.
-$1$-RTT connectivity overhead in the full handshake connection and 
+$1$-RTT connectivity overhead in the full handshake connection and
 $0$-RTT one in the abbreviate handshake connection.
 Namely, in the QUIC abbreviate handshake, a client can send
 encrypted data to a server, concurrently with a new session.
@@ -60,7 +60,7 @@ encrypted data to a server, concurrently with a new session.
 % abbreviate handshake protocols of QUIC in
 % Fig.~\ref{fig:quic_abst_1rtt_init},~\ref{fig:quic_abst_1rtt_last}, and ~\ref{fig:quic_abst_0rtt}.
 By this property, an abbreviate handshake session is called
-the 0-RTT session. On one hand, 
+the 0-RTT session. On one hand,
 a client can send encrypted data just after executing one round interaction with a server.
 Hence, a full handshake session is called the 1-RTT session.
 \fi
@@ -68,69 +68,69 @@ Hence, a full handshake session is called the 1-RTT session.
 \subsection{Prior Works and Security Concerns} \label{sec:concern}
 %=========================================================================
 To the best of our knowledge, there are two security analyses on QUIC~\cite{FG14:QUIC,LJBN15:QUIC}.
-Both papers define new security models and have analyzed the security of QUIC. 
-Both provide positive conclusions, but 
-\cite{LJBN15:QUIC} points out some security concerns at the same time. 
+Both papers define new security models and have analyzed the security of QUIC.
+Both provide positive conclusions, but
+\cite{LJBN15:QUIC} points out some security concerns at the same time.
 
-In~\cite{FG14:QUIC}, Fischlin and Gunther focus on the two-key structure in the QUIC handshake 
-and formalize a secure authenticated key-exchange protocol with such a two-key structure, 
-in an extension  of the Bellare-Rogaway model~\cite{BR93:AKE}. 
+In~\cite{FG14:QUIC}, Fischlin and Gunther focus on the two-key structure in the QUIC handshake
+and formalize a secure authenticated key-exchange protocol with such a two-key structure,
+in an extension  of the Bellare-Rogaway model~\cite{BR93:AKE}.
 %and analyze the security of QUIC (with abbreviate handshakes).
-However, the actual QUIC protocol is slightly different from the protocol defined in \cite{FG14:QUIC}, 
-because a server always sends an authenticated encryption in the last message of 
-the QUIC full handshake and   
-it makes impossible to obtain \textit{key-indistinguishability}, as with the case of TLS. 
+However, the actual QUIC protocol is slightly different from the protocol defined in \cite{FG14:QUIC},
+because a server always sends an authenticated encryption in the last message of
+the QUIC full handshake and
+it makes impossible to obtain \textit{key-indistinguishability}, as with the case of TLS.
 Therefore, the authenticated and channel confidentiality
 establishment (ACCE) model~\cite{JKSS12:ACCE} is more
 suitable to analyze QUIC.
 
-In~\cite{LJBN15:QUIC}, Lychev et al.~also formalize a new security model, called QUIC ACCE (QACCE) model,  
+In~\cite{LJBN15:QUIC}, Lychev et al.~also formalize a new security model, called QUIC ACCE (QACCE) model,
 based on ACCE model to analyze full and abbreviate handshake connections of QUIC.
-Although they conclude that QUIC is secure in their model as it is, 
-they also point out vulnerabilities, which appear in 
-(1) the server-config replay attack, (2) the source-address token replay attack, 
-(3) the connection ID manipulation attack, (4) the source-address token manipulation attack, 
-and (5) the crypto stream offset attack. 
-Each attack affects the increase of server loads and makes it easy that 
-an adversary executes the distributed denial of service (DDoS) attacks. 
+Although they conclude that QUIC is secure in their model as it is,
+they also point out vulnerabilities, which appear in
+(1) the server-config replay attack, (2) the source-address token replay attack,
+(3) the connection ID manipulation attack, (4) the source-address token manipulation attack,
+and (5) the crypto stream offset attack.
+Each attack affects the increase of server loads and makes it easy that
+an adversary executes the distributed denial of service (DDoS) attacks.
 The security model QACCE does not prevent an adversary from doing these attacks.
 
 
 %=====================================================
 \subsection{Other Related Works} \label{sec:Related Work}
 %=====================================================
-There are a huge body of literature on authenticated key exchange protocols 
-(See~\cite{CK01:AKE,JKSS12:ACCE,KPW13:SACCE} for survey). 
-An important stream of research dates back to Bellare and Rogaway~\cite{BR93:AKE}, 
-followed by~\cite{DB96,Blei98,JMDP00,Kraw01,JB02,KK05:TLS,KCRE08,SMOAJ08,EK09,KTT11,}.
-However, as mentioned above, the QUIC full handshake protocol does not satisfy key-indistinguishability,  
+There are a huge body of literature on authenticated key exchange protocols
+(See~\cite{CK01:AKE,JKSS12:ACCE,KPW13:SACCE} for survey).
+An important stream of research dates back to Bellare and Rogaway~\cite{BR93:AKE},
+followed by~\cite{DB96,Blei98,JMDP00,Kraw01,JB02,KK05:TLS,KCRE08,SMOAJ08,EK09,KTT11}.
+However, as mentioned above, the QUIC full handshake protocol does not satisfy key-indistinguishability,
 because a server always sends an authenticated encryption in a full handshake connection, as does TLS.
-TLS Handshake Protocol is recently analyzed in various security models, 
-e.g., ~\cite{JKSS12:ACCE,KPW13:SACCE,FS13:ACCE,GKS13:RACCE,BDKSS14:SSH,BFKPSB14:TLS}. 
-Our proposed security model lies in the line of 
-the ACCE security model~\cite{JKSS12:ACCE,KPW13:SACCE}. 
-Although QUIC is a server-only authenticated protocol, 
-it is not appropriate to apply it directly to 
+TLS Handshake Protocol is recently analyzed in various security models,
+e.g., ~\cite{JKSS12:ACCE,KPW13:SACCE,FS13:ACCE,GKS13:RACCE,BDKSS14:SSH,BFKPSB14:TLS}.
+Our proposed security model lies in the line of
+the ACCE security model~\cite{JKSS12:ACCE,KPW13:SACCE}.
+Although QUIC is a server-only authenticated protocol,
+it is not appropriate to apply it directly to
 the server-only authenticated and confidential channel establishment
-(SACCE) model~\cite{KPW13:SACCE}, defined for analyzing 
-a server-only authenticated connection of TLS. 
-Firstly, QUIC has a two-key mechanism mentioned above, 
-in which a client and a server firstly share an initial 
+(SACCE) model~\cite{KPW13:SACCE}, defined for analyzing
+a server-only authenticated connection of TLS.
+Firstly, QUIC has a two-key mechanism mentioned above,
+in which a client and a server firstly share an initial
 key $\ik$ in the middle of a connection and finally take a final key $\key$ when the connection is established.
-The initial key is used to encrypt messages before the final key is shared. 
-This mechanism allows QUIC to enjoy $1$-RTT and $0$-RTT connections in the full and abbreviate handshakes  
-respectively, but it prevents adaptation to the SACCE model. 
-Secondly, QUIC has full and abbreviate handshake connections, where 
-an abbreviate handshake is a descendent  of some full handshake. 
-When such two related handshake connections exist, 
-it is natural to consider some binding property between them. 
-Otherwise, an adversary might hijack an abbreviate handshake connection, 
+The initial key is used to encrypt messages before the final key is shared.
+This mechanism allows QUIC to enjoy $1$-RTT and $0$-RTT connections in the full and abbreviate handshakes
+respectively, but it prevents adaptation to the SACCE model.
+Secondly, QUIC has full and abbreviate handshake connections, where
+an abbreviate handshake is a descendent  of some full handshake.
+When such two related handshake connections exist,
+it is natural to consider some binding property between them.
+Otherwise, an adversary might hijack an abbreviate handshake connection,
 which actually causes DDoS attacks.
-TLS also has an abbreviate handshake, called the resumption, but 
-it is not treated in the (S)ACCE model. 
+TLS also has an abbreviate handshake, called the resumption, but
+it is not treated in the (S)ACCE model.
 
 \if0
-In \cite{LJBN15:QUIC}, 
+In \cite{LJBN15:QUIC},
  does not
 consider the consistency of the client between a full
 handshake and abbreviate handshakes.
@@ -141,62 +141,62 @@ handshake and abbreviate handshakes.
 \subsection{Our Contribution} \label{sec:proposal}
 %=====================================================
 We introduce a new security model, what we call \textit{resumable} SACCE
-(RSACCE) to analyze the securty of QUIC and its variants. 
-RSACCE is a stronger security notion than QACCE. 
-Unfortunately, the original QUIC is not secure in the RSACCE model. 
-We present a new protocol, a ``variant'' of QUIC, which is secure in the RSACCE model. 
+(RSACCE) to analyze the security of QUIC and its variants.
+RSACCE is a stronger security notion than QACCE.
+Unfortunately, the original QUIC is not secure in the RSACCE model.
+We present a new protocol, a ``variant'' of QUIC, which is secure in the RSACCE model.
 Here the DDoS attacks mentioned in \cite{LJBN15:QUIC} do not effectively work against the new protocol.
 
-Our motivation is to enhance QUIC without harming its concepts, and to prevent an adversary from executing the DDoS attacks mentioned above. 
-Observing the original QUIC, we noticed  that 
-a client cannot be aware of the presence of a man-in-the-middle adversary to make inconsistent views 
+Our motivation is to enhance QUIC without harming its concepts, and to prevent an adversary from executing the DDoS attacks mentioned above.
+Observing the original QUIC, we noticed  that
+a client cannot be aware of the presence of a man-in-the-middle adversary to make inconsistent views
 in the right and left interactions.
-In addition, an adversary may easily hijack an abbreviate connection to pretend an initial client 
-if the adversary can see the initial full handshake connection. 
-The DDoS attacks mentioned in \cite{LJBN15:QUIC} take advantage of these vulnerabilities of QUIC. 
-Such vulnerabilities cannot be allowed to a protocol secure in the RSACCE model. 
+In addition, an adversary may easily hijack an abbreviate connection to pretend an initial client
+if the adversary can see the initial full handshake connection.
+The DDoS attacks mentioned in \cite{LJBN15:QUIC} take advantage of these vulnerabilities of QUIC.
+Such vulnerabilities cannot be allowed to a protocol secure in the RSACCE model.
 
 We want to enhance QUIC secure in the RSACCE model, without changing its design concepts.
-What features define QUIC and what should be preserved, then. 
+What features define QUIC and what should be preserved, then.
 We consider that the following features represent the concept of QUIC.
 
 \begin{itemize}
-\item The two-key structure based on the DH key exchange protocol. 
-\item Repeated usage of server-configuration $\SCFG$ (with static DH public-key $T_s$) in some time period. 
-\item Server-only authentication. 
+\item The two-key structure based on the DH key exchange protocol.
+\item Repeated usage of server-configuration $\SCFG$ (with static DH public-key $T_s$) in some time period.
+\item Server-only authentication.
 \item No server cash data.
 \end{itemize}
 
-The  first and second properties enables 
-$1$-round trip time (RTT) and $0$-RTT connective overheads in the full and abbreviate handshakes, respectively. 
-The third and forth properties represent some policy of the design of QUIC. 
-In addition, we have not changed any server's (long-term and middle-term) secret in our proposal.   
-So, we think our proposed protocol retains the spirit of QUIC. 
+The  first and second properties enables
+$1$-round trip time (RTT) and $0$-RTT connective overheads in the full and abbreviate handshakes, respectively.
+The third and forth properties represent some policy of the design of QUIC.
+In addition, we have not changed any server's (long-term and middle-term) secret in our proposal.
+So, we think our proposed protocol retains the spirit of QUIC.
 
-In the RSACCE security model, we consider three security requirements, 
-server authentication, channel confidentiality, and channel binding. 
-The server authentication prevents an adversary from making inconsistent views, 
+In the RSACCE security model, we consider three security requirements,
+server authentication, channel confidentiality, and channel binding.
+The server authentication prevents an adversary from making inconsistent views,
 and the channel  binding prevents an adversary from pretending the client in the initial handshake connection.
-The channel confidentiality guarantees message confidentiality.   
-Unlike \cite{KPW13:SACCE,FG14:QUIC,LJBN15:QUIC}, 
+The channel confidentiality guarantees message confidentiality.
+Unlike \cite{KPW13:SACCE,FG14:QUIC,LJBN15:QUIC},
 we consider a server's message confidentiality, as well as a client's message
-confidentiality, where an adversary is allowed to send 
-an encryption query, i.e., a ``test" query, to a \textit{server} 
-both in the full and abbreviate handshake connections, 
+confidentiality, where an adversary is allowed to send
+an encryption query, i.e., a ``test" query, to a \textit{server}
+both in the full and abbreviate handshake connections,
 as far as the server has established the initial full handshake session with a \textit{honest} client.
-In QACCE, an adversary 
+In QACCE, an adversary
 is also allowed to send a ``test" query to a server oracle in an
 abbreviate handshake.
 However, an adversary is only allowed
 to send it to the server oracle with a matching
 conversation with a client oracle.
-In this case, server's message confidentiality is 
-equivalent to client's message confidentiality.  
+In this case, server's message confidentiality is
+equivalent to client's message confidentiality.
 % An adversary needs to forge the query to make a server accept
 % and the server does not have a matching conversations with any
 % client oracle.
 \if0
-By this restriction, QACCE cannot take care of the attack where 
+By this restriction, QACCE cannot take care of the attack where
 an adversary makes a server accept.
 In QUIC, a server does not make sure consistencies of a client
 between 0-RTT connections and 1-RTT connections and
@@ -227,15 +227,15 @@ Our security model also consider the consistency of the client between
 The consistency of the client between 0-RTT connections
 and 1-RTT connections prevent one of the attacks.
 
-We consider a security model, which would be appropriate for QUIC, but 
+We consider a security model, which would be appropriate for QUIC, but
 Our contributions are two-holds:
 \begin{itemize}
  \item{
- We propose a security model, which would be appropriate for a server-only authenticated key exchange 
- equipped with the two-key structure and the abbreviate handshake connections, such as QUIC. 
- In particular, we consider a binding property between a full handshake connection 
- and its successive abbreviate handshake, which is not considered in QACCE~\cite{LJBN15:QUIC}, but 
- the property is 
+ We propose a security model, which would be appropriate for a server-only authenticated key exchange
+ equipped with the two-key structure and the abbreviate handshake connections, such as QUIC.
+ In particular, we consider a binding property between a full handshake connection
+ and its successive abbreviate handshake, which is not considered in QACCE~\cite{LJBN15:QUIC}, but
+ the property is
  }
 
  \item{A new scheme which is more secure and efficient
@@ -244,21 +244,21 @@ Our contributions are two-holds:
 
 
 
-Here, the long-term secret of a server is a signing key and  
-a secret key for an authenticated encryption, to create a source address token (STK)  
-described later. The middle-term secret is a DH secret key $t_s$ with respects to a static (in some period) 
-DH public key $T_s$.
+Here, the long-term secret of a server is a signing key and
+a secret key for an authenticated encryption, to create a source address token (STK)
+described later. The middle-term secret is a DH secret key $t_s$ with respects to a static (in some period)
+DH public-key $T_s$.
 
 
 We also propose a new scheme which is more secure and more efficient
 than the original QUIC and it satisfy RSACCE secure.
-In the our proposed scheme, a client sends its Diffie-Hellman public value in
-a first query while in original QUIC the client sends its Diffie-Hellman
-public value in a second query.
+In our proposed scheme, a client sends its DH public-key in
+a first query while in original QUIC the client sends its DH
+public-key in a second query.
 For this scheme, the server can generate MAC for important parameters in the
 response and it prevents the attacks.
 % In~\cite{LJBN15:QUIC}, they found the five attacks for
-% QUIC and the our proposed scheme can prevent the four attacks.
+% QUIC and our proposed scheme can prevent the four attacks.
 
 
 %%%%%%%%

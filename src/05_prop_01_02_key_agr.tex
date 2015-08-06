@@ -3,7 +3,7 @@
 %=====================================================
 In this phase, the client sends an initial client
 hello (initialCHLO) which contains connection id,
-a client's Diffie-Hellman public value $T_c$, a client
+a client's DH public key $T_c$, a client
 nonce $\NONC$, and some information such as server name,
 protocol version, and user agent id. In our definition,
 the some informations are omitted.
@@ -24,7 +24,7 @@ sends a server hello (SHLO). The server hello contains
 source address token (STK), server config (SCFG),
 a certificate, a signature of server config generated
 by the server long term secret key, ephemeral server's
-Diffie-Hellman public value $T_s^{\prime}$. The client use
+DH public key $T_s^{\prime}$. The client use
 STK in future queries to demonstrate ownership of their
 source IP address.
 \\
